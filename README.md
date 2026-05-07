@@ -66,5 +66,7 @@ localhost:5432
 
 # Team members
 
-- Nguyen An
-- ...
+- Nguyen Hoai An
+- Tran Dinh Bao
+- Do Cao Dat
+- Tran Thanh Nam
