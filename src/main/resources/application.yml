@@ -12,12 +12,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+    open-in-view: true
 
   security:
     oauth2:
-      resource server:
+      resourceserver:
         jwt:
           issuer-uri: https://cognito-idp.ap-southeast-2.amazonaws.com/ap-southeast-2_wuMjdreND
 
-    show-sql: true
 

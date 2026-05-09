@@ -13,14 +13,12 @@ public class GlobalExceptionHandler {
             RuntimeException exception
     ) {
 
-        ApiResponse<Object> response = ApiResponse.builder()
-                .success(false)
-                .message(exception.getMessage())
-                .build();
-
         return ResponseEntity
                 .status(500)
-                .body(response);
+                .body(ApiResponse.error(
+                        500,
+                        "Internal server error"
+                ));
     }
 
     @ExceptionHandler(AppException.class)
@@ -30,13 +28,11 @@ public class GlobalExceptionHandler {
 
         ErrorCode errorCode = exception.getErrorCode();
 
-        ApiResponse<Object> response = ApiResponse.builder()
-                .success(false)
-                .message(errorCode.getMessage())
-                .build();
-
         return ResponseEntity
                 .status(errorCode.getHttpStatus())
-                .body(response);
+                .body(ApiResponse.error(
+                        errorCode.getCode(),
+                        errorCode.getMessage()
+                ));
     }
 }
