@@ -1,6 +1,7 @@
 package com.chemistry.demo.entity;
 
 
+import com.chemistry.demo.enums.RoleName;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,11 +18,11 @@ import java.util.Set;
 public class Role extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
-    @Column(nullable = false, unique = true)
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private RoleName roleName;
 
     private String description;
 

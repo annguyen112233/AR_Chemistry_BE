@@ -1,5 +1,6 @@
 package com.chemistry.demo.entity;
 
+import com.chemistry.demo.enums.PermissionName;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,11 +14,12 @@ import lombok.*;
 public class Permission {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
-    @Column(nullable = false, unique = true)
-    private String name;
+    @Enumerated(EnumType.STRING)
+    @Column(unique = true, nullable = false)
+    private PermissionName name;
 
     private String description;
 }
