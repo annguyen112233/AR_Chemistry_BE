@@ -29,11 +29,15 @@ public class UserController {
 
         userService.syncUser(email, cognitoSub);
 
-        return ApiResponse.ok(userSecurityService.getUserSecurity(cognitoSub));
+        return ApiResponse.<UserResponse>ok()
+                .data(userSecurityService.getUserSecurity(cognitoSub))
+                .build();
     }
 
     @PutMapping("/profile")
     public ApiResponse<UpdateProfileResponse> updateProfile(@RequestBody UpdateProfileRequest request) {
-        return ApiResponse.ok(userService.updateProfile(request));
+        return ApiResponse.<UpdateProfileResponse>ok()
+                .data(userService.updateProfile(request))
+                .build();
     }
 }

@@ -32,39 +32,31 @@ public class ApiResponse<T> {
 
         private String path;
 
-        // --- Static Factory Methods ---
-
-        public static <T> ApiResponse<T> ok(T data) {
-                return buildResponse(HttpStatus.OK, "Success", data);
-        }
-
-        public static <T> ApiResponse<T> ok(String message, T data) {
-                return buildResponse(HttpStatus.OK, message, data);
-        }
-
-        public static <T> ApiResponse<T> ok(String message) {
-                return buildResponse(HttpStatus.OK, message, null);
-        }
-
-        public static <T> ApiResponse<T> created(String message, T data) {
-                return buildResponse(HttpStatus.CREATED, message, data);
-        }
-
-        public static <T> ApiResponse<T> error(int code, String message, String path) {
+        /**
+         * Điểm bắt đầu cho phản hồi thành công (200 OK)
+         */
+        public static <T> ApiResponseBuilder<T> ok() {
                 return ApiResponse.<T>builder()
-                                .success(false)
-                                .code(code)
-                                .message(message)
-                                .path(path)
-                                .build();
+                                .success(true)
+                                .code(HttpStatus.OK.value())
+                                .message("Success");
         }
 
-        // Helper method to reduce boilerplate
-        private static <T> ApiResponse<T> buildResponse(HttpStatus status, String message, T data) {
+        /**
+         * Điểm bắt đầu cho phản hồi tạo mới thành công (201 Created)
+         */
+        public static <T> ApiResponseBuilder<T> created() {
                 return ApiResponse.<T>builder()
-                                .code(status.value())
-                                .message(message)
-                                .data(data)
-                                .build();
+                                .success(true)
+                                .code(HttpStatus.CREATED.value())
+                                .message("Created Successfully");
+        }
+
+        /**
+         * Điểm bắt đầu cho phản hồi lỗi
+         */
+        public static <T> ApiResponseBuilder<T> error() {
+                return ApiResponse.<T>builder()
+                                .success(false);
         }
 }
