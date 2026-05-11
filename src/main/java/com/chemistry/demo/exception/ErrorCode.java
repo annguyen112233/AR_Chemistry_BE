@@ -15,12 +15,10 @@ public enum ErrorCode {
         INVALID_ROLE(HttpStatus.BAD_REQUEST, "Invalid role selection"),
         TEACHER_ALREADY_APPROVED(HttpStatus.BAD_REQUEST, "Teacher already approved");
 
-        private final int code;
         private final String message;
         private final HttpStatus httpStatus;
 
         ErrorCode(HttpStatus status, String message) {
-                this.code = status.value();
                 this.message = message;
                 this.httpStatus = status;
         }
