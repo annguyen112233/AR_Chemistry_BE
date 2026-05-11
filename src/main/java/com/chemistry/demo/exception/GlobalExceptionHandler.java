@@ -1,6 +1,7 @@
 package com.chemistry.demo.exception;
 
 import com.chemistry.demo.dto.ApiResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -8,50 +9,32 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-//    @ExceptionHandler(RuntimeException.class)
-//    public ResponseEntity<ApiResponse<Object>> handleRuntimeException(
-//            RuntimeException exception
-//    ) {
-//
-//        return ResponseEntity
-//                .status(500)
-//                .body(ApiResponse.error(
-//                        500,
-//                        "Internal server error"
-//                ));
-//    }
+        @ExceptionHandler(AppException.class)
+        public ResponseEntity<ApiResponse<Object>> handleAppException(
+                        AppException exception,
+                        HttpServletRequest request) {
+                ErrorCode errorCode = exception.getErrorCode();
 
-    @ExceptionHandler(AppException.class)
-    public ResponseEntity<ApiResponse<Object>> handleAppException(
-            AppException exception
-    ) {
+                return ResponseEntity
+                                .status(errorCode.getHttpStatus())
+                                .body(ApiResponse.error(
+                                                errorCode.getCode(),
+                                                errorCode.getMessage(),
+                                                request.getRequestURI()));
+        }
 
+        @ExceptionHandler(Exception.class)
+        public ResponseEntity<ApiResponse<Object>> handleException(
+                        Exception ex,
+                        HttpServletRequest request) {
+                ex.printStackTrace();
 
+                ErrorCode errorCode = ErrorCode.UNCATEGORIZED_EXCEPTION;
 
-        ErrorCode errorCode = exception.getErrorCode();
-
-        return ResponseEntity
-                .status(errorCode.getHttpStatus())
-                .body(ApiResponse.error(
-                        errorCode.getCode(),
-                        errorCode.getMessage()
-                ));
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<Object>> handleException(
-            Exception ex
-    ) {
-
-        ex.printStackTrace();
-
-        return ResponseEntity.badRequest()
-                .body(
-                        ApiResponse.builder()
-                                .success(false)
-                                .code(500)
-                                .message(ex.getMessage())
-                                .build()
-                );
-    }
+                return ResponseEntity.status(errorCode.getHttpStatus())
+                                .body(ApiResponse.error(
+                                                errorCode.getCode(),
+                                                ex.getMessage(),
+                                                request.getRequestURI()));
+        }
 }

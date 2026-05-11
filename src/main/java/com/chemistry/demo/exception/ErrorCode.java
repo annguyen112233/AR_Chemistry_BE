@@ -6,64 +6,22 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum ErrorCode {
 
-    USER_NOT_FOUND(
-            1001,
-            "User not found",
-            HttpStatus.NOT_FOUND
-    ),
+        UNCATEGORIZED_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "Uncategorized error"),
+        USER_NOT_FOUND(HttpStatus.NOT_FOUND, "User not found"),
+        ROLE_NOT_FOUND(HttpStatus.NOT_FOUND, "Role not found"),
+        UNAUTHENTICATED(HttpStatus.UNAUTHORIZED, "Unauthenticated"),
+        FORBIDDEN(HttpStatus.FORBIDDEN, "Forbidden"),
+        ROLE_ALREADY_ASSIGNED(HttpStatus.BAD_REQUEST, "Role already assigned"),
+        INVALID_ROLE(HttpStatus.BAD_REQUEST, "Invalid role selection"),
+        TEACHER_ALREADY_APPROVED(HttpStatus.BAD_REQUEST, "Teacher already approved");
 
-    ROLE_NOT_FOUND(
-            1002,
-            "Role not found",
-            HttpStatus.NOT_FOUND
-    ),
+        private final int code;
+        private final String message;
+        private final HttpStatus httpStatus;
 
-    UNAUTHENTICATED(
-            1003,
-            "Unauthenticated",
-            HttpStatus.UNAUTHORIZED
-    ),
-
-    FORBIDDEN(
-            1004,
-            "Forbidden",
-            HttpStatus.FORBIDDEN
-    ),
-
-    ROLE_ALREADY_ASSIGNED(
-        1005,
-                "Role already assigned",
-        HttpStatus.BAD_REQUEST
-        ),
-
-
-    INVALID_ROLE(
-            1006,
-            "Invalid role selection",
-            HttpStatus.BAD_REQUEST
-    ),
-
-    TEACHER_ALREADY_APPROVED(
-            1007,
-            "Teacher already approved",
-            HttpStatus.BAD_REQUEST
-    );
-
-
-
-    private final int code;
-
-    private final String message;
-
-    private final HttpStatus httpStatus;
-
-    ErrorCode(
-            int code,
-            String message,
-            HttpStatus httpStatus
-    ) {
-        this.code = code;
-        this.message = message;
-        this.httpStatus = httpStatus;
-    }
+        ErrorCode(HttpStatus status, String message) {
+                this.code = status.value();
+                this.message = message;
+                this.httpStatus = status;
+        }
 }
