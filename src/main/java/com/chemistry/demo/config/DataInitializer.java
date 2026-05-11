@@ -6,6 +6,8 @@ import com.chemistry.demo.enums.PermissionName;
 import com.chemistry.demo.enums.RoleName;
 import com.chemistry.demo.repository.PermissionRepository;
 import com.chemistry.demo.repository.RoleRepository;
+import com.chemistry.demo.services.PermissionService;
+import com.chemistry.demo.services.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -16,18 +18,17 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
 
-    private final RoleRepository roleRepository;
-    private final PermissionRepository permissionRepository;
-
+    private final PermissionService permissionService;
+    private final RoleService roleService;
     @Override
     public void run(String... args) {
 
         // create all permissions
         for (PermissionName permissionName : PermissionName.values()) {
 
-            permissionRepository.findByName(permissionName)
+            permissionService.findByName(permissionName)
                     .orElseGet(() ->
-                            permissionRepository.save(
+                            permissionService.save(
                                     Permission.builder()
                                             .name(permissionName)
                                             .build()
@@ -36,171 +37,158 @@ public class DataInitializer implements CommandLineRunner {
         }
 
         // ADMIN
-        Role adminRole = createRole(RoleName.ROLE_ADMIN);
+        Role adminRole = roleService.createRole(RoleName.ROLE_ADMIN);
 
         adminRole.setPermissions(Set.of(
 
                 // USER
-                getPermission(PermissionName.MANAGE_USERS),
-                getPermission(PermissionName.VIEW_USERS),
-                getPermission(PermissionName.CREATE_USER),
-                getPermission(PermissionName.UPDATE_USER),
-                getPermission(PermissionName.DELETE_USER),
-                getPermission(PermissionName.BLOCK_USER),
-                getPermission(PermissionName.UNBLOCK_USER),
-                getPermission(PermissionName.ASSIGN_ROLE),
-                getPermission(PermissionName.APPROVE_TEACHER),
+                permissionService.getPermission(PermissionName.MANAGE_USERS),
+                permissionService.getPermission(PermissionName.VIEW_USERS),
+                permissionService.getPermission(PermissionName.CREATE_USER),
+                permissionService.getPermission(PermissionName.UPDATE_USER),
+                permissionService.getPermission(PermissionName.DELETE_USER),
+                permissionService.getPermission(PermissionName.BLOCK_USER),
+                permissionService.getPermission(PermissionName.UNBLOCK_USER),
+                permissionService.getPermission(PermissionName.ASSIGN_ROLE),
+                permissionService.getPermission(PermissionName.APPROVE_TEACHER),
 
                 // CHEMICAL
-                getPermission(PermissionName.CREATE_CHEMICAL),
-                getPermission(PermissionName.VIEW_CHEMICAL),
-                getPermission(PermissionName.UPDATE_CHEMICAL),
-                getPermission(PermissionName.DELETE_CHEMICAL),
-                getPermission(PermissionName.IMPORT_CHEMICAL),
-                getPermission(PermissionName.EXPORT_CHEMICAL),
-                getPermission(PermissionName.MANAGE_CHEMICAL_STOCK),
+                permissionService.getPermission(PermissionName.CREATE_CHEMICAL),
+                permissionService.getPermission(PermissionName.VIEW_CHEMICAL),
+                permissionService.getPermission(PermissionName.UPDATE_CHEMICAL),
+                permissionService.getPermission(PermissionName.DELETE_CHEMICAL),
+                permissionService.getPermission(PermissionName.IMPORT_CHEMICAL),
+                permissionService.getPermission(PermissionName.EXPORT_CHEMICAL),
+                permissionService.getPermission(PermissionName.MANAGE_CHEMICAL_STOCK),
 
                 // REACTION
-                getPermission(PermissionName.CREATE_REACTION),
-                getPermission(PermissionName.VIEW_REACTION),
-                getPermission(PermissionName.UPDATE_REACTION),
-                getPermission(PermissionName.DELETE_REACTION),
-                getPermission(PermissionName.VERIFY_REACTION),
-                getPermission(PermissionName.APPROVE_REACTION),
+                permissionService.getPermission(PermissionName.CREATE_REACTION),
+                permissionService.getPermission(PermissionName.VIEW_REACTION),
+                permissionService.getPermission(PermissionName.UPDATE_REACTION),
+                permissionService.getPermission(PermissionName.DELETE_REACTION),
+                permissionService.getPermission(PermissionName.VERIFY_REACTION),
+                permissionService.getPermission(PermissionName.APPROVE_REACTION),
 
                 // AR
-                getPermission(PermissionName.SCAN_AR),
-                getPermission(PermissionName.UPLOAD_AR_MARKER),
-                getPermission(PermissionName.MANAGE_AR_CONTENT),
-                getPermission(PermissionName.DELETE_AR_CONTENT),
+                permissionService.getPermission(PermissionName.SCAN_AR),
+                permissionService.getPermission(PermissionName.UPLOAD_AR_MARKER),
+                permissionService.getPermission(PermissionName.MANAGE_AR_CONTENT),
+                permissionService.getPermission(PermissionName.DELETE_AR_CONTENT),
 
                 // EXPERIMENT
-                getPermission(PermissionName.CREATE_EXPERIMENT),
-                getPermission(PermissionName.VIEW_EXPERIMENT),
-                getPermission(PermissionName.UPDATE_EXPERIMENT),
-                getPermission(PermissionName.DELETE_EXPERIMENT),
-                getPermission(PermissionName.MANAGE_LAB),
+                permissionService.getPermission(PermissionName.CREATE_EXPERIMENT),
+                permissionService.getPermission(PermissionName.VIEW_EXPERIMENT),
+                permissionService.getPermission(PermissionName.UPDATE_EXPERIMENT),
+                permissionService.getPermission(PermissionName.DELETE_EXPERIMENT),
+                permissionService.getPermission(PermissionName.MANAGE_LAB),
 
                 // COURSE
-                getPermission(PermissionName.CREATE_COURSE),
-                getPermission(PermissionName.UPDATE_COURSE),
-                getPermission(PermissionName.DELETE_COURSE),
-                getPermission(PermissionName.VIEW_COURSE),
-                getPermission(PermissionName.JOIN_COURSE),
-                getPermission(PermissionName.ASSIGN_STUDENT),
+                permissionService.getPermission(PermissionName.CREATE_COURSE),
+                permissionService.getPermission(PermissionName.UPDATE_COURSE),
+                permissionService.getPermission(PermissionName.DELETE_COURSE),
+                permissionService.getPermission(PermissionName.VIEW_COURSE),
+                permissionService.getPermission(PermissionName.JOIN_COURSE),
+                permissionService.getPermission(PermissionName.ASSIGN_STUDENT),
 
                 // REPORT
-                getPermission(PermissionName.VIEW_REPORTS),
-                getPermission(PermissionName.EXPORT_REPORTS),
-                getPermission(PermissionName.VIEW_STATISTICS),
+                permissionService.getPermission(PermissionName.VIEW_REPORTS),
+                permissionService.getPermission(PermissionName.EXPORT_REPORTS),
+                permissionService.getPermission(PermissionName.VIEW_STATISTICS),
 
                 // SAFETY
-                getPermission(PermissionName.VIEW_SAFETY_GUIDE),
-                getPermission(PermissionName.MANAGE_SAFETY_GUIDE),
-                getPermission(PermissionName.REPORT_INCIDENT),
-                getPermission(PermissionName.VIEW_INCIDENT_REPORTS)
+                permissionService.getPermission(PermissionName.VIEW_SAFETY_GUIDE),
+                permissionService.getPermission(PermissionName.MANAGE_SAFETY_GUIDE),
+                permissionService.getPermission(PermissionName.REPORT_INCIDENT),
+                permissionService.getPermission(PermissionName.VIEW_INCIDENT_REPORTS)
         ));
 
         // STAFF
-        Role staffRole = createRole(RoleName.ROLE_STAFF);
+        Role staffRole = roleService.createRole(RoleName.ROLE_STAFF);
 
         staffRole.setPermissions(Set.of(
 
-                getPermission(PermissionName.APPROVE_TEACHER),
+                permissionService.getPermission(PermissionName.APPROVE_TEACHER),
 
-                getPermission(PermissionName.CREATE_CHEMICAL),
-                getPermission(PermissionName.VIEW_CHEMICAL),
-                getPermission(PermissionName.UPDATE_CHEMICAL),
-                getPermission(PermissionName.IMPORT_CHEMICAL),
-                getPermission(PermissionName.EXPORT_CHEMICAL),
-                getPermission(PermissionName.MANAGE_CHEMICAL_STOCK),
+                permissionService.getPermission(PermissionName.CREATE_CHEMICAL),
+                permissionService.getPermission(PermissionName.VIEW_CHEMICAL),
+                permissionService.getPermission(PermissionName.UPDATE_CHEMICAL),
+                permissionService.getPermission(PermissionName.IMPORT_CHEMICAL),
+                permissionService.getPermission(PermissionName.EXPORT_CHEMICAL),
+                permissionService.getPermission(PermissionName.MANAGE_CHEMICAL_STOCK),
 
-                getPermission(PermissionName.CREATE_REACTION),
-                getPermission(PermissionName.VIEW_REACTION),
-                getPermission(PermissionName.UPDATE_REACTION),
-                getPermission(PermissionName.VERIFY_REACTION),
-                getPermission(PermissionName.APPROVE_REACTION),
+                permissionService.getPermission(PermissionName.CREATE_REACTION),
+                permissionService.getPermission(PermissionName.VIEW_REACTION),
+                permissionService.getPermission(PermissionName.UPDATE_REACTION),
+                permissionService.getPermission(PermissionName.VERIFY_REACTION),
+                permissionService.getPermission(PermissionName.APPROVE_REACTION),
 
-                getPermission(PermissionName.SCAN_AR),
-                getPermission(PermissionName.UPLOAD_AR_MARKER),
-                getPermission(PermissionName.MANAGE_AR_CONTENT),
+                permissionService.getPermission(PermissionName.SCAN_AR),
+                permissionService.getPermission(PermissionName.UPLOAD_AR_MARKER),
+                permissionService.getPermission(PermissionName.MANAGE_AR_CONTENT),
 
-                getPermission(PermissionName.VIEW_EXPERIMENT),
-                getPermission(PermissionName.MANAGE_LAB),
+                permissionService.getPermission(PermissionName.VIEW_EXPERIMENT),
+                permissionService.getPermission(PermissionName.MANAGE_LAB),
 
-                getPermission(PermissionName.VIEW_REPORTS),
-                getPermission(PermissionName.EXPORT_REPORTS),
+                permissionService.getPermission(PermissionName.VIEW_REPORTS),
+                permissionService.getPermission(PermissionName.EXPORT_REPORTS),
 
-                getPermission(PermissionName.VIEW_SAFETY_GUIDE),
-                getPermission(PermissionName.REPORT_INCIDENT),
-                getPermission(PermissionName.VIEW_INCIDENT_REPORTS)
+                permissionService.getPermission(PermissionName.VIEW_SAFETY_GUIDE),
+                permissionService.getPermission(PermissionName.REPORT_INCIDENT),
+                permissionService.getPermission(PermissionName.VIEW_INCIDENT_REPORTS)
         ));
 
         // TEACHER
-        Role teacherRole = createRole(RoleName.ROLE_TEACHER);
+        Role teacherRole = roleService.createRole(RoleName.ROLE_TEACHER);
 
         teacherRole.setPermissions(Set.of(
 
-                getPermission(PermissionName.VIEW_CHEMICAL),
-                getPermission(PermissionName.VIEW_REACTION),
+                permissionService.getPermission(PermissionName.VIEW_CHEMICAL),
+                permissionService.getPermission(PermissionName.VIEW_REACTION),
 
-                getPermission(PermissionName.SCAN_AR),
-                getPermission(PermissionName.UPLOAD_AR_MARKER),
+                permissionService.getPermission(PermissionName.SCAN_AR),
+                permissionService.getPermission(PermissionName.UPLOAD_AR_MARKER),
 
-                getPermission(PermissionName.CREATE_EXPERIMENT),
-                getPermission(PermissionName.VIEW_EXPERIMENT),
-                getPermission(PermissionName.UPDATE_EXPERIMENT),
+                permissionService.getPermission(PermissionName.CREATE_EXPERIMENT),
+                permissionService.getPermission(PermissionName.VIEW_EXPERIMENT),
+                permissionService.getPermission(PermissionName.UPDATE_EXPERIMENT),
 
-                getPermission(PermissionName.CREATE_COURSE),
-                getPermission(PermissionName.UPDATE_COURSE),
-                getPermission(PermissionName.VIEW_COURSE),
-                getPermission(PermissionName.ASSIGN_STUDENT),
+                permissionService.getPermission(PermissionName.CREATE_COURSE),
+                permissionService.getPermission(PermissionName.UPDATE_COURSE),
+                permissionService.getPermission(PermissionName.VIEW_COURSE),
+                permissionService.getPermission(PermissionName.ASSIGN_STUDENT),
 
-                getPermission(PermissionName.VIEW_REPORTS),
-                getPermission(PermissionName.VIEW_STATISTICS),
+                permissionService.getPermission(PermissionName.VIEW_REPORTS),
+                permissionService.getPermission(PermissionName.VIEW_STATISTICS),
 
-                getPermission(PermissionName.VIEW_SAFETY_GUIDE),
-                getPermission(PermissionName.REPORT_INCIDENT)
+                permissionService.getPermission(PermissionName.VIEW_SAFETY_GUIDE),
+                permissionService.getPermission(PermissionName.REPORT_INCIDENT)
         ));
 
         // STUDENT
-        Role studentRole = createRole(RoleName.ROLE_STUDENT);
+        Role studentRole = roleService.createRole(RoleName.ROLE_STUDENT);
 
         studentRole.setPermissions(Set.of(
 
-                getPermission(PermissionName.VIEW_CHEMICAL),
-                getPermission(PermissionName.VIEW_REACTION),
+                permissionService.getPermission(PermissionName.VIEW_CHEMICAL),
+                permissionService.getPermission(PermissionName.VIEW_REACTION),
 
-                getPermission(PermissionName.SCAN_AR),
+                permissionService.getPermission(PermissionName.SCAN_AR),
 
-                getPermission(PermissionName.VIEW_EXPERIMENT),
+                permissionService.getPermission(PermissionName.VIEW_EXPERIMENT),
 
-                getPermission(PermissionName.VIEW_COURSE),
-                getPermission(PermissionName.JOIN_COURSE),
+                permissionService.getPermission(PermissionName.VIEW_COURSE),
+                permissionService.getPermission(PermissionName.JOIN_COURSE),
 
-                getPermission(PermissionName.VIEW_SAFETY_GUIDE),
-                getPermission(PermissionName.REPORT_INCIDENT)
+                permissionService.getPermission(PermissionName.VIEW_SAFETY_GUIDE),
+                permissionService.getPermission(PermissionName.REPORT_INCIDENT)
         ));
 
-        roleRepository.save(adminRole);
-        roleRepository.save(staffRole);
-        roleRepository.save(teacherRole);
-        roleRepository.save(studentRole);
+        roleService.save(adminRole);
+        roleService.save(staffRole);
+        roleService.save(teacherRole);
+        roleService.save(studentRole);
     }
 
-    private Permission getPermission(PermissionName name) {
-        return permissionRepository.findByName(name)
-                .orElseThrow();
-    }
 
-    private Role createRole(RoleName name) {
-        return roleRepository
-                .findByRoleName(name)
-                .orElseGet(() ->
-                        roleRepository.save(
-                                Role.builder()
-                                        .roleName(name)
-                                        .build()
-                        ));
-    }
+
 }

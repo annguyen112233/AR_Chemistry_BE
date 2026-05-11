@@ -4,6 +4,7 @@ import com.chemistry.demo.entity.Permission;
 import com.chemistry.demo.entity.Role;
 import com.chemistry.demo.entity.User;
 import com.chemistry.demo.repository.UserRepository;
+import com.chemistry.demo.untils.UserSecurityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
@@ -26,31 +27,21 @@ public class CustomJwtAuthenticationConverter
     @Override
     public AbstractAuthenticationToken convert(Jwt jwt) {
 
-        String cognitoSub = jwt.getSubject();
+        Set<SimpleGrantedAuthority> authorities =
+                new HashSet<>();
 
-        User user = userRepository.findByCognitoSub(cognitoSub)
-                .orElse(null);
+        Object groupsObj =
+                jwt.getClaims().get("cognito:groups");
 
-        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
+        if (groupsObj instanceof Iterable<?> groups) {
 
-        if (user != null) {
-
-            for (Role role : user.getRoles()) {
+            for (Object group : groups) {
 
                 authorities.add(
                         new SimpleGrantedAuthority(
-                                role.getRoleName().name()
+                                group.toString()
                         )
                 );
-
-                for (Permission permission : role.getPermissions()) {
-
-                    authorities.add(
-                            new SimpleGrantedAuthority(
-                                    permission.getName().name()
-                            )
-                    );
-                }
             }
         }
 

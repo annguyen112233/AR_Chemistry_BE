@@ -34,13 +34,12 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final UserMapper userMapper;
 
     private final SecurityUtils securityUtils;
 
     //dong bo thong tin user tu cognito vao database
-    public UserResponse syncUser(String cognitoSub, String email) {
+    public UserResponse syncUser(String email, String cognitoSub) {
 
         User user = userRepository.findByCognitoSub(cognitoSub)
                 .orElseGet(() -> {
@@ -56,12 +55,15 @@ public class UserService {
 
     //cap nhat thong tin user
     public UpdateProfileResponse updateProfile(
-            String cognitoSub,
             UpdateProfileRequest request
     ) {
 
+        String cognitoSub = securityUtils.getCurrentUserCognitoSub();
+
         User user = userRepository.findByCognitoSub(cognitoSub)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() ->
+                        new AppException(ErrorCode.USER_NOT_FOUND)
+                );
 
         user.setPhoneNumber(request.getPhoneNumber());
 
@@ -72,100 +74,5 @@ public class UserService {
         userRepository.save(user);
 
         return userMapper.toUpdateProfileResponse(user);
-    }
-
-    //chon role cho user
-    public String selectRole(
-            String cognitoSub,
-            SelectRoleRequest request
-    ) {
-
-        User user = userRepository.findByCognitoSub(cognitoSub)
-                .orElseThrow(() ->
-                        new AppException(ErrorCode.USER_NOT_FOUND)
-                );
-
-
-        if(!user.getRoles().isEmpty()){
-            throw new AppException(ErrorCode.ROLE_ALREADY_ASSIGNED);
-        }
-
-        if (RoleName.ROLE_TEACHER.equals(request.getRole())) {
-
-            user.setStatus(UserStatus.PENDING);
-
-        } else {
-
-            user.setStatus(UserStatus.ACTIVE);
-        }
-
-        Role role =roleRepository.findByRoleName(request.getRole())
-                .orElseThrow(() ->
-                        new AppException(ErrorCode.ROLE_NOT_FOUND)
-                );
-
-        user.setRoles(new HashSet<>(List.of(role)));
-
-
-        userRepository.save(user);
-
-
-        return "Role " + request.getRole() + " assigned to user " + user.getEmail();
-    }
-
-    //duyet role cho user (role STAFF no duyet)
-    @PreAuthorize("hasAuthority('APPROVE_TEACHER')")
-    @Transactional
-    public String approveTeacher(String cognitoSub) {
-
-        User approver = securityUtils.getCurrentUser();
-
-        User user = userRepository.findByCognitoSub(cognitoSub)
-                .orElseThrow(() ->
-                        new AppException(ErrorCode.USER_NOT_FOUND)
-                );
-
-        user.setStatus(UserStatus.ACTIVE);
-
-        user.getTeacherVerifications().forEach(verification -> {
-
-            verification.setStatus(VerificationStatus.APPROVED);
-            verification.setReviewedBy(approver);
-            verification.setReviewedAt(Instant.now());
-        });
-
-        userRepository.save(user);
-
-        return "Teacher approved successfully";
-    }
-
-    //tu choi role cho user (role STAFF no duyet)
-    @PreAuthorize("hasAuthority('APPROVE_TEACHER')")
-    @Transactional
-    public String rejectTeacher(
-            String cognitoSub,
-            RejectTeacherRequest reason
-    ) {
-
-        User approver = securityUtils.getCurrentUser();
-
-        User user = userRepository.findByCognitoSub(cognitoSub)
-                .orElseThrow(() ->
-                        new AppException(ErrorCode.USER_NOT_FOUND)
-                );
-
-        user.setStatus(UserStatus.REJECTED);
-
-        user.getTeacherVerifications().forEach(verification -> {
-
-            verification.setStatus(VerificationStatus.REJECTED);
-            verification.setReviewedBy(approver);
-            verification.setReviewedAt(Instant.now());
-            verification.setRejectionReason(String.valueOf(reason));
-        });
-
-        userRepository.save(user);
-
-        return "Teacher rejected successfully";
     }
 }

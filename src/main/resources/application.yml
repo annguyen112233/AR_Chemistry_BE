@@ -8,7 +8,10 @@ spring:
     url: ${SPRING_DATASOURCE_URL}
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
-
+  data:
+    redis:
+      host: localhost
+      port: 6379
   jpa:
     hibernate:
       ddl-auto: update
@@ -21,3 +24,8 @@ spring:
           issuer-uri: https://cognito-idp.ap-southeast-2.amazonaws.com/ap-southeast-2_wuMjdreND
 
 
+aws:
+  access-key: ${AWS_ACCESS_KEY}
+  secret-key: ${AWS_SECRET_KEY}
+  region: ${AWS_REGION}
+  user_pool-id: ${AWS_USER_POOL_ID}

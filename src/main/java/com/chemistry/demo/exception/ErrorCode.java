@@ -34,7 +34,22 @@ public enum ErrorCode {
         1005,
                 "Role already assigned",
         HttpStatus.BAD_REQUEST
-        );
+        ),
+
+
+    INVALID_ROLE(
+            1006,
+            "Invalid role selection",
+            HttpStatus.BAD_REQUEST
+    ),
+
+    TEACHER_ALREADY_APPROVED(
+            1007,
+            "Teacher already approved",
+            HttpStatus.BAD_REQUEST
+    );
+
+
 
     private final int code;
 
