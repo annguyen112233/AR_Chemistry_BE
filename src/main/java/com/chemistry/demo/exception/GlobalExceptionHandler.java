@@ -17,10 +17,11 @@ public class GlobalExceptionHandler {
 
                 return ResponseEntity
                                 .status(errorCode.getHttpStatus())
-                                .body(ApiResponse.error(
-                                                errorCode.getCode(),
-                                                errorCode.getMessage(),
-                                                request.getRequestURI()));
+                                .body(ApiResponse.error()
+                                                .code(errorCode.getCode())
+                                                .message(errorCode.getMessage())
+                                                .path(request.getRequestURI())
+                                                .build());
         }
 
         @ExceptionHandler(Exception.class)
@@ -32,9 +33,10 @@ public class GlobalExceptionHandler {
                 ErrorCode errorCode = ErrorCode.UNCATEGORIZED_EXCEPTION;
 
                 return ResponseEntity.status(errorCode.getHttpStatus())
-                                .body(ApiResponse.error(
-                                                errorCode.getCode(),
-                                                ex.getMessage(),
-                                                request.getRequestURI()));
+                                .body(ApiResponse.error()
+                                                .code(errorCode.getCode())
+                                                .message(ex.getMessage())
+                                                .path(request.getRequestURI())
+                                                .build());
         }
 }

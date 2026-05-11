@@ -19,7 +19,8 @@ public class RoleController {
 
     @PutMapping("/select-role")
     public ApiResponse<String> updateRole(@RequestBody SelectRoleRequest request) {
-        return ApiResponse.ok(
-                roleService.selectRole(request));
+        return ApiResponse.<String>ok()
+                .data(roleService.selectRole(request))
+                .build();
     }
 }

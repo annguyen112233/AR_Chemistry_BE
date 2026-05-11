@@ -16,15 +16,17 @@ public class TeacherVerificationController {
 
     @PutMapping("/{cognitoSub}/approve")
     public ApiResponse<String> approve(@PathVariable String cognitoSub) {
-        return ApiResponse.ok(
-                verificationService.approveTeacher(cognitoSub));
+        return ApiResponse.<String>ok()
+                .data(verificationService.approveTeacher(cognitoSub))
+                .build();
     }
 
     @PutMapping("/{cognitoSub}/reject")
     public ApiResponse<String> reject(
             @PathVariable String cognitoSub,
             @RequestBody RejectTeacherRequest reason) {
-        return ApiResponse.ok(
-                verificationService.rejectTeacher(cognitoSub, reason));
+        return ApiResponse.<String>ok()
+                .data(verificationService.rejectTeacher(cognitoSub, reason))
+                .build();
     }
 }
