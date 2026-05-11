@@ -29,4 +29,18 @@ public class SecurityUtils {
                         new AppException(ErrorCode.USER_NOT_FOUND)
                 );
     }
+
+    public String getCurrentUserCognitoSub() {
+        String sub = Objects.requireNonNull(
+                SecurityContextHolder.getContext()
+                        .getAuthentication()
+        ).getName();
+
+        User user = userRepository.findByCognitoSub(sub)
+                .orElseThrow(() ->
+                        new AppException(ErrorCode.USER_NOT_FOUND)
+                );
+
+        return user.getCognitoSub();
+    }
 }

@@ -18,10 +18,7 @@ import java.util.Set;
 public class User extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "cognito_sub", nullable = false, unique = true)
+    @Column(name = "user_id")
     private String cognitoSub;
 
     @Column(nullable = false, unique = true)

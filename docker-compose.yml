@@ -1,7 +1,8 @@
 services:
-  postgres:
+
+  postgres-master:
     image: postgres:16
-    container_name: ar_postgres
+    container_name: ar_postgres_master
     restart: always
 
     environment:
@@ -10,10 +11,57 @@ services:
       POSTGRES_PASSWORD: 123456
 
     ports:
-      - "5432:5432"
+      - "5433:5432"
 
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_master_data:/var/lib/postgresql/data
+
+  postgres-replica:
+    image: postgres:16
+    container_name: ar_postgres_replica
+    restart: always
+
+    environment:
+      POSTGRES_DB: ar_chemistry
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+
+    ports:
+      - "5434:5432"
+
+    volumes:
+      - postgres_replica_data:/var/lib/postgresql/data
+
+  pgpool:
+    image: pgpool/pgpool:latest
+    container_name: chemistry_pgpool
+    restart: always
+
+    depends_on:
+      - postgres-master
+      - postgres-replica
+
+    environment:
+      PGPOOL_PARAMS_BACKEND_HOSTNAME0: postgres-master
+      PGPOOL_PARAMS_BACKEND_PORT0: 5432
+
+      PGPOOL_PARAMS_BACKEND_HOSTNAME1: postgres-replica
+      PGPOOL_PARAMS_BACKEND_PORT1: 5432
+
+    ports:
+      - "5432:9999"
+
+    volumes:
+      - ./pgpool/pgpool.conf:/opt/pgpool-II/etc/pgpool.conf
+      - ./pgpool/pool_passwd:/opt/pgpool-II/etc/pool_passwd
+  redis:
+    image: redis:7
+    container_name: chemistry-redis
+    restart: always
+
+    ports:
+      - "6379:6379"
 
 volumes:
-  postgres_data:
+  postgres_master_data:
+  postgres_replica_data:
