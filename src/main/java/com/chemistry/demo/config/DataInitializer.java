@@ -1,5 +1,6 @@
 package com.chemistry.demo.config;
 
+import com.chemistry.demo.aspect.NoLogging;
 import com.chemistry.demo.config.seeder.DataSeeder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -10,6 +11,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@NoLogging
 public class DataInitializer implements CommandLineRunner {
 
         private final List<DataSeeder> seeders;
