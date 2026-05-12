@@ -5,7 +5,7 @@ import com.chemistry.demo.dto.request.UpdateProfileRequest;
 import com.chemistry.demo.dto.response.UpdateProfileResponse;
 import com.chemistry.demo.dto.response.UserResponse;
 import com.chemistry.demo.services.user.UserService;
-import com.chemistry.demo.untils.UserSecurityService;
+import com.chemistry.demo.utils.UserSecurityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
