@@ -1,6 +1,5 @@
 package com.chemistry.demo.entity;
 
-
 import com.chemistry.demo.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,8 +9,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -34,16 +32,15 @@ public class User extends BaseEntity {
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
-    private UserStatus status = com.chemistry.demo.enums.UserStatus.ACTIVE;
+    @Builder.Default
+    private UserStatus status = UserStatus.ACTIVE;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @Builder.Default
     private Set<Role> roles = new HashSet<>();
 
     @OneToMany
+    @Builder.Default
     private Set<TeacherVerification> teacherVerifications = new HashSet<>();
 }

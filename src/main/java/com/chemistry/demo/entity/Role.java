@@ -1,6 +1,5 @@
 package com.chemistry.demo.entity;
 
-
 import com.chemistry.demo.enums.RoleName;
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,10 +26,7 @@ public class Role extends BaseEntity {
     private String description;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "role_permissions",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "permission_id")
-    )
+    @JoinTable(name = "role_permissions", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "permission_id"))
+    @Builder.Default
     private Set<Permission> permissions = new HashSet<>();
 }

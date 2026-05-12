@@ -8,8 +8,6 @@ import java.util.Set;
 
 @Data
 @Builder
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserResponse implements java.io.Serializable{
