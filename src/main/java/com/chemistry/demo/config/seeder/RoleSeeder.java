@@ -1,5 +1,6 @@
 package com.chemistry.demo.config.seeder;
 
+import com.chemistry.demo.aspect.NoLogging;
 import com.chemistry.demo.entity.Role;
 import com.chemistry.demo.enums.PermissionName;
 import com.chemistry.demo.enums.RoleName;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
+@NoLogging
 @Component
 @RequiredArgsConstructor
 public class RoleSeeder implements DataSeeder {

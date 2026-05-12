@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    
+    <property name="LOG_PATH" value="logs"/>
+    <property name="APP_NAME" value="ar-chemistry-be"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - [traceId=%X{correlationId}] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Appender ghi file JSON cục bộ (để backup) -->
+    <appender name="FILE_JSON" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${APP_NAME}-json.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/${APP_NAME}-json.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp><timeZone>UTC</timeZone></timestamp>
+                <pattern>
+                    <pattern>
+                        {
+                        "severity": "%level",
+                        "service": "${APP_NAME}",
+                        "traceId": "%X{correlationId}",
+                        "thread": "%thread",
+                        "class": "%logger{40}",
+                        "message": "%message",
+                        "exception": "%ex"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
+    </appender>
+
+    <!-- TCP Appender: Gửi trực tiếp đến Logstash Docker -->
+    <appender name="LOGSTASH_TCP" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>localhost:5044</destination>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp><timeZone>UTC</timeZone></timestamp>
+                <pattern>
+                    <pattern>
+                        {
+                        "severity": "%level",
+                        "service": "${APP_NAME}",
+                        "traceId": "%X{correlationId}",
+                        "thread": "%thread",
+                        "class": "%logger{40}",
+                        "message": "%message",
+                        "exception": "%ex"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE_JSON"/>
+        <appender-ref ref="LOGSTASH_TCP"/>
+    </root>
+
+    <logger name="com.chemistry.demo" level="DEBUG"/>
+</configuration>
