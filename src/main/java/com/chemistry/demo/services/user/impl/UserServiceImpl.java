@@ -4,12 +4,10 @@ import com.chemistry.demo.dto.request.UpdateProfileRequest;
 import com.chemistry.demo.dto.response.UpdateProfileResponse;
 import com.chemistry.demo.dto.response.UserResponse;
 import com.chemistry.demo.entity.User;
-import com.chemistry.demo.exception.AppException;
-import com.chemistry.demo.exception.ErrorCode;
 import com.chemistry.demo.mapper.UserMapper;
 import com.chemistry.demo.repository.UserRepository;
 import com.chemistry.demo.services.user.UserService;
-import com.chemistry.demo.untils.SecurityUtils;
+import com.chemistry.demo.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -41,7 +39,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UpdateProfileResponse updateProfile(UpdateProfileRequest request) {
         // Tối ưu: Lấy trực tiếp User từ SecurityUtils (chỉ tốn 1 lần query DB)
-        User user = securityUtils.getCurrentUser();
+        User user = securityUtils.getCurrentUserCognitoSub();
 
         user.setPhoneNumber(request.getPhoneNumber());
         user.setAvatarUrl(request.getAvatarUrl());

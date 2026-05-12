@@ -47,10 +47,11 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @Transactional
     public String selectRole(SelectRoleRequest request) {
+        log.info("=== ENTER SERVICE ===");
         // 1. Lấy User chỉ bằng 1 lần query duy nhất
-        User user = securityUtils.getCurrentUser();
+        User user = securityUtils.getCurrentUserCognitoSub();
+        log.info("User found: {}", user);
 
         // 2. Kiểm tra nếu đã có role (Chống hack hoặc lỗi client)
         if (!user.getRoles().isEmpty()) {
