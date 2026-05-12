@@ -1,4 +1,4 @@
-package com.chemistry.demo.untils;
+package com.chemistry.demo.utils;
 
 import com.chemistry.demo.entity.User;
 import com.chemistry.demo.exception.AppException;
@@ -16,26 +16,13 @@ public class SecurityUtils {
 
         private final UserRepository userRepository;
 
-        public User getCurrentUser() {
-
-                String email = Objects.requireNonNull(
-                                SecurityContextHolder.getContext()
-                                                .getAuthentication())
-                                .getName();
-
-                return userRepository.findByEmail(email)
-                                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        }
-
-        public String getCurrentUserCognitoSub() {
+        public User getCurrentUserCognitoSub() {
                 String sub = Objects.requireNonNull(
                                 SecurityContextHolder.getContext()
                                                 .getAuthentication())
                                 .getName();
 
-                User user = userRepository.findByCognitoSub(sub)
-                                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-
-                return user.getCognitoSub();
+                return userRepository.findByCognitoSub(sub)
+                        .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         }
 }

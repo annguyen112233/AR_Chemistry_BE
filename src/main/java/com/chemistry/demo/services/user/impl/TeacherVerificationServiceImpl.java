@@ -65,7 +65,7 @@ public class TeacherVerificationServiceImpl implements TeacherVerificationServic
      * Template Method: Quy trình xét duyệt chung
      */
     private String processReview(String cognitoSub, VerificationStatus targetStatus, Consumer<User> specificLogic) {
-        User approver = securityUtils.getCurrentUser();
+        User approver = securityUtils.getCurrentUserCognitoSub();
 
         User user = userRepository.findByCognitoSub(cognitoSub)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
