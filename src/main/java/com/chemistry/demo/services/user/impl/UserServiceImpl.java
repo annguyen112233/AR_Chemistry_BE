@@ -9,7 +9,7 @@ import com.chemistry.demo.exception.ErrorCode;
 import com.chemistry.demo.mapper.UserMapper;
 import com.chemistry.demo.repository.UserRepository;
 import com.chemistry.demo.services.user.UserService;
-import com.chemistry.demo.untils.SecurityUtils;
+import com.chemistry.demo.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

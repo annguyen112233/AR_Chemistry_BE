@@ -1,4 +1,4 @@
-package com.chemistry.demo.untils;
+package com.chemistry.demo.utils;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.Cache;

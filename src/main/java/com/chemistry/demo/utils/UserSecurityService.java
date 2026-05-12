@@ -1,4 +1,4 @@
-package com.chemistry.demo.untils;
+package com.chemistry.demo.utils;
 
 import com.chemistry.demo.dto.response.UserResponse;
 import com.chemistry.demo.entity.User;
