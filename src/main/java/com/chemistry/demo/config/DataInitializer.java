@@ -2,6 +2,7 @@ package com.chemistry.demo.config;
 
 import com.chemistry.demo.aspect.NoLogging;
 import com.chemistry.demo.config.seeder.DataSeeder;
+import com.chemistry.demo.utils.SeederExecutionContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -18,8 +19,13 @@ public class DataInitializer implements CommandLineRunner {
 
         @Override
         public void run(String... args) {
-                seeders.stream()
-                                .sorted(Comparator.comparingInt(DataSeeder::getOrder))
-                                .forEach(DataSeeder::seed);
+                SeederExecutionContext.enter();
+                try {
+                        seeders.stream()
+                                        .sorted(Comparator.comparingInt(DataSeeder::getOrder))
+                                        .forEach(DataSeeder::seed);
+                } finally {
+                        SeederExecutionContext.exit();
+                }
         }
 }

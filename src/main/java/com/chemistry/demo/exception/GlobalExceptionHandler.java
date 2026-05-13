@@ -28,8 +28,6 @@ public class GlobalExceptionHandler {
         public ResponseEntity<ApiResponse<Object>> handleException(
                         Exception ex,
                         HttpServletRequest request) {
-                ex.printStackTrace();
-
                 ErrorCode errorCode = ErrorCode.UNCATEGORIZED_EXCEPTION;
 
                 return ResponseEntity.status(errorCode.getHttpStatus())

@@ -1,67 +1,100 @@
-services:
+version: "3.8"
 
+services:
+  # --- DATABASE SECTION (Postgres & PgPool) ---
   postgres-master:
     image: postgres:16
-    container_name: ar_postgres_master
+    container_name: postgres_master
     restart: always
-
     environment:
       POSTGRES_DB: ar_chemistry
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123456
-
     ports:
       - "5433:5432"
-
     volumes:
       - postgres_master_data:/var/lib/postgresql/data
 
   postgres-replica:
     image: postgres:16
-    container_name: ar_postgres_replica
+    container_name: postgres_replica
     restart: always
-
     environment:
       POSTGRES_DB: ar_chemistry
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123456
-
     ports:
       - "5434:5432"
-
     volumes:
       - postgres_replica_data:/var/lib/postgresql/data
 
   pgpool:
     image: pgpool/pgpool:latest
-    container_name: chemistry_pgpool
+    container_name: pgpool
     restart: always
-
     depends_on:
       - postgres-master
       - postgres-replica
-
     environment:
       PGPOOL_PARAMS_BACKEND_HOSTNAME0: postgres-master
       PGPOOL_PARAMS_BACKEND_PORT0: 5432
-
       PGPOOL_PARAMS_BACKEND_HOSTNAME1: postgres-replica
       PGPOOL_PARAMS_BACKEND_PORT1: 5432
-
     ports:
       - "5432:9999"
-
     volumes:
       - ./pgpool/pgpool.conf:/opt/pgpool-II/etc/pgpool.conf
       - ./pgpool/pool_passwd:/opt/pgpool-II/etc/pool_passwd
+
+  # --- CACHE SECTION ---
   redis:
     image: redis:7
-    container_name: chemistry-redis
+    container_name: redis
     restart: always
-
     ports:
       - "6379:6379"
+
+  # --- ELK STACK SECTION (Logging & Monitoring) ---
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.14.3
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - bootstrap.memory_lock=true
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+    ports:
+      - "9200:9200"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.14.3
+    container_name: logstash
+    environment:
+      - LS_JAVA_OPTS=-Xms512m -Xmx512m
+    volumes:
+      - ./elk-config/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
+    ports:
+      - "5044:5044"
+    depends_on:
+      - elasticsearch
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.14.3
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
 
 volumes:
   postgres_master_data:
   postgres_replica_data:
+  es_data:

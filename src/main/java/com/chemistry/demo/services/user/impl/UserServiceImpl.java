@@ -9,11 +9,9 @@ import com.chemistry.demo.repository.UserRepository;
 import com.chemistry.demo.services.user.UserService;
 import com.chemistry.demo.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -46,8 +44,6 @@ public class UserServiceImpl implements UserService {
         user.setFullName(request.getFullName());
 
         userRepository.save(user);
-        log.info("Profile updated for user: {}", user.getEmail());
-
         return userMapper.toUpdateProfileResponse(user);
     }
 }

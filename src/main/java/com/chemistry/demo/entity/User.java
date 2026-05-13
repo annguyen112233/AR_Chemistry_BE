@@ -33,9 +33,11 @@ public class User extends BaseEntity {
     @Column(name = "phone_number")
     private String phoneNumber;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
-    private UserStatus status = com.chemistry.demo.enums.UserStatus.ACTIVE;
+    private UserStatus status = UserStatus.ACTIVE;
 
+    @Builder.Default
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_roles",
@@ -44,6 +46,7 @@ public class User extends BaseEntity {
     )
     private Set<Role> roles = new HashSet<>();
 
+    @Builder.Default
     @OneToMany
     private Set<TeacherVerification> teacherVerifications = new HashSet<>();
 }
