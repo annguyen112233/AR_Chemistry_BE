@@ -1,5 +1,6 @@
 package com.chemistry.demo.services.user.impl;
 
+import com.chemistry.demo.aspect.NoLogging;
 import com.chemistry.demo.entity.Permission;
 import com.chemistry.demo.enums.PermissionName;
 import com.chemistry.demo.repository.PermissionRepository;
@@ -16,6 +17,7 @@ import java.util.Optional;
 public class PermissionServiceImpl implements PermissionService {
     private final PermissionRepository permissionRepository;
 
+    @NoLogging
     @Override
     public Permission getPermission(PermissionName name) {
         return permissionRepository.findByName(name)
@@ -27,6 +29,7 @@ public class PermissionServiceImpl implements PermissionService {
         return permissionRepository.findByName(name);
     }
 
+    @NoLogging
     @Override
     public Permission save(Permission permission) {
         return permissionRepository.save(permission);

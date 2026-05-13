@@ -1,71 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration>
-    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-    
-    <property name="LOG_PATH" value="logs"/>
-    <property name="APP_NAME" value="ar-chemistry-be"/>
+<configuration scan="false">
+
+    <springProperty scope="context" name="ENVIRONMENT" source="spring.profiles.active" defaultValue="dev"/>
+    <springProperty scope="context" name="LOGSTASH_HOST" source="lbos.logging.logstash.host" defaultValue="localhost"/>
+    <springProperty scope="context" name="LOGSTASH_PORT" source="lbos.logging.logstash.port" defaultValue="5044"/>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - [traceId=%X{correlationId}] - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %-5level [%thread] %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <!-- Appender ghi file JSON cục bộ (để backup) -->
-    <appender name="FILE_JSON" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}/${APP_NAME}-json.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/${APP_NAME}-json.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <maxHistory>7</maxHistory>
-        </rollingPolicy>
+    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>${LOGSTASH_HOST}:${LOGSTASH_PORT}</destination>
+        <keepAliveDuration>5 minutes</keepAliveDuration>
+        <reconnectionDelay>10 seconds</reconnectionDelay>
+
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
-                <timestamp><timeZone>UTC</timeZone></timestamp>
+                <timestamp>
+                    <fieldName>timestamp</fieldName>
+                    <timeZone>UTC</timeZone>
+                </timestamp>
+                <logLevel>
+                    <fieldName>level</fieldName>
+                </logLevel>
                 <pattern>
-                    <pattern>
-                        {
-                        "severity": "%level",
-                        "service": "${APP_NAME}",
-                        "traceId": "%X{correlationId}",
-                        "thread": "%thread",
-                        "class": "%logger{40}",
-                        "message": "%message",
-                        "exception": "%ex"
-                        }
-                    </pattern>
+                    <pattern>{"application":"AR_Labs","environment":"${ENVIRONMENT}"}</pattern>
                 </pattern>
+                <message>
+                    <fieldName>message</fieldName>
+                </message>
+                <mdc/>
+                <logstashMarkers/>
+                <stackTrace>
+                    <fieldName>stackTrace</fieldName>
+                </stackTrace>
             </providers>
         </encoder>
     </appender>
 
-    <!-- TCP Appender: Gửi trực tiếp đến Logstash Docker -->
-    <appender name="LOGSTASH_TCP" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-        <destination>localhost:5044</destination>
-        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
-            <providers>
-                <timestamp><timeZone>UTC</timeZone></timestamp>
-                <pattern>
-                    <pattern>
-                        {
-                        "severity": "%level",
-                        "service": "${APP_NAME}",
-                        "traceId": "%X{correlationId}",
-                        "thread": "%thread",
-                        "class": "%logger{40}",
-                        "message": "%message",
-                        "exception": "%ex"
-                        }
-                    </pattern>
-                </pattern>
-            </providers>
-        </encoder>
+    <appender name="ASYNC_LOGSTASH" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>8192</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+        <neverBlock>true</neverBlock>
+        <appender-ref ref="LOGSTASH"/>
     </appender>
 
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="FILE_JSON"/>
-        <appender-ref ref="LOGSTASH_TCP"/>
+        <appender-ref ref="ASYNC_LOGSTASH"/>
     </root>
 
-    <logger name="com.chemistry.demo" level="DEBUG"/>
 </configuration>
