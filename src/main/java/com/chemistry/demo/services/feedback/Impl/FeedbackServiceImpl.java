@@ -23,6 +23,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 @Slf4j
 @Service
@@ -91,30 +92,22 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public FeedBackResponse handleFeedback(
-            String id,
-            HandleFeedbackRequest request
-    ) {
-
+    public FeedBackResponse handleFeedback(String id, HandleFeedbackRequest request) {
         Feedback feedback = feedbackRepository.findById(id)
-                .orElseThrow(() ->
-                        new AppException(ErrorCode.FEEDBACK_NOT_FOUND)
-                );
+                .orElseThrow(() -> new AppException(ErrorCode.FEEDBACK_NOT_FOUND));
 
-        if (request.getStatus() != null) {
-            feedback.setStatus(request.getStatus());
+        updateIfNotNull(request.getStatus(), feedback::setStatus);
+        updateIfNotNull(request.getPriority(), feedback::setPriority);
+        updateIfNotNull(request.getAdminReply(), feedback::setAdminReply);
+
+        Feedback savedFeedback = feedbackRepository.save(feedback);
+
+        return feedbackMapper.toFeedBackResponse(savedFeedback);
+    }
+
+    private <T> void updateIfNotNull(T value, Consumer<T> setter) {
+        if (value != null) {
+            setter.accept(value);
         }
-
-        if (request.getPriority() != null) {
-            feedback.setPriority(request.getPriority());
-        }
-
-        if (request.getAdminReply() != null) {
-            feedback.setAdminReply(request.getAdminReply());
-        }
-
-        feedbackRepository.save(feedback);
-
-        return feedbackMapper.toFeedBackResponse(feedback);
     }
 }
