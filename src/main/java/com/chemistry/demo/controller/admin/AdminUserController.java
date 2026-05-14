@@ -31,7 +31,7 @@ public class AdminUserController {
     ) {
 
         return ApiResponse.<PageResponse<AdminUsersResponse>>ok()
-                .data(adminService.getUsersForAdmin(pageable))
+                .data(adminService.userManagement().getUsersForAdmin(pageable))
                 .build();
     }
 }
