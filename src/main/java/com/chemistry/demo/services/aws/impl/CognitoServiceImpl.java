@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminAddUserToGroupRequest;
 
+import software.amazon.awssdk.services.cognitoidentityprovider.model.*;
+
 @Service
 @RequiredArgsConstructor
 public class CognitoServiceImpl implements CognitoService {
@@ -25,5 +27,34 @@ public class CognitoServiceImpl implements CognitoService {
                 .build();
 
         cognitoClient.adminAddUserToGroup(groupRequest);
+    }
+
+    @Override
+    public String createAdminUser(String email, String password) {
+        AdminCreateUserRequest createRequest = AdminCreateUserRequest.builder()
+                .userPoolId(userPoolId)
+                .username(email)
+                .temporaryPassword("TempPass123!")
+                .userAttributes(
+                        AttributeType.builder().name("email").value(email).build(),
+                        AttributeType.builder().name("email_verified").value("true").build()
+                )
+                .messageAction(MessageActionType.SUPPRESS)
+                .build();
+
+        AdminCreateUserResponse response = cognitoClient.adminCreateUser(createRequest);
+        
+        cognitoClient.adminSetUserPassword(AdminSetUserPasswordRequest.builder()
+                .userPoolId(userPoolId)
+                .username(email)
+                .password(password)
+                .permanent(true)
+                .build());
+
+        return response.user().attributes().stream()
+                .filter(attr -> attr.name().equals("sub"))
+                .findFirst()
+                .map(AttributeType::value)
+                .orElseThrow(() -> new RuntimeException("Failed to get sub from Cognito"));
     }
 }
