@@ -1,4 +1,4 @@
-package com.chemistry.demo.dto.request;
+package com.chemistry.demo.dto.request.role;
 
 import com.chemistry.demo.enums.RoleName;
 import jakarta.validation.constraints.NotNull;

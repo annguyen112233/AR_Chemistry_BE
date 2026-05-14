@@ -1,4 +1,5 @@
 package com.chemistry.demo.mapper;
+import com.chemistry.demo.dto.response.AdminUsersResponse;
 import com.chemistry.demo.dto.response.UpdateProfileResponse;
 import com.chemistry.demo.dto.response.UserResponse;
 import com.chemistry.demo.entity.User;
@@ -12,4 +13,7 @@ public interface UserMapper {
     UserResponse toUserResponse(User user);
 
     UpdateProfileResponse toUpdateProfileResponse(User user);
+
+    @Mapping(target = "roles", source = "roles")
+    AdminUsersResponse toAdminUsersResponse(User users);
 }

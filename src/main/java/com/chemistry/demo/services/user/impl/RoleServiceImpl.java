@@ -1,6 +1,6 @@
 package com.chemistry.demo.services.user.impl;
 
-import com.chemistry.demo.dto.request.SelectRoleRequest;
+import com.chemistry.demo.dto.request.role.SelectRoleRequest;
 import com.chemistry.demo.entity.Role;
 import com.chemistry.demo.entity.User;
 import com.chemistry.demo.enums.RoleName;
@@ -16,7 +16,6 @@ import com.chemistry.demo.utils.UserSecurityCacheService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.HashSet;

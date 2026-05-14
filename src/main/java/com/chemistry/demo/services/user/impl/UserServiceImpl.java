@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Set;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -23,7 +25,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserResponse syncUser(String email, String cognitoSub) {
+    public UserResponse syncUser(String email,String cognitoSub) {
+
         User user = userRepository.findByCognitoSub(cognitoSub)
                 .orElseGet(() -> {
                     User newUser = User.builder()
@@ -50,4 +53,15 @@ public class UserServiceImpl implements UserService {
 
         return userMapper.toUpdateProfileResponse(user);
     }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsUserByEmail((email));
+    }
+
+    @Override
+    public void save(User user) {
+        userRepository.save(user);
+    }
+
 }

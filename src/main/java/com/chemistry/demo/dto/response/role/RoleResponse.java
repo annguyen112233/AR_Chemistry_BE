@@ -1,5 +1,6 @@
-package com.chemistry.demo.dto.response;
+package com.chemistry.demo.dto.response.role;
 
+import com.chemistry.demo.dto.response.PermissionResponse;
 import com.chemistry.demo.enums.RoleName;
 import lombok.*;
 

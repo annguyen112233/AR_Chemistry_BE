@@ -1,6 +1,6 @@
 package com.chemistry.demo.services.user;
 
-import com.chemistry.demo.dto.request.SelectRoleRequest;
+import com.chemistry.demo.dto.request.role.SelectRoleRequest;
 import com.chemistry.demo.entity.Role;
 import com.chemistry.demo.enums.RoleName;
 
@@ -10,4 +10,5 @@ public interface RoleService {
     void save(Role role);
 
     String selectRole(SelectRoleRequest request);
+
 }
