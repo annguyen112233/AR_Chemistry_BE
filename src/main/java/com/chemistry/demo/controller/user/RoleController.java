@@ -1,7 +1,7 @@
 package com.chemistry.demo.controller.user;
 
 import com.chemistry.demo.dto.ApiResponse;
-import com.chemistry.demo.dto.request.SelectRoleRequest;
+import com.chemistry.demo.dto.request.role.SelectRoleRequest;
 import com.chemistry.demo.services.user.RoleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

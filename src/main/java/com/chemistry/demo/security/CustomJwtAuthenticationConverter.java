@@ -6,6 +6,7 @@ import com.chemistry.demo.entity.User;
 import com.chemistry.demo.repository.UserRepository;
 import com.chemistry.demo.utils.UserSecurityService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 import java.util.HashSet;
 import java.util.Set;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class CustomJwtAuthenticationConverter
@@ -30,15 +32,36 @@ public class CustomJwtAuthenticationConverter
 
                 Set<SimpleGrantedAuthority> authorities = new HashSet<>();
 
-                Object groupsObj = jwt.getClaims().get("cognito:groups");
+                String cognitoSub = jwt.getSubject();
 
-                if (groupsObj instanceof Iterable<?> groups) {
+                User user = userRepository.findByCognitoSub(cognitoSub)
+                        .orElse(null);
 
-                        for (Object group : groups) {
 
+
+                if (user != null) {
+
+                        for (Role role : user.getRoles()) {
+
+
+
+                                // add role
                                 authorities.add(
+                                        new SimpleGrantedAuthority(
+                                                role.getRoleName().name()
+                                        )
+                                );
+
+
+                                // add permissions
+                                for (Permission permission : role.getPermissions()) {
+
+                                        authorities.add(
                                                 new SimpleGrantedAuthority(
-                                                                group.toString()));
+                                                        permission.getName().name()
+                                                )
+                                        );
+                                }
                         }
                 }
 

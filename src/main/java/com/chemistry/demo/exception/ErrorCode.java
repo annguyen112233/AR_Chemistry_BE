@@ -8,6 +8,7 @@ public enum ErrorCode {
 
         UNCATEGORIZED_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "Uncategorized error"),
         USER_NOT_FOUND(HttpStatus.NOT_FOUND, "User not found"),
+        FEEDBACK_NOT_FOUND(HttpStatus.NOT_FOUND, "Feedback not found"),
         ROLE_NOT_FOUND(HttpStatus.NOT_FOUND, "Role not found"),
         UNAUTHENTICATED(HttpStatus.UNAUTHORIZED, "Unauthenticated"),
         FORBIDDEN(HttpStatus.FORBIDDEN, "Forbidden"),
