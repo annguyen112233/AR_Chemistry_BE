@@ -1,6 +1,6 @@
 package com.chemistry.demo.services.user;
 
-import com.chemistry.demo.dto.request.RejectTeacherRequest;
+import com.chemistry.demo.dto.request.role.RejectTeacherRequest;
 
 public interface TeacherVerificationService {
     String approveTeacher(String cognitoSub);

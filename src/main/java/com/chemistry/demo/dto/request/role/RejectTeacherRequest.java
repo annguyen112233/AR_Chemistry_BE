@@ -1,4 +1,4 @@
-package com.chemistry.demo.dto.request;
+package com.chemistry.demo.dto.request.role;
 
 import lombok.*;
 

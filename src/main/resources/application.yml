@@ -14,6 +14,8 @@ spring:
     redis:
       host: localhost
       port: 6379
+  cache:
+    type: redis
   jpa:
     hibernate:
       ddl-auto: update
@@ -42,3 +44,11 @@ aws:
   secret-key: ${AWS_SECRET_KEY}
   region: ${AWS_REGION}
   user_pool-id: ${AWS_USER_POOL_ID}
+
+  s3:
+    bucket-name: ${AWS_S3_BUCKET_NAME}
+
+admin:
+  email: ${ADMIN_EMAIL}
+  password: ${ADMIN_PASSWORD}
+  temp-password: ${ADMIN_TEMPORARY_PASSWORD}

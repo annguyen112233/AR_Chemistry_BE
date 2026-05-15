@@ -1,7 +1,7 @@
 package com.chemistry.demo.controller.user;
 
 import com.chemistry.demo.dto.ApiResponse;
-import com.chemistry.demo.dto.request.RejectTeacherRequest;
+import com.chemistry.demo.dto.request.role.RejectTeacherRequest;
 import com.chemistry.demo.services.user.TeacherVerificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
