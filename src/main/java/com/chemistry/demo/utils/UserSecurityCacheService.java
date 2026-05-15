@@ -11,14 +11,21 @@ public class UserSecurityCacheService {
 
     private final CacheManager cacheManager;
 
-    private static final String CACHE_NAME = "user-security";
+    private static final String USER_SECURITY_CACHE = "user-security";
+    private static final String USER_AUTHORITIES_CACHE = "user-authorities";
 
     public void evictUserSecurity(String cognitoSub) {
 
-        Cache cache = cacheManager.getCache(CACHE_NAME);
+        Cache userSecurityCache = cacheManager.getCache(USER_SECURITY_CACHE);
 
-        if (cache != null) {
-            cache.evict(cognitoSub);
+        if (userSecurityCache != null) {
+            userSecurityCache.evict(cognitoSub);
+        }
+
+        Cache userAuthoritiesCache = cacheManager.getCache(USER_AUTHORITIES_CACHE);
+
+        if (userAuthoritiesCache != null) {
+            userAuthoritiesCache.evict(cognitoSub);
         }
     }
 }

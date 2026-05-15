@@ -1,6 +1,6 @@
 package com.chemistry.demo.services.user.impl;
 
-import com.chemistry.demo.dto.request.RejectTeacherRequest;
+import com.chemistry.demo.dto.request.role.RejectTeacherRequest;
 import com.chemistry.demo.entity.User;
 import com.chemistry.demo.enums.RoleName;
 import com.chemistry.demo.enums.UserStatus;

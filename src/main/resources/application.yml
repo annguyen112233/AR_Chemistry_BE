@@ -18,7 +18,7 @@ spring:
     type: redis
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: ${DDL_AUTO}
     open-in-view: true
 
   security:

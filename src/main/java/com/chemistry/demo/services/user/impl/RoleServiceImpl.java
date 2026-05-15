@@ -1,7 +1,6 @@
 package com.chemistry.demo.services.user.impl;
 
 import com.chemistry.demo.aspect.NoLogging;
-import com.chemistry.demo.dto.request.SelectRoleRequest;
 import com.chemistry.demo.dto.request.role.SelectRoleRequest;
 import com.chemistry.demo.entity.Role;
 import com.chemistry.demo.entity.User;
@@ -47,10 +46,6 @@ public class RoleServiceImpl implements RoleService {
         roleRepository.save(role);
     }
 
-    @Override
-    public String selectRole(com.chemistry.demo.dto.request.role.SelectRoleRequest request) {
-        return "";
-    }
 
     @Override
     public String selectRole(SelectRoleRequest request) {
