@@ -41,7 +41,6 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UpdateProfileResponse updateProfile(UpdateProfileRequest request) {
-        // Tối ưu: Lấy trực tiếp User từ SecurityUtils (chỉ tốn 1 lần query DB)
         User user = securityUtils.getCurrentUserCognitoSub();
 
         user.setPhoneNumber(request.getPhoneNumber());
@@ -49,7 +48,6 @@ public class UserServiceImpl implements UserService {
         user.setFullName(request.getFullName());
 
         userRepository.save(user);
-        log.info("Profile updated for user: {}", user.getEmail());
 
         return userMapper.toUpdateProfileResponse(user);
     }

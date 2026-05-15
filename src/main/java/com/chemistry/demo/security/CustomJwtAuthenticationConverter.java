@@ -18,7 +18,7 @@ public class CustomJwtAuthenticationConverter
 
         @Override
         public AbstractAuthenticationToken convert(Jwt jwt) {
-                log.debug("Converting JWT to AuthenticationToken for subject: {}", jwt.getSubject());
-                return new JwtAuthenticationToken(jwt, authoritiesProvider.getAuthorities(jwt.getSubject()));
+                var authorities = authoritiesProvider.getAuthorities(jwt.getSubject());
+                return new JwtAuthenticationToken(jwt, authorities);
         }
 }
