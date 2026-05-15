@@ -9,6 +9,7 @@ import com.chemistry.demo.services.aws.CognitoService;
 import com.chemistry.demo.services.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -23,10 +24,15 @@ public class AccountSeeder implements DataSeeder {
     private final RoleRepository roleRepository;
     private final CognitoService cognitoService;
 
+    @Value("${admin.email}")
+    private String adminEmail;
+
+    @Value("${admin.password}")
+    private String adminPassword;
+
     @Override
     public void seed() {
-        String adminEmail = "admin@gmail.com";
-        String adminPassword = "13579Messi@";
+
 
         if (userService.existsByEmail(adminEmail)) {
             log.info("Admin user already exists, skipping seeding.");

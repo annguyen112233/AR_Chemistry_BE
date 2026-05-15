@@ -34,3 +34,8 @@ aws:
 
   s3:
     bucket-name: ${AWS_S3_BUCKET_NAME}
+
+admin:
+  email: ${ADMIN_EMAIL}
+  password: ${ADMIN_PASSWORD}
+  temp-password: ${ADMIN_TEMPORARY_PASSWORD}
