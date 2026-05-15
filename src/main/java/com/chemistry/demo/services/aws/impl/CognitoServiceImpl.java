@@ -18,6 +18,9 @@ public class CognitoServiceImpl implements CognitoService {
     @Value("${aws.user_pool-id}")
     private String userPoolId;
 
+    @Value("${admin.temp-password}")
+    private String tempPassword;
+
     @Override
     public void addUserToGroup(String email, String groupName) {
         AdminAddUserToGroupRequest groupRequest = AdminAddUserToGroupRequest.builder()
@@ -34,7 +37,7 @@ public class CognitoServiceImpl implements CognitoService {
         AdminCreateUserRequest createRequest = AdminCreateUserRequest.builder()
                 .userPoolId(userPoolId)
                 .username(email)
-                .temporaryPassword("TempPass123!")
+                .temporaryPassword(tempPassword)
                 .userAttributes(
                         AttributeType.builder().name("email").value(email).build(),
                         AttributeType.builder().name("email_verified").value("true").build()
