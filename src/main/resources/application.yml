@@ -27,6 +27,15 @@ spring:
         jwt:
           issuer-uri: https://cognito-idp.ap-southeast-2.amazonaws.com/ap-southeast-2_wuMjdreND
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+
 lbos:
   logging:
     logstash:

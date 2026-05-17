@@ -45,6 +45,7 @@ public class Feedback extends BaseEntity {
 
     private String deviceInfo;
 
+    @Builder.Default
     private Boolean anonymous = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
