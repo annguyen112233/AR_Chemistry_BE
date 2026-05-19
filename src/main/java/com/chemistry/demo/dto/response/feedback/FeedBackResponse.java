@@ -12,7 +12,7 @@ import java.time.Instant;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FeedBackResponse {
+public class FeedbackResponse {
 
     private String id;
 

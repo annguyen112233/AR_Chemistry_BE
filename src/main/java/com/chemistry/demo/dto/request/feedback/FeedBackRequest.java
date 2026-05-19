@@ -11,7 +11,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FeedBackRequest {
+public class FeedbackRequest {
 
     @NotBlank(message = "Title is required")
     private String title;

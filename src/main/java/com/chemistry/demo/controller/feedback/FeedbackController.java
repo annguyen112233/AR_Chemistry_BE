@@ -2,9 +2,9 @@ package com.chemistry.demo.controller.feedback;
 
 import com.chemistry.demo.dto.ApiResponse;
 import com.chemistry.demo.dto.PageResponse;
-import com.chemistry.demo.dto.request.feedback.FeedBackRequest;
+import com.chemistry.demo.dto.request.feedback.FeedbackRequest;
 import com.chemistry.demo.dto.request.feedback.HandleFeedbackRequest;
-import com.chemistry.demo.dto.response.feedback.FeedBackResponse;
+import com.chemistry.demo.dto.response.feedback.FeedbackResponse;
 import com.chemistry.demo.dto.response.feedback.FeedbackListResponse;
 import com.chemistry.demo.services.feedback.FeedbackService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class FeedbackController {
     private final FeedbackService feedbackService;
 
     @PostMapping
-    public ApiResponse<String> submitFeedback(@RequestBody FeedBackRequest request) {
+    public ApiResponse<String> submitFeedback(@RequestBody FeedbackRequest request) {
         String response = feedbackService.sendFeedback(request);
         return ApiResponse.<String>ok()
                 .data(response)
@@ -44,20 +44,20 @@ public class FeedbackController {
     }
 
     @GetMapping("/details")
-    public ApiResponse<FeedBackResponse> getFeedbackForAdmin(
+    public ApiResponse<FeedbackResponse> getFeedbackForAdmin(
             @RequestParam String feedbackId
     ) {
-        return ApiResponse.<FeedBackResponse>ok()
+        return ApiResponse.<FeedbackResponse>ok()
                 .data(feedbackService.getFeedbackForAdmin(feedbackId))
                 .build();
     }
 
     @PutMapping("/handle")
-    public ApiResponse<FeedBackResponse> handleFeedback(
+    public ApiResponse<FeedbackResponse> handleFeedback(
             @RequestParam String feedbackId,
             @RequestBody HandleFeedbackRequest request
     ) {
-        return ApiResponse.<FeedBackResponse>ok()
+        return ApiResponse.<FeedbackResponse>ok()
                 .data(feedbackService.handleFeedback(feedbackId, request))
                 .build();
     }
