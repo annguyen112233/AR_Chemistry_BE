@@ -13,4 +13,6 @@ public class AiChatResponse {
     private String modelUsed;
     private boolean success;
     private Instant timestamp;
+    private boolean reusedMemory;
+    private Double similarityScore;
 }

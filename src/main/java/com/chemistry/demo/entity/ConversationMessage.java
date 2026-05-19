@@ -31,4 +31,11 @@ public class ConversationMessage extends BaseEntity {
     private String modelUsed;
 
     private Integer tokenUsage;
+
+    @Column(columnDefinition = "TEXT")
+    private String embeddingJson;
+
+    private String reusedFromMessageId;
+
+    private Double similarityScore;
 }
