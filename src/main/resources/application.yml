@@ -24,7 +24,23 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: https://cognito-idp.ap-southeast-2.amazonaws.com/ap-southeast-2_wuMjdreND
+  ai:
+    openai:
+      api-key: ${OPENROUTER_API_KEY}
 
+      # Route qua OpenRouter
+      base-url: https://openrouter.ai/api
+
+      chat:
+        completions-path: /v1/chat/completions
+
+        options:
+          # Default model
+          model: deepseek/deepseek-chat-v3-0324:free
+
+          # Optional
+          temperature: 0.7
+          max-tokens: 1000
 lbos:
   logging:
     logstash:

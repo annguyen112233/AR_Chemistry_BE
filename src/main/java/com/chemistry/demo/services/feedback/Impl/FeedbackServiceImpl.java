@@ -1,9 +1,9 @@
 package com.chemistry.demo.services.feedback.Impl;
 
 import com.chemistry.demo.dto.PageResponse;
-import com.chemistry.demo.dto.request.feedback.FeedBackRequest;
+import com.chemistry.demo.dto.request.feedback.FeedbackRequest;
 import com.chemistry.demo.dto.request.feedback.HandleFeedbackRequest;
-import com.chemistry.demo.dto.response.feedback.FeedBackResponse;
+import com.chemistry.demo.dto.response.feedback.FeedbackResponse;
 import com.chemistry.demo.dto.response.feedback.FeedbackListResponse;
 import com.chemistry.demo.entity.Feedback;
 import com.chemistry.demo.entity.User;
@@ -35,7 +35,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     @PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_TEACHER')")
-    public String sendFeedback(FeedBackRequest feedback) {
+    public String sendFeedback(FeedbackRequest feedback) {
         User user = securityUtils.getCurrentUserCognitoSub();
 
         Feedback feedbackEntity = Feedback.builder()
@@ -84,15 +84,15 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public FeedBackResponse getFeedbackForAdmin(String feedbackId) {
+    public FeedbackResponse getFeedbackForAdmin(String feedbackId) {
         return feedbackRepository.findById(feedbackId)
-                .map(feedbackMapper::toFeedBackResponse)
+                .map(feedbackMapper::toFeedbackResponse)
                 .orElseThrow(() -> new AppException(ErrorCode.FEEDBACK_NOT_FOUND));
     }
 
     @Override
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public FeedBackResponse handleFeedback(String id, HandleFeedbackRequest request) {
+    public FeedbackResponse handleFeedback(String id, HandleFeedbackRequest request) {
         Feedback feedback = feedbackRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.FEEDBACK_NOT_FOUND));
 
@@ -102,7 +102,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
         Feedback savedFeedback = feedbackRepository.save(feedback);
 
-        return feedbackMapper.toFeedBackResponse(savedFeedback);
+        return feedbackMapper.toFeedbackResponse(savedFeedback);
     }
 
     private <T> void updateIfNotNull(T value, Consumer<T> setter) {
