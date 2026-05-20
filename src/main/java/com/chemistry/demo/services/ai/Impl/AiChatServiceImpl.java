@@ -9,8 +9,9 @@ import com.chemistry.demo.entity.Conversation;
 import com.chemistry.demo.entity.ConversationMessage;
 import com.chemistry.demo.entity.User;
 import com.chemistry.demo.enums.MessageRole;
+import com.chemistry.demo.exception.AiErrorCode;
+import com.chemistry.demo.exception.AppErrorCode;
 import com.chemistry.demo.exception.AppException;
-import com.chemistry.demo.exception.ErrorCode;
 import com.chemistry.demo.mapper.ConversationMapper;
 import com.chemistry.demo.repository.ConversationMessageRepository;
 import com.chemistry.demo.repository.ConversationRepository;
@@ -161,7 +162,7 @@ public class AiChatServiceImpl implements AiChatService {
 
         } catch (Exception e) {
             log.error("AI call failed for conversation {}: {}", conversation.getId(), e.getMessage());
-            throw new AppException(ErrorCode.AI_SERVICE_ERROR);
+            throw new AppException(AiErrorCode.AI_SERVICE_ERROR);
         }
     }
 
@@ -179,7 +180,7 @@ public class AiChatServiceImpl implements AiChatService {
     @Transactional(readOnly = true)
     public ConversationDetailResponse getConversationDetail(String conversationId) {
         Conversation conversation = conversationRepository.findById(conversationId)
-                .orElseThrow(() -> new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION));
+                .orElseThrow(() -> new AppException(AppErrorCode.UNCATEGORIZED_EXCEPTION));
         return conversationMapper.toDetailResponse(conversation);
     }
 
@@ -187,7 +188,7 @@ public class AiChatServiceImpl implements AiChatService {
     @Transactional
     public void deleteConversation(String conversationId) {
         if (!conversationRepository.existsById(conversationId)) {
-            throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION);
+            throw new AppException(AppErrorCode.UNCATEGORIZED_EXCEPTION);
         }
         conversationRepository.deleteById(conversationId);
     }
@@ -195,7 +196,7 @@ public class AiChatServiceImpl implements AiChatService {
     private Conversation getOrCreateConversation(AiChatRequest request, User user) {
         if (request.getConversationId() != null && !request.getConversationId().isEmpty()) {
             return conversationRepository.findById(request.getConversationId())
-                    .orElseThrow(() -> new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION));
+                    .orElseThrow(() -> new AppException(AppErrorCode.UNCATEGORIZED_EXCEPTION));
         }
         Conversation conversation = Conversation.builder()
                 .user(user)

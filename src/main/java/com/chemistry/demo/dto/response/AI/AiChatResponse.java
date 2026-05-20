@@ -1,4 +1,4 @@
-package com.chemistry.demo.dto.response.ai;
+package com.chemistry.demo.dto.response.AI;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
