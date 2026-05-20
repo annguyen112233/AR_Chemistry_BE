@@ -10,7 +10,7 @@ import com.chemistry.demo.entity.User;
 import com.chemistry.demo.enums.FeedbackPriority;
 import com.chemistry.demo.enums.FeedbackStatus;
 import com.chemistry.demo.exception.AppException;
-import com.chemistry.demo.exception.ErrorCode;
+import com.chemistry.demo.exception.AppErrorCode;
 import com.chemistry.demo.mapper.FeedbackMapper;
 import com.chemistry.demo.repository.FeedbackRepository;
 import com.chemistry.demo.services.feedback.FeedbackService;
@@ -45,8 +45,7 @@ public class FeedbackServiceImpl implements FeedbackService {
                 .anonymous(
                         feedback.getAnonymous() != null
                                 ? feedback.getAnonymous()
-                                : false
-                )
+                                : false)
                 .imageUrl(feedback.getImageUrl())
                 .type(feedback.getType())
                 .status(FeedbackStatus.OPEN)
@@ -87,14 +86,14 @@ public class FeedbackServiceImpl implements FeedbackService {
     public FeedBackResponse getFeedbackForAdmin(String feedbackId) {
         return feedbackRepository.findById(feedbackId)
                 .map(feedbackMapper::toFeedBackResponse)
-                .orElseThrow(() -> new AppException(ErrorCode.FEEDBACK_NOT_FOUND));
+                .orElseThrow(() -> new AppException(AppErrorCode.FEEDBACK_NOT_FOUND));
     }
 
     @Override
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public FeedBackResponse handleFeedback(String id, HandleFeedbackRequest request) {
         Feedback feedback = feedbackRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.FEEDBACK_NOT_FOUND));
+                .orElseThrow(() -> new AppException(AppErrorCode.FEEDBACK_NOT_FOUND));
 
         updateIfNotNull(request.getStatus(), feedback::setStatus);
         updateIfNotNull(request.getPriority(), feedback::setPriority);
