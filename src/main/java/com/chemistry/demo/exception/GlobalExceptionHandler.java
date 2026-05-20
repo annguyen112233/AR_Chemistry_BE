@@ -14,7 +14,7 @@ public class GlobalExceptionHandler {
         public ResponseEntity<ApiResponse<Object>> handleAppException(
                         AppException exception,
                         HttpServletRequest request) {
-                ErrorCode errorCode = exception.getErrorCode();
+                IErrorCode errorCode = exception.getErrorCode();
 
                 return ResponseEntity
                                 .status(errorCode.getHttpStatus())
@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
         public ResponseEntity<ApiResponse<Object>> handleException(
                         Exception ex,
                         HttpServletRequest request) {
-                ErrorCode errorCode = ErrorCode.UNCATEGORIZED_EXCEPTION;
+                IErrorCode errorCode = AppErrorCode.UNCATEGORIZED_EXCEPTION;
 
                 return ResponseEntity.status(errorCode.getHttpStatus())
                                 .body(ApiResponse.error()

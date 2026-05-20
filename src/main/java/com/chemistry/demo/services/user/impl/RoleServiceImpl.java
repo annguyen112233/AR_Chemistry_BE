@@ -7,7 +7,7 @@ import com.chemistry.demo.entity.User;
 import com.chemistry.demo.enums.RoleName;
 import com.chemistry.demo.enums.UserStatus;
 import com.chemistry.demo.exception.AppException;
-import com.chemistry.demo.exception.ErrorCode;
+import com.chemistry.demo.exception.UserErrorCode;
 import com.chemistry.demo.repository.RoleRepository;
 import com.chemistry.demo.repository.UserRepository;
 import com.chemistry.demo.services.aws.CognitoService;
@@ -51,14 +51,14 @@ public class RoleServiceImpl implements RoleService {
         User user = securityUtils.getCurrentUserCognitoSub();
 
         if (!user.getRoles().isEmpty()) {
-            throw new AppException(ErrorCode.ROLE_ALREADY_ASSIGNED);
+            throw new AppException(UserErrorCode.ROLE_ALREADY_ASSIGNED);
         }
 
         RoleName roleName = request.getRole();
         applyRoleAssignmentLogic(user, roleName);
 
         Role role = roleRepository.findByRoleName(roleName)
-                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
+                .orElseThrow(() -> new AppException(UserErrorCode.ROLE_NOT_FOUND));
 
         user.setRoles(new HashSet<>(Collections.singletonList(role)));
         userRepository.save(user);

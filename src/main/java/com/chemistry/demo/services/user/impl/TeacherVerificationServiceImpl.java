@@ -6,7 +6,7 @@ import com.chemistry.demo.enums.RoleName;
 import com.chemistry.demo.enums.UserStatus;
 import com.chemistry.demo.enums.VerificationStatus;
 import com.chemistry.demo.exception.AppException;
-import com.chemistry.demo.exception.ErrorCode;
+import com.chemistry.demo.exception.UserErrorCode;
 import com.chemistry.demo.repository.UserRepository;
 import com.chemistry.demo.services.aws.CognitoService;
 import com.chemistry.demo.services.user.TeacherVerificationService;
@@ -38,10 +38,10 @@ public class TeacherVerificationServiceImpl implements TeacherVerificationServic
                     .anyMatch(role -> role.getRoleName() == RoleName.ROLE_TEACHER);
 
             if (!isTeacher) {
-                throw new AppException(ErrorCode.INVALID_ROLE);
+                throw new AppException(UserErrorCode.INVALID_ROLE);
             }
             if (user.getStatus() == UserStatus.ACTIVE) {
-                throw new AppException(ErrorCode.TEACHER_ALREADY_APPROVED);
+                throw new AppException(UserErrorCode.TEACHER_ALREADY_APPROVED);
             }
 
             cognitoService.addUserToGroup(user.getEmail(), RoleName.ROLE_TEACHER.name());
@@ -63,7 +63,7 @@ public class TeacherVerificationServiceImpl implements TeacherVerificationServic
         User approver = securityUtils.getCurrentUserCognitoSub();
 
         User user = userRepository.findByCognitoSub(cognitoSub)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new AppException(UserErrorCode.USER_NOT_FOUND));
 
         specificLogic.accept(user);
 
