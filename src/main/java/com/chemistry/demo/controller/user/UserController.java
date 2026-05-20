@@ -26,8 +26,12 @@ public class UserController {
 
         String email = jwt.getClaim("email");
         String cognitoSub = jwt.getSubject();
+        String cognitoUsername =
+                jwt.getClaimAsString(
+                        "cognito:username"
+                );
 
-        userService.syncUser(email, cognitoSub);
+        userService.syncUser(email,cognitoUsername, cognitoSub);
 
         return ApiResponse.<UserResponse>ok()
                 .data(userSecurityService.getUserSecurity(cognitoSub))

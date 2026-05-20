@@ -2,6 +2,7 @@ server:
   port: ${SERVER_PORT}
   servlet:
     context-path: ${SERVER_SERVLET_CONTEXT_PATH}
+  address: ${SERVER_ADDRESS}
 
 spring:
   application:

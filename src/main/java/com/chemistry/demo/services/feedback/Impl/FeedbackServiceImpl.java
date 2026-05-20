@@ -1,16 +1,16 @@
 package com.chemistry.demo.services.feedback.Impl;
 
 import com.chemistry.demo.dto.PageResponse;
-import com.chemistry.demo.dto.request.feedback.FeedbackRequest;
+import com.chemistry.demo.dto.request.feedback.FeedBackRequest;
 import com.chemistry.demo.dto.request.feedback.HandleFeedbackRequest;
-import com.chemistry.demo.dto.response.feedback.FeedbackResponse;
+import com.chemistry.demo.dto.response.feedback.FeedBackResponse;
 import com.chemistry.demo.dto.response.feedback.FeedbackListResponse;
 import com.chemistry.demo.entity.Feedback;
 import com.chemistry.demo.entity.User;
 import com.chemistry.demo.enums.FeedbackPriority;
 import com.chemistry.demo.enums.FeedbackStatus;
 import com.chemistry.demo.exception.AppException;
-import com.chemistry.demo.exception.ErrorCode;
+import com.chemistry.demo.exception.AppErrorCode;
 import com.chemistry.demo.mapper.FeedbackMapper;
 import com.chemistry.demo.repository.FeedbackRepository;
 import com.chemistry.demo.services.feedback.FeedbackService;
@@ -35,7 +35,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     @PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_TEACHER')")
-    public String sendFeedback(FeedbackRequest feedback) {
+    public String sendFeedback(FeedBackRequest feedback) {
         User user = securityUtils.getCurrentUserCognitoSub();
 
         Feedback feedbackEntity = Feedback.builder()
@@ -45,8 +45,7 @@ public class FeedbackServiceImpl implements FeedbackService {
                 .anonymous(
                         feedback.getAnonymous() != null
                                 ? feedback.getAnonymous()
-                                : false
-                )
+                                : false)
                 .imageUrl(feedback.getImageUrl())
                 .type(feedback.getType())
                 .status(FeedbackStatus.OPEN)
@@ -84,17 +83,17 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public FeedbackResponse getFeedbackForAdmin(String feedbackId) {
+    public FeedBackResponse getFeedbackForAdmin(String feedbackId) {
         return feedbackRepository.findById(feedbackId)
-                .map(feedbackMapper::toFeedbackResponse)
-                .orElseThrow(() -> new AppException(ErrorCode.FEEDBACK_NOT_FOUND));
+                .map(feedbackMapper::toFeedBackResponse)
+                .orElseThrow(() -> new AppException(AppErrorCode.FEEDBACK_NOT_FOUND));
     }
 
     @Override
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public FeedbackResponse handleFeedback(String id, HandleFeedbackRequest request) {
+    public FeedBackResponse handleFeedback(String id, HandleFeedbackRequest request) {
         Feedback feedback = feedbackRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.FEEDBACK_NOT_FOUND));
+                .orElseThrow(() -> new AppException(AppErrorCode.FEEDBACK_NOT_FOUND));
 
         updateIfNotNull(request.getStatus(), feedback::setStatus);
         updateIfNotNull(request.getPriority(), feedback::setPriority);
@@ -102,7 +101,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
         Feedback savedFeedback = feedbackRepository.save(feedback);
 
-        return feedbackMapper.toFeedbackResponse(savedFeedback);
+        return feedbackMapper.toFeedBackResponse(savedFeedback);
     }
 
     private <T> void updateIfNotNull(T value, Consumer<T> setter) {

@@ -43,6 +43,8 @@ public class AccountSeeder implements DataSeeder {
             log.info("Creating admin user in Cognito...");
             String cognitoSub = cognitoService.createAdminUser(adminEmail, adminPassword);
 
+            cognitoService.addUserToGroup(adminEmail, RoleName.ROLE_ADMIN.name());
+
             Role adminRole = roleRepository.findByRoleName(RoleName.ROLE_ADMIN)
                     .orElseThrow(() -> new RuntimeException("Role ADMIN not found"));
 
