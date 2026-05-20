@@ -13,12 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Semantic Memory Retrieval Service.
- * Tìm kiếm tin nhắn USER cũ có nội dung tương tự dựa trên cosine similarity
- * của embedding vectors. Nếu tìm thấy match >= threshold, trả về câu trả lời
- * ASSISTANT cũ tương ứng mà không cần gọi AI model.
- */
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -31,11 +26,7 @@ public class ConversationMemoryService {
 
     private static final double SIMILARITY_THRESHOLD = 0.90;
 
-    /**
-     * Tìm USER message cũ có nội dung tương tự nhất.
-     * @param message nội dung tin nhắn mới của user
-     * @return Optional chứa MemoryMatchResult nếu tìm thấy match >= threshold
-     */
+
     public Optional<MemoryMatchResult> findSimilarUserMessage(String message) {
         try {
             log.info("Starting memory search for message: '{}'",

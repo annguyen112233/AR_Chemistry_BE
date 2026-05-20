@@ -15,7 +15,8 @@ public enum ErrorCode {
         ROLE_ALREADY_ASSIGNED(HttpStatus.BAD_REQUEST, "Role already assigned"),
         INVALID_ROLE(HttpStatus.BAD_REQUEST, "Invalid role selection"),
         TEACHER_ALREADY_APPROVED(HttpStatus.BAD_REQUEST, "Teacher already approved"),
-        AI_SERVICE_ERROR(HttpStatus.SERVICE_UNAVAILABLE, "AI service is currently unavailable");
+        AI_SERVICE_ERROR(HttpStatus.SERVICE_UNAVAILABLE, "AI service is currently unavailable"),
+        CONVERSATION_NOT_FOUND(HttpStatus.NOT_FOUND, "Conversation not found");
 
         private final int code;
         private final String message;

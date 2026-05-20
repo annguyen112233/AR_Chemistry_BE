@@ -1,4 +1,4 @@
-package com.chemistry.demo.services.ai;
+package com.chemistry.demo.services.ai.Impl;
 
 import com.chemistry.demo.dto.ai.AiChatRequest;
 import com.chemistry.demo.dto.ai.AiChatResponse;
@@ -14,6 +14,9 @@ import com.chemistry.demo.exception.ErrorCode;
 import com.chemistry.demo.mapper.ConversationMapper;
 import com.chemistry.demo.repository.ConversationMessageRepository;
 import com.chemistry.demo.repository.ConversationRepository;
+import com.chemistry.demo.services.ai.AiChatService;
+import com.chemistry.demo.services.ai.ConversationMemoryService;
+import com.chemistry.demo.services.ai.EmbeddingService;
 import com.chemistry.demo.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
