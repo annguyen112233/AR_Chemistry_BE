@@ -14,5 +14,6 @@ import java.util.Set;
 public class UserResponse implements java.io.Serializable{
     private String email;
     private String status;
+    private String fullName;
     private Set<RoleResponse> roles;
 }

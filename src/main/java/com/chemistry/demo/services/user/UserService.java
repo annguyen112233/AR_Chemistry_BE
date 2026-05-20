@@ -9,7 +9,7 @@ import com.chemistry.demo.entity.User;
 import java.util.List;
 
 public interface UserService {
-    UserResponse syncUser(String email,  String cognitoSub);
+    UserResponse syncUser(String email,String cognitoUsername,  String cognitoSub);
 
     UpdateProfileResponse updateProfile(UpdateProfileRequest request);
 
