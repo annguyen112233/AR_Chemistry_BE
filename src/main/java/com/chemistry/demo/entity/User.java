@@ -46,7 +46,4 @@ public class User extends BaseEntity {
     )
     private Set<Role> roles = new HashSet<>();
 
-    @Builder.Default
-    @OneToMany
-    private Set<TeacherVerification> teacherVerifications = new HashSet<>();
 }
