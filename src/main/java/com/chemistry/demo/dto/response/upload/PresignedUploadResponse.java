@@ -9,7 +9,15 @@ import lombok.*;
 @NoArgsConstructor
 public class PresignedUploadResponse {
 
+    private Long uploadFileId;
+
     private String uploadUrl;
 
     private String fileUrl;
+
+    private String storageKey;
+
+    private Long expiresInSeconds;
+
+    private String contentType;
 }

@@ -10,7 +10,7 @@ import com.chemistry.demo.entity.User;
 import com.chemistry.demo.enums.FeedbackPriority;
 import com.chemistry.demo.enums.FeedbackStatus;
 import com.chemistry.demo.exception.AppException;
-import com.chemistry.demo.exception.AppErrorCode;
+import com.chemistry.demo.exception.FeedbackErrorCode;
 import com.chemistry.demo.mapper.FeedbackMapper;
 import com.chemistry.demo.repository.FeedbackRepository;
 import com.chemistry.demo.services.feedback.FeedbackService;
@@ -86,14 +86,14 @@ public class FeedbackServiceImpl implements FeedbackService {
     public FeedbackResponse getFeedbackForAdmin(String feedbackId) {
         return feedbackRepository.findById(feedbackId)
                 .map(feedbackMapper::toFeedbackResponse)
-                .orElseThrow(() -> new AppException(AppErrorCode.FEEDBACK_NOT_FOUND));
+                .orElseThrow(() -> new AppException(FeedbackErrorCode.FEEDBACK_NOT_FOUND));
     }
 
     @Override
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public FeedbackResponse handleFeedback(String id, HandleFeedbackRequest request) {
         Feedback feedback = feedbackRepository.findById(id)
-                .orElseThrow(() -> new AppException(AppErrorCode.FEEDBACK_NOT_FOUND));
+                .orElseThrow(() -> new AppException(FeedbackErrorCode.FEEDBACK_NOT_FOUND));
 
         updateIfNotNull(request.getStatus(), feedback::setStatus);
         updateIfNotNull(request.getPriority(), feedback::setPriority);
