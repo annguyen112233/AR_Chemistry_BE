@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum UploadErrorCode implements IErrorCode {
     UPLOAD_PURPOSE_NOT_FOUND(HttpStatus.NOT_FOUND, "Upload purpose not found"),
+    UPLOAD_PURPOSE_ALREADY_EXISTS(HttpStatus.CONFLICT, "Upload purpose code already exists"),
     UPLOAD_PURPOSE_INACTIVE(HttpStatus.BAD_REQUEST, "Upload purpose is inactive"),
     INVALID_FILE_NAME(HttpStatus.BAD_REQUEST, "Invalid file name"),
     INVALID_CONTENT_TYPE(HttpStatus.BAD_REQUEST, "Invalid content type"),
