@@ -19,47 +19,44 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final CustomJwtAuthenticationConverter
-            customJwtAuthenticationConverter;
+        private final CustomJwtAuthenticationConverter customJwtAuthenticationConverter;
 
-    @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
-    private String issuerUri;
+        @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
+        private String issuerUri;
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http)
-            throws Exception {
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http)
+                        throws Exception {
 
-        http
-                .csrf(AbstractHttpConfigurer::disable)
+                http
+                                .csrf(AbstractHttpConfigurer::disable)
 
-                .formLogin(AbstractHttpConfigurer::disable)
+                                .formLogin(AbstractHttpConfigurer::disable)
 
-                .httpBasic(AbstractHttpConfigurer::disable)
+                                .httpBasic(AbstractHttpConfigurer::disable)
 
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/public/**").permitAll()
-                        .requestMatchers("/api/v1/roles/select-role").permitAll()
-                        .requestMatchers("/chat").permitAll()
-                        .anyRequest().authenticated()
-                )
+                                .authorizeHttpRequests(auth -> auth
+                                                .requestMatchers("/public/**").permitAll()
+                                                .requestMatchers("/api/v1/roles/select-role").permitAll()
+                                                .requestMatchers("/chat").permitAll()
+                                                .requestMatchers("/swagger-ui.html", "/swagger-ui/**",
+                                                                "/v3/api-docs/**", "/swagger-resources/**",
+                                                                "/webjars/**")
+                                                .permitAll()
+                                                .anyRequest().authenticated())
 
-                .oauth2ResourceServer(oauth2 ->
-                        oauth2.jwt(jwt ->
-                                jwt.jwtAuthenticationConverter(
-                                        customJwtAuthenticationConverter
-                                )
-                        )
-                );
+                                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(
+                                                customJwtAuthenticationConverter)));
 
-        return http.build();
-    }
+                return http.build();
+        }
 
-    @Bean
-    public JwtDecoder jwtDecoder() {
+        @Bean
+        public JwtDecoder jwtDecoder() {
 
-        String issuerUri = this.issuerUri;
+                String issuerUri = this.issuerUri;
 
-        return JwtDecoders.fromIssuerLocation(issuerUri);
-    }
+                return JwtDecoders.fromIssuerLocation(issuerUri);
+        }
 
 }

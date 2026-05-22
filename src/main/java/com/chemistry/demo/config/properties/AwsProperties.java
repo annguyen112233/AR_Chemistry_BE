@@ -22,5 +22,7 @@ public class AwsProperties {
     public static class S3Properties {
 
         private String bucketName;
+
+        private String publicBaseUrl;
     }
 }

@@ -2,8 +2,8 @@ package com.chemistry.demo.services.ai;
 
 import com.chemistry.demo.dto.ai.AiChatRequest;
 import com.chemistry.demo.dto.ai.AiChatResponse;
-import com.chemistry.demo.dto.response.ai.ConversationDetailResponse;
-import com.chemistry.demo.dto.response.ai.ConversationResponse;
+import com.chemistry.demo.dto.response.AI.ConversationDetailResponse;
+import com.chemistry.demo.dto.response.AI.ConversationResponse;
 import java.util.List;
 
 public interface AiChatService {
