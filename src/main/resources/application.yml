@@ -73,3 +73,7 @@ admin:
   email: ${ADMIN_EMAIL}
   password: ${ADMIN_PASSWORD}
   temp-password: ${ADMIN_TEMPORARY_PASSWORD}
+
+staff:
+  email: ${STAFF_EMAIL}
+  password: ${STAFF_PASSWORD}

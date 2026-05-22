@@ -33,7 +33,7 @@ public class CognitoServiceImpl implements CognitoService {
     }
 
     @Override
-    public String createAdminUser(String email, String password) {
+    public String createUser(String email, String password) {
         AdminCreateUserRequest createRequest = AdminCreateUserRequest.builder()
                 .userPoolId(userPoolId)
                 .username(email)

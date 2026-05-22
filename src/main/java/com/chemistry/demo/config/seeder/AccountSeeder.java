@@ -30,9 +30,21 @@ public class AccountSeeder implements DataSeeder {
     @Value("${admin.password}")
     private String adminPassword;
 
+    @Value("${staff.email}")
+    private String staffEmail;
+
+    @Value("${staff.password}")
+    private String staffPassword;
+
     @Override
     public void seed() {
 
+        seedAdmin();
+
+        seedStaff();
+    }
+
+    private void seedAdmin() {
 
         if (userService.existsByEmail(adminEmail)) {
             log.info("Admin user already exists, skipping seeding.");
@@ -40,13 +52,25 @@ public class AccountSeeder implements DataSeeder {
         }
 
         try {
+
             log.info("Creating admin user in Cognito...");
-            String cognitoSub = cognitoService.createAdminUser(adminEmail, adminPassword);
 
-            cognitoService.addUserToGroup(adminEmail, RoleName.ROLE_ADMIN.name());
+            String cognitoSub =
+                    cognitoService.createUser(
+                            adminEmail,
+                            adminPassword
+                    );
 
-            Role adminRole = roleRepository.findByRoleName(RoleName.ROLE_ADMIN)
-                    .orElseThrow(() -> new RuntimeException("Role ADMIN not found"));
+            cognitoService.addUserToGroup(
+                    adminEmail,
+                    RoleName.ROLE_ADMIN.name()
+            );
+
+            Role adminRole = roleRepository
+                    .findByRoleName(RoleName.ROLE_ADMIN)
+                    .orElseThrow(() ->
+                            new RuntimeException("Role ADMIN not found")
+                    );
 
             User admin = User.builder()
                     .email(adminEmail)
@@ -57,9 +81,64 @@ public class AccountSeeder implements DataSeeder {
                     .build();
 
             userService.save(admin);
-            log.info("Admin user seeded successfully in DB and Cognito.");
+
+            log.info("Admin user seeded successfully.");
+
         } catch (Exception e) {
-            log.error("Failed to seed admin account: {}", e.getMessage());
+
+            log.error(
+                    "Failed to seed admin account: {}",
+                    e.getMessage()
+            );
+        }
+    }
+
+    private void seedStaff() {
+
+        if (userService.existsByEmail(staffEmail)) {
+            log.info("Staff user already exists, skipping seeding.");
+            return;
+        }
+
+        try {
+
+            log.info("Creating staff user in Cognito...");
+
+            String cognitoSub =
+                    cognitoService.createUser(
+                            staffEmail,
+                            staffPassword
+                    );
+
+            cognitoService.addUserToGroup(
+                    staffEmail,
+                    RoleName.ROLE_STAFF.name()
+            );
+
+            Role staffRole = roleRepository
+                    .findByRoleName(RoleName.ROLE_STAFF)
+                    .orElseThrow(() ->
+                            new RuntimeException("Role STAFF not found")
+                    );
+
+            User staff = User.builder()
+                    .email(staffEmail)
+                    .fullName("Staff User")
+                    .cognitoSub(cognitoSub)
+                    .status(UserStatus.ACTIVE)
+                    .roles(new HashSet<>(List.of(staffRole)))
+                    .build();
+
+            userService.save(staff);
+
+            log.info("Staff user seeded successfully.");
+
+        } catch (Exception e) {
+
+            log.error(
+                    "Failed to seed staff account: {}",
+                    e.getMessage()
+            );
         }
     }
 

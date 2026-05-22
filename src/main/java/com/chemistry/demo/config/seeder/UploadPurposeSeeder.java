@@ -48,7 +48,16 @@ public class UploadPurposeSeeder implements DataSeeder {
                         .allowedContentTypes(
                                 "application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
                         .active(true)
-                        .build());
+                        .build(),
+                UploadPurpose.builder()
+                        .code("PAYMENT_PROOF")
+                        .folderPrefix("payment-proofs")
+                        .maxFileSize(5 * 1024 * 1024L)
+                        .allowedContentTypes("image/png,image/jpeg")
+                        .active(true)
+                        .build()
+                );
+
 
         for (UploadPurpose purpose : purposes) {
             uploadPurposeRepository.findByCodeAndActiveTrue(purpose.getCode())
@@ -58,6 +67,6 @@ public class UploadPurposeSeeder implements DataSeeder {
 
     @Override
     public int getOrder() {
-        return 2;
+        return 5;
     }
 }

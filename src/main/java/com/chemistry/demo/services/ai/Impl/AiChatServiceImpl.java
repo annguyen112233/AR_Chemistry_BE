@@ -8,6 +8,7 @@ import com.chemistry.demo.dto.response.ai.ConversationResponse;
 import com.chemistry.demo.entity.Conversation;
 import com.chemistry.demo.entity.ConversationMessage;
 import com.chemistry.demo.entity.User;
+import com.chemistry.demo.enums.FeatureCode;
 import com.chemistry.demo.enums.MessageRole;
 import com.chemistry.demo.exception.AiErrorCode;
 import com.chemistry.demo.exception.AppErrorCode;
@@ -18,6 +19,7 @@ import com.chemistry.demo.repository.ConversationRepository;
 import com.chemistry.demo.services.ai.AiChatService;
 import com.chemistry.demo.services.ai.ConversationMemoryService;
 import com.chemistry.demo.services.ai.EmbeddingService;
+import com.chemistry.demo.services.feature.FeatureService;
 import com.chemistry.demo.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +48,7 @@ public class AiChatServiceImpl implements AiChatService {
     private final SecurityUtils securityUtils;
     private final ConversationMemoryService memoryService;
     private final EmbeddingService embeddingService;
+    private final FeatureService featureService;
 
     private static final List<String> FREE_MODELS = List.of("openrouter/free");
 
@@ -53,6 +56,11 @@ public class AiChatServiceImpl implements AiChatService {
     @Transactional
     public AiChatResponse chatWithAi(AiChatRequest request) {
         User currentUser = securityUtils.getCurrentUserCognitoSub();
+
+        featureService.checkFeature(
+                currentUser,
+                FeatureCode.AI_EXPLANATION
+        );
 
         // ============================================================
         // STEP 0: Kiểm tra Memory - tìm câu hỏi tương tự đã hỏi trước đó

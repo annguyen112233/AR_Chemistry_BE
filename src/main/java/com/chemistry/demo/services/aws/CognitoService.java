@@ -2,5 +2,5 @@ package com.chemistry.demo.services.aws;
 
 public interface CognitoService {
     void addUserToGroup(String email, String groupName);
-    String createAdminUser(String email, String password);
+    String createUser(String email, String password);
 }
