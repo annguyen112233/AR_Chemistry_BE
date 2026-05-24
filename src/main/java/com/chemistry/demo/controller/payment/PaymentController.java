@@ -2,11 +2,9 @@ package com.chemistry.demo.controller.payment;
 
 import com.chemistry.demo.dto.ApiResponse;
 import com.chemistry.demo.dto.PageResponse;
-import com.chemistry.demo.dto.request.payment.createPaymentRequest;
-import com.chemistry.demo.dto.response.feedback.FeedbackListResponse;
+import com.chemistry.demo.dto.request.payment.CreatePaymentRequest;
 import com.chemistry.demo.dto.response.payment.PaymentResponse;
 import com.chemistry.demo.services.payment.PaymentService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +32,7 @@ public class PaymentController {
     }
 
     @PostMapping
-    public ApiResponse<String> createPayment(createPaymentRequest request) {
+    public ApiResponse<String> createPayment(@RequestBody CreatePaymentRequest request) {
         String payment = paymentService.createPayment(request);
         return ApiResponse.<String>ok()
                 .data(payment)

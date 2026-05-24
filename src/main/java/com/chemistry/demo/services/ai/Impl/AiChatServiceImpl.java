@@ -57,11 +57,6 @@ public class AiChatServiceImpl implements AiChatService {
     public AiChatResponse chatWithAi(AiChatRequest request) {
         User currentUser = securityUtils.getCurrentUserCognitoSub();
 
-        featureService.checkFeature(
-                currentUser,
-                FeatureCode.AI_EXPLANATION
-        );
-
         // ============================================================
         // STEP 0: Kiểm tra Memory - tìm câu hỏi tương tự đã hỏi trước đó
         // ============================================================

@@ -77,12 +77,15 @@ public class RoleSeeder implements DataSeeder {
                 permissionService.getPermission(PermissionName.VIEW_REPORTS),
                 permissionService.getPermission(PermissionName.EXPORT_REPORTS),
                 permissionService.getPermission(PermissionName.VIEW_STATISTICS),
+                permissionService.getPermission(PermissionName.UPLOAD_FILE),
 
                 // SAFETY
                 permissionService.getPermission(PermissionName.VIEW_SAFETY_GUIDE),
                 permissionService.getPermission(PermissionName.MANAGE_SAFETY_GUIDE),
                 permissionService.getPermission(PermissionName.REPORT_INCIDENT),
-                permissionService.getPermission(PermissionName.VIEW_INCIDENT_REPORTS)));
+                permissionService.getPermission(PermissionName.VIEW_INCIDENT_REPORTS)
+                )
+        );
 
         // STAFF
         Role staffRole = roleService.createRole(RoleName.ROLE_STAFF);
@@ -110,24 +113,6 @@ public class RoleSeeder implements DataSeeder {
                 permissionService.getPermission(PermissionName.REPORT_INCIDENT),
                 permissionService.getPermission(PermissionName.VIEW_INCIDENT_REPORTS)));
 
-        // TEACHER
-        Role teacherRole = roleService.createRole(RoleName.ROLE_TEACHER);
-        teacherRole.setPermissions(Set.of(
-                permissionService.getPermission(PermissionName.VIEW_CHEMICAL),
-                permissionService.getPermission(PermissionName.VIEW_REACTION),
-                permissionService.getPermission(PermissionName.SCAN_AR),
-                permissionService.getPermission(PermissionName.UPLOAD_AR_MARKER),
-                permissionService.getPermission(PermissionName.CREATE_EXPERIMENT),
-                permissionService.getPermission(PermissionName.VIEW_EXPERIMENT),
-                permissionService.getPermission(PermissionName.UPDATE_EXPERIMENT),
-                permissionService.getPermission(PermissionName.CREATE_COURSE),
-                permissionService.getPermission(PermissionName.UPDATE_COURSE),
-                permissionService.getPermission(PermissionName.VIEW_COURSE),
-                permissionService.getPermission(PermissionName.ASSIGN_STUDENT),
-                permissionService.getPermission(PermissionName.VIEW_REPORTS),
-                permissionService.getPermission(PermissionName.VIEW_STATISTICS),
-                permissionService.getPermission(PermissionName.VIEW_SAFETY_GUIDE),
-                permissionService.getPermission(PermissionName.REPORT_INCIDENT)));
 
         // STUDENT
         Role studentRole = roleService.createRole(RoleName.ROLE_STUDENT);
@@ -143,7 +128,6 @@ public class RoleSeeder implements DataSeeder {
 
         roleService.save(adminRole);
         roleService.save(staffRole);
-        roleService.save(teacherRole);
         roleService.save(studentRole);
     }
 

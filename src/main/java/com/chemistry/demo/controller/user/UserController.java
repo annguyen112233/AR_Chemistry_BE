@@ -1,9 +1,11 @@
 package com.chemistry.demo.controller.user;
 
 import com.chemistry.demo.dto.ApiResponse;
-import com.chemistry.demo.dto.request.UpdateProfileRequest;
-import com.chemistry.demo.dto.response.UpdateProfileResponse;
+import com.chemistry.demo.dto.request.profile.AvatarRequest;
+import com.chemistry.demo.dto.request.profile.UpdateProfileRequest;
+import com.chemistry.demo.dto.response.profile.UpdateProfileResponse;
 import com.chemistry.demo.dto.response.UserResponse;
+import com.chemistry.demo.dto.response.profile.UserProfileResponse;
 import com.chemistry.demo.services.user.UserService;
 import com.chemistry.demo.utils.UserSecurityService;
 import lombok.RequiredArgsConstructor;
@@ -44,4 +46,19 @@ public class UserController {
                 .data(userService.updateProfile(request))
                 .build();
     }
+    @GetMapping("/profile")
+    public ApiResponse<UserProfileResponse> getProfile() {
+        return ApiResponse.<UserProfileResponse>ok()
+                .data(userService.getUserProfile())
+                .build();
+    }
+    @PutMapping("/avatar")
+    public ApiResponse<String> updateAvatar( @RequestBody AvatarRequest avatarUrl) {
+        userService.updateAvatar(avatarUrl.getAvatarUrl());
+        return ApiResponse.<String>ok()
+                .data("Avatar updated successfully")
+                .build();
+    }
+
+
 }

@@ -8,7 +8,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class createPaymentRequest {
+public class CreatePaymentRequest {
     String packageId;
     String proofImageUrl;
 }

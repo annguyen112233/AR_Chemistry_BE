@@ -1,4 +1,4 @@
-package com.chemistry.demo.dto.response;
+package com.chemistry.demo.dto.response.profile;
 
 import lombok.*;
 
@@ -8,8 +8,10 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateProfileResponse {
+public class UserProfileResponse {
     private String fullName;
-    private String avatarUrl;
+    private String email;
     private String phoneNumber;
+    private String avatarUrl;
+
 }

@@ -39,7 +39,11 @@ public class UserSecurityService implements UserAuthoritiesProvider {
         }
 
         @Override
-        @Cacheable(value = "user-authorities", key = "#cognitoSub")
+        @Cacheable(
+                value = "user-authorities",
+                key = "#cognitoSub",
+                unless = "#result == null || #result.isEmpty()"
+        )
         public Collection<? extends GrantedAuthority> getAuthorities(String cognitoSub) {
                 log.info("Fetching authorities from DB for user: {}", cognitoSub);
 
@@ -55,6 +59,7 @@ public class UserSecurityService implements UserAuthoritiesProvider {
                                         }
                                         return authorities;
                                 })
+
                                 .orElse(Set.of());
         }
 }

@@ -30,8 +30,9 @@ public class UploadServiceImpl implements UploadService {
     private final S3Service s3Service;
     private final SecurityUtils securityUtils;
 
+    //    @PreAuthorize("hasAuthority('UPLOAD_FILE')")
     @Override
-    @PreAuthorize("hasAuthority('UPLOAD_FILE')")
+    @PreAuthorize("hasAuthority('ROLE_STUDENT')")
     public PresignedUploadResponse generateUploadUrl(GenerateUploadUrlRequest request) {
         User currentUser = securityUtils.getCurrentUserCognitoSub();
 

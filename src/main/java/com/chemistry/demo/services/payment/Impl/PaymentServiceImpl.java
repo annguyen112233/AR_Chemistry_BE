@@ -1,7 +1,7 @@
 package com.chemistry.demo.services.payment.Impl;
 
 import com.chemistry.demo.dto.PageResponse;
-import com.chemistry.demo.dto.request.payment.createPaymentRequest;
+import com.chemistry.demo.dto.request.payment.CreatePaymentRequest;
 import com.chemistry.demo.dto.response.payment.PaymentResponse;
 import com.chemistry.demo.entity.Packages;
 import com.chemistry.demo.entity.Payment;
@@ -67,7 +67,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @PreAuthorize("hasAuthority('ROLE_STUDENT')")
-    public String createPayment(createPaymentRequest request) {
+    public String createPayment(CreatePaymentRequest request) {
         User user = securityUtils.getCurrentUserCognitoSub();
         Packages packageEntity = packageRepository.findById(request.getPackageId())
                 .orElseThrow(() -> new AppException(PackageErrorCode.PACKAGE_NOT_FOUND));

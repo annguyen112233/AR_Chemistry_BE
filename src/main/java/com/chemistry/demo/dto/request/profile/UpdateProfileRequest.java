@@ -1,4 +1,4 @@
-package com.chemistry.demo.dto.request;
+package com.chemistry.demo.dto.request.profile;
 
 import lombok.*;
 
@@ -10,6 +10,5 @@ import lombok.*;
 @AllArgsConstructor
 public class UpdateProfileRequest {
     private String fullName;
-    private String avatarUrl;
     private String phoneNumber;
 }
