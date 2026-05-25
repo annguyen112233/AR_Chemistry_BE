@@ -37,7 +37,11 @@ public class Feedback extends BaseEntity {
     private FeedbackPriority priority = FeedbackPriority.MEDIUM;
 
     @Column(columnDefinition = "TEXT")
-    private String adminReply;
+    private String staffReply;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "replied_by")
+    private User repliedBy;
 
     private String imageUrl;
 

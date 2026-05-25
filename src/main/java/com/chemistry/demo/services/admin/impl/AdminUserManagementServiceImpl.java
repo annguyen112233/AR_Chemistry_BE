@@ -27,7 +27,6 @@ public class AdminUserManagementServiceImpl implements AdminUserManagementServic
     @PreAuthorize("hasAuthority('MANAGE_USERS')")
     @Transactional(readOnly = true)
     public PageResponse<AdminUsersResponse> getUsersForAdmin(Pageable pageable) {
-        log.info("Fetching users for admin with pageable: {}", pageable);
         Page<User> users = userRepository.findAllWithRoles(pageable);
 
         List<AdminUsersResponse> items = users.getContent()

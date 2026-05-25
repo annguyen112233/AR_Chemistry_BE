@@ -1,5 +1,6 @@
 package com.chemistry.demo.entity;
 
+import com.chemistry.demo.enums.PaymentItemType;
 import com.chemistry.demo.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,6 +25,11 @@ public class Payment{
     @ManyToOne
     private User user;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PaymentItemType itemType;
+
+
     @ManyToOne
     private Packages packageEntity;
 
@@ -31,6 +37,12 @@ public class Payment{
 
     private String proofImageUrl;
     private Instant createdAt;
+
+    @ManyToOne
+    private ChemicalCard chemicalCard;
+
+    @ManyToOne
+    private CardBundle cardBundle;
 
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;

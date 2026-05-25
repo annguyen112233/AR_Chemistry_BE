@@ -90,7 +90,6 @@ public class RoleSeeder implements DataSeeder {
         // STAFF
         Role staffRole = roleService.createRole(RoleName.ROLE_STAFF);
         staffRole.setPermissions(Set.of(
-                permissionService.getPermission(PermissionName.APPROVE_TEACHER),
                 permissionService.getPermission(PermissionName.CREATE_CHEMICAL),
                 permissionService.getPermission(PermissionName.VIEW_CHEMICAL),
                 permissionService.getPermission(PermissionName.UPDATE_CHEMICAL),

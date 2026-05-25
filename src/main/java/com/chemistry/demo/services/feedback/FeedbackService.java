@@ -11,9 +11,9 @@ import org.springframework.data.domain.Pageable;
 public interface FeedbackService {
     String sendFeedback(FeedbackRequest feedback);
 
-    PageResponse<FeedbackListResponse> getFeedbacksForAdmin(Pageable pageable);
+    PageResponse<FeedbackListResponse> getFeedbacksForStaff(Pageable pageable);
 
-    FeedbackResponse getFeedbackForAdmin(String feedbackId);
+    FeedbackResponse getFeedbackForStaff(String feedbackId);
 
 
 

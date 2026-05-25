@@ -1,0 +1,25 @@
+package com.chemistry.demo.repository;
+
+import com.chemistry.demo.entity.ChemicalCard;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+public interface ChemicalCardRepository extends JpaRepository<ChemicalCard, String> {
+
+    Optional<ChemicalCard> findBySymbol(String symbol);
+
+    boolean existsBySymbol(String symbol);
+
+    boolean existsByAtomicNumber(Integer atomicNumber);
+
+    Page<ChemicalCard> findByActiveTrueAndPurchasableTrue(Pageable pageable);
+
+    Page<ChemicalCard> findByPurchasable(Boolean purchasable, Pageable pageable);
+
+}
