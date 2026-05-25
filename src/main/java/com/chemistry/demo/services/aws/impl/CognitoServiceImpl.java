@@ -2,6 +2,7 @@ package com.chemistry.demo.services.aws.impl;
 
 import com.chemistry.demo.services.aws.CognitoService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
@@ -9,6 +10,9 @@ import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminAddUse
 
 import software.amazon.awssdk.services.cognitoidentityprovider.model.*;
 
+import java.util.Optional;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CognitoServiceImpl implements CognitoService {
@@ -30,6 +34,33 @@ public class CognitoServiceImpl implements CognitoService {
                 .build();
 
         cognitoClient.adminAddUserToGroup(groupRequest);
+    }
+
+    @Override
+    public void addUserToGroupIfNeeded(String email, String groupName) {
+        String nextToken = null;
+
+        do {
+            AdminListGroupsForUserResponse groupsResponse = cognitoClient.adminListGroupsForUser(
+                    AdminListGroupsForUserRequest.builder()
+                            .userPoolId(userPoolId)
+                            .username(email)
+                            .nextToken(nextToken)
+                            .build()
+            );
+
+            boolean alreadyInGroup = groupsResponse.groups().stream()
+                    .anyMatch(group -> groupName.equals(group.groupName()));
+
+            if (alreadyInGroup) {
+                log.info("User {} is already in Cognito group {}, skipping.", email, groupName);
+                return;
+            }
+
+            nextToken = groupsResponse.nextToken();
+        } while (nextToken != null);
+
+        addUserToGroup(email, groupName);
     }
 
     @Override
@@ -59,5 +90,24 @@ public class CognitoServiceImpl implements CognitoService {
                 .findFirst()
                 .map(AttributeType::value)
                 .orElseThrow(() -> new RuntimeException("Failed to get sub from Cognito"));
+    }
+
+    @Override
+    public Optional<String> getUserSubByEmail(String email) {
+        try {
+            AdminGetUserResponse response = cognitoClient.adminGetUser(
+                    AdminGetUserRequest.builder()
+                            .userPoolId(userPoolId)
+                            .username(email)
+                            .build()
+            );
+
+            return response.userAttributes().stream()
+                    .filter(attribute -> "sub".equals(attribute.name()))
+                    .findFirst()
+                    .map(AttributeType::value);
+        } catch (UserNotFoundException e) {
+            return Optional.empty();
+        }
     }
 }
