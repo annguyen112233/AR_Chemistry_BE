@@ -1,4 +1,4 @@
-package com.chemistry.demo.controller.feedback;
+package com.chemistry.demo.controller;
 
 import com.chemistry.demo.dto.ApiResponse;
 import com.chemistry.demo.dto.request.upload.GenerateUploadUrlRequest;

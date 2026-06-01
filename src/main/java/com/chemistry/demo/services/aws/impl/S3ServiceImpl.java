@@ -28,7 +28,7 @@ public class S3ServiceImpl implements S3Service {
                 .build();
 
         PutObjectPresignRequest presignRequest = PutObjectPresignRequest.builder()
-                .signatureDuration(Duration.ofMinutes(5))
+                .signatureDuration(Duration.ofMinutes(30))
                 .putObjectRequest(putObjectRequest)
                 .build();
 

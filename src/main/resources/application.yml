@@ -5,6 +5,12 @@ server:
   address: ${SERVER_ADDRESS}
 
 spring:
+  batch:
+    jdbc:
+      initialize-schema: always
+    job:
+      enabled: false
+
   application:
     name: ${SPRING_APPLICATION_NAME:ar_chemistry}
   datasource:

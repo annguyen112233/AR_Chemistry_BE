@@ -55,6 +55,13 @@ public class UploadPurposeSeeder implements DataSeeder {
                         .maxFileSize(5 * 1024 * 1024L)
                         .allowedContentTypes("image/png,image/jpeg")
                         .active(true)
+                        .build(),
+                UploadPurpose.builder()
+                        .code("QUIZ_IMPORT")
+                        .folderPrefix("quiz-import")
+                        .maxFileSize(10 * 1024 * 1024L)
+                        .allowedContentTypes("text/csv,application/vnd.ms-excel")
+                        .active(true)
                         .build()
                 );
 

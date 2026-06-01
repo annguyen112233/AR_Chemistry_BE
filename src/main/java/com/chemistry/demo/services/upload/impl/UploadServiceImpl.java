@@ -32,7 +32,7 @@ public class UploadServiceImpl implements UploadService {
 
     //    @PreAuthorize("hasAuthority('UPLOAD_FILE')")
     @Override
-    @PreAuthorize("hasAuthority('ROLE_STUDENT')")
+    @PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_STAFF', 'ROLE_ADMIN')")
     public PresignedUploadResponse generateUploadUrl(GenerateUploadUrlRequest request) {
         User currentUser = securityUtils.getCurrentUserCognitoSub();
 
@@ -43,6 +43,10 @@ public class UploadServiceImpl implements UploadService {
             throw new AppException(UploadErrorCode.FILE_SIZE_EXCEEDED);
         }
 
+//        if ("QUIZ_IMPORT".equals(request.getPurposeCode())
+//                && !securityUtils.hasAnyAuthority("ROLE_STAFF", "ROLE_ADMIN")) {
+//            throw new AppException(AuthErrorCode.ACCESS_DENIED);
+//        }
         boolean isAllowedContentType = Arrays.stream(purpose.getAllowedContentTypes().split(","))
                 .anyMatch(allowedType -> allowedType.trim().equalsIgnoreCase(request.getContentType()));
 
