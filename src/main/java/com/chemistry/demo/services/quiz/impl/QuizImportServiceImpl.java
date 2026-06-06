@@ -1,7 +1,7 @@
 package com.chemistry.demo.services.quiz.impl;
 
 import com.chemistry.demo.dto.request.quiz.StartQuizImportRequest;
-import com.chemistry.demo.dto.response.quiz.StartQuizImportResponse;
+import com.chemistry.demo.dto.response.quiz.staff.StartQuizImportResponse;
 import com.chemistry.demo.entity.Lesson;
 import com.chemistry.demo.entity.QuizImportJob;
 import com.chemistry.demo.repository.LessonRepository;
@@ -60,7 +60,7 @@ public class QuizImportServiceImpl implements QuizImportService {
             job.setStatus("FAILED");
             job.setErrorMessage("Cannot start batch job: " + e.getMessage());
             quizImportJobRepository.save(job);
-            throw new RuntimeException("Cannot start quiz import batch job", e);
+            throw new RuntimeException("Cannot start quizCSV import batch job", e);
         }
 
         return new StartQuizImportResponse(job.getJobCode(), job.getStatus());
@@ -79,8 +79,8 @@ public class QuizImportServiceImpl implements QuizImportService {
             throw new IllegalArgumentException("s3Key is required");
         }
 
-        if (!request.getS3Key().startsWith("quiz-import/")) {
-            throw new IllegalArgumentException("Invalid s3Key for quiz import");
+        if (!request.getS3Key().startsWith("quizCSV-import/")) {
+            throw new IllegalArgumentException("Invalid s3Key for quizCSV import");
         }
     }
 }

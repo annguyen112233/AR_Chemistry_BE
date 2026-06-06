@@ -1,8 +1,9 @@
 package com.chemistry.demo.dto.response.chemical;
 
+import com.chemistry.demo.enums.ChemicalGroup;
+import com.chemistry.demo.enums.ChemicalSubstanceType;
+import com.chemistry.demo.enums.SubstanceState;
 import lombok.*;
-
-import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -13,23 +14,27 @@ public class ChemicalCardResponse {
 
     private String id;
 
-    private Integer atomicNumber;
+    private String cardCode;
 
-    private String symbol;
+    private String qrPayload;
 
-    private String name;
+    private String substanceId;
 
-    private String category;
+    private String formula;
 
-    private BigDecimal atomicMass;
+    private String substanceName;
 
-    private Integer period;
+    private String vietnameseName;
 
-    private Integer groupNumber;
+    private ChemicalSubstanceType type;
 
-    private BigDecimal price;
+    private ChemicalGroup chemicalGroup;
+
+    private SubstanceState state;
+
+    private String displayName;
+
+    private String imageUrl;
 
     private Boolean active;
-
-    private Boolean purchasable;
 }

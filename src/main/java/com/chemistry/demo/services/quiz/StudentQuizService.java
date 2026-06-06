@@ -1,10 +1,9 @@
 package com.chemistry.demo.services.quiz;
 
+import com.chemistry.demo.dto.PageResponse;
 import com.chemistry.demo.dto.request.quiz.student.SubmitQuizRequest;
-import com.chemistry.demo.dto.response.quiz.student.StudentPublishedQuizResponse;
-import com.chemistry.demo.dto.response.quiz.student.StudentQuizDetailResponse;
-import com.chemistry.demo.dto.response.quiz.student.StudentQuizSummaryResponse;
-import com.chemistry.demo.dto.response.quiz.student.SubmitQuizResponse;
+import com.chemistry.demo.dto.response.quiz.student.*;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -16,4 +15,9 @@ public interface StudentQuizService {
 
     SubmitQuizResponse submitQuiz(String quizCode, SubmitQuizRequest request);
     List<StudentPublishedQuizResponse> getPublishedQuizzes();
+    PageResponse<StudentQuizAttemptHistoryResponse> getMyQuizAttemptHistory(
+            String quizCode,
+            Pageable pageable
+    );
+    StudentQuizAttemptDetailResponse getMyQuizAttemptDetail(String attemptCode);
 }

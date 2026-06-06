@@ -2,7 +2,7 @@ package com.chemistry.demo.services.user;
 
 import com.chemistry.demo.dto.request.profile.UpdateProfileRequest;
 import com.chemistry.demo.dto.response.profile.UpdateProfileResponse;
-import com.chemistry.demo.dto.response.UserResponse;
+import com.chemistry.demo.dto.response.user.UserResponse;
 import com.chemistry.demo.dto.response.profile.UserProfileResponse;
 import com.chemistry.demo.entity.User;
 

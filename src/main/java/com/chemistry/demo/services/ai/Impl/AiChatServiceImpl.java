@@ -19,7 +19,6 @@ import com.chemistry.demo.repository.ConversationRepository;
 import com.chemistry.demo.services.ai.AiChatService;
 import com.chemistry.demo.services.ai.ConversationMemoryService;
 import com.chemistry.demo.services.ai.EmbeddingService;
-import com.chemistry.demo.services.feature.FeatureService;
 import com.chemistry.demo.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,7 +47,6 @@ public class AiChatServiceImpl implements AiChatService {
     private final SecurityUtils securityUtils;
     private final ConversationMemoryService memoryService;
     private final EmbeddingService embeddingService;
-    private final FeatureService featureService;
 
     private static final List<String> FREE_MODELS = List.of("openrouter/free");
 

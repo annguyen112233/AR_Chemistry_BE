@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SubmitQuizResponse {
+    private String attemptCode;
     private Integer score;
     private Integer total;
     private Integer correctCount;

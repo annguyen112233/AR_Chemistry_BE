@@ -1,24 +1,23 @@
 package com.chemistry.demo.services.quiz.impl;
 
+import com.chemistry.demo.dto.PageResponse;
 import com.chemistry.demo.dto.request.quiz.student.SubmitQuizRequest;
 import com.chemistry.demo.dto.response.quiz.student.*;
-import com.chemistry.demo.entity.Lesson;
-import com.chemistry.demo.entity.Quiz;
-import com.chemistry.demo.entity.QuizQuestion;
+import com.chemistry.demo.entity.*;
 import com.chemistry.demo.exception.AppException;
 import com.chemistry.demo.exception.LessonErrorCode;
-import com.chemistry.demo.repository.LessonRepository;
-import com.chemistry.demo.repository.QuizQuestionRepository;
-import com.chemistry.demo.repository.QuizRepository;
+import com.chemistry.demo.repository.*;
 import com.chemistry.demo.services.quiz.StudentQuizService;
+import com.chemistry.demo.utils.PageResponseUtils;
+import com.chemistry.demo.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,6 +30,9 @@ public class StudentQuizServiceImpl implements StudentQuizService {
     private final LessonRepository lessonRepository;
     private final QuizRepository quizRepository;
     private final QuizQuestionRepository quizQuestionRepository;
+    private final QuizAttemptRepository quizAttemptRepository;
+    private final QuizAttemptAnswerRepository quizAttemptAnswerRepository;
+    private final SecurityUtils securityUtils;
     @Override
     @PreAuthorize("hasAuthority('ROLE_STUDENT')")
     public StudentQuizSummaryResponse getPublishedQuizByLesson(String lessonCode) {
@@ -38,7 +40,7 @@ public class StudentQuizServiceImpl implements StudentQuizService {
                 .orElseThrow(() -> new AppException(LessonErrorCode.LESSON_NOT_FOUND));
 
         Quiz quiz = quizRepository.findTopByLessonAndStatusOrderByCreatedAtDesc(lesson, PUBLISHED)
-                .orElseThrow(() -> new RuntimeException("Published quiz not found for lesson: " + lessonCode));
+                .orElseThrow(() -> new RuntimeException("Published quizCSV not found for lesson: " + lessonCode));
 
         long questionCount = quizQuestionRepository.countByQuiz(quiz);
 
@@ -55,7 +57,7 @@ public class StudentQuizServiceImpl implements StudentQuizService {
     @PreAuthorize("hasAuthority('ROLE_STUDENT')")
     public StudentQuizDetailResponse getQuizQuestions(String quizCode) {
         Quiz quiz = quizRepository.findByQuizCodeAndStatus(quizCode, PUBLISHED)
-                .orElseThrow(() -> new RuntimeException("Published quiz not found: " + quizCode));
+                .orElseThrow(() -> new RuntimeException("Published quizCSV not found: " + quizCode));
 
         List<QuizQuestion> questions =
                 quizQuestionRepository.findByQuizAndStatusOrderByQuestionOrderAsc(quiz, ACTIVE);
@@ -82,15 +84,15 @@ public class StudentQuizServiceImpl implements StudentQuizService {
 
     @Override
     @PreAuthorize("hasAuthority('ROLE_STUDENT')")
+    @Transactional
     public SubmitQuizResponse submitQuiz(String quizCode, SubmitQuizRequest request) {
         Quiz quiz = quizRepository.findByQuizCodeAndStatus(quizCode, PUBLISHED)
-                .orElseThrow(() -> new RuntimeException("Published quiz not found: " + quizCode));
+                .orElseThrow(() -> new RuntimeException("Published quizCSV not found: " + quizCode));
+
+        User student = securityUtils.getCurrentUserCognitoSub();
 
         List<QuizQuestion> questions =
                 quizQuestionRepository.findByQuizAndStatusOrderByQuestionOrderAsc(quiz, ACTIVE);
-
-        Map<String, QuizQuestion> questionMap = questions.stream()
-                .collect(Collectors.toMap(QuizQuestion::getId, q -> q));
 
         Map<String, String> answerMap = Optional.ofNullable(request.getAnswers())
                 .orElse(List.of())
@@ -102,7 +104,20 @@ public class StudentQuizServiceImpl implements StudentQuizService {
                 ));
 
         List<SubmitQuizResponse.QuestionResult> results = new ArrayList<>();
+        List<QuizAttemptAnswer> attemptAnswers = new ArrayList<>();
+
         int correctCount = 0;
+
+        QuizAttempt attempt = new QuizAttempt();
+        attempt.setAttemptCode("attempt_" + System.currentTimeMillis() + "_" + UUID.randomUUID());
+        attempt.setQuiz(quiz);
+        attempt.setStudent(student);
+        attempt.setScore(0);
+        attempt.setTotalQuestions(questions.size());
+        attempt.setCorrectCount(0);
+        attempt.setStatus("submitted");
+
+        quizAttemptRepository.save(attempt);
 
         for (QuizQuestion question : questions) {
             String questionId = question.getId();
@@ -115,6 +130,16 @@ public class StudentQuizServiceImpl implements StudentQuizService {
                 correctCount++;
             }
 
+            QuizAttemptAnswer attemptAnswer = new QuizAttemptAnswer();
+            attemptAnswer.setAttempt(attempt);
+            attemptAnswer.setQuestion(question);
+            attemptAnswer.setStudentAnswer(studentAnswer);
+            attemptAnswer.setCorrectAnswer(question.getCorrectAnswer());
+            attemptAnswer.setCorrect(correct);
+            attemptAnswer.setExplanation(question.getExplanation());
+
+            attemptAnswers.add(attemptAnswer);
+
             results.add(SubmitQuizResponse.QuestionResult.builder()
                     .questionId(questionId)
                     .correct(correct)
@@ -124,7 +149,14 @@ public class StudentQuizServiceImpl implements StudentQuizService {
                     .build());
         }
 
+        attempt.setScore(correctCount);
+        attempt.setCorrectCount(correctCount);
+        quizAttemptRepository.save(attempt);
+
+        quizAttemptAnswerRepository.saveAll(attemptAnswers);
+
         return SubmitQuizResponse.builder()
+                .attemptCode(attempt.getAttemptCode())
                 .score(correctCount)
                 .total(questions.size())
                 .correctCount(correctCount)
@@ -156,8 +188,103 @@ public class StudentQuizServiceImpl implements StudentQuizService {
                 .toList();
     }
 
+    @Override
+    @PreAuthorize("hasAuthority('ROLE_STUDENT')")
+    public PageResponse<StudentQuizAttemptHistoryResponse> getMyQuizAttemptHistory(
+            String quizCode,
+            Pageable pageable
+    ) {
+        User student = securityUtils.getCurrentUserCognitoSub();
+
+        Page<QuizAttempt> attempts;
+
+        if (quizCode != null && !quizCode.isBlank()) {
+            Quiz quiz = quizRepository.findByQuizCodeAndStatus(quizCode, PUBLISHED)
+                    .orElseThrow(() -> new RuntimeException("Published quizCSV not found: " + quizCode));
+
+            attempts = quizAttemptRepository.findByStudentAndQuizOrderByCreatedAtDesc(
+                    student,
+                    quiz,
+                    pageable
+            );
+        } else {
+            attempts = quizAttemptRepository.findByStudentOrderByCreatedAtDesc(
+                    student,
+                    pageable
+            );
+        }
+
+        return PageResponseUtils.toPageResponse(
+                attempts,
+                this::toAttemptHistoryResponse
+        );
+    }
+
+    @Override
+    @PreAuthorize("hasAuthority('ROLE_STUDENT')")
+    public StudentQuizAttemptDetailResponse getMyQuizAttemptDetail(String attemptCode) {
+        User student = securityUtils.getCurrentUserCognitoSub();
+
+        QuizAttempt attempt = quizAttemptRepository.findByAttemptCodeAndStudent(attemptCode, student)
+                .orElseThrow(() -> new RuntimeException("Quiz attempt not found: " + attemptCode));
+
+        List<QuizAttemptAnswer> answers =
+                quizAttemptAnswerRepository.findByAttemptOrderByQuestionOrderAsc(attempt);
+
+        Quiz quiz = attempt.getQuiz();
+        Lesson lesson = quiz.getLesson();
+
+        List<StudentQuizAttemptDetailResponse.AnswerDetail> answerDetails = answers.stream()
+                .map(answer -> {
+                    QuizQuestion question = answer.getQuestion();
+
+                    return StudentQuizAttemptDetailResponse.AnswerDetail.builder()
+                            .questionId(question.getId())
+                            .questionOrder(question.getQuestionOrder())
+                            .questionText(question.getQuestionText())
+                            .studentAnswer(answer.getStudentAnswer())
+                            .correctAnswer(answer.getCorrectAnswer())
+                            .correct(answer.getCorrect())
+                            .explanation(answer.getExplanation())
+                            .build();
+                })
+                .toList();
+
+        return StudentQuizAttemptDetailResponse.builder()
+                .attemptCode(attempt.getAttemptCode())
+                .quizCode(quiz.getQuizCode())
+                .quizTitle(quiz.getTitle())
+                .lessonCode(lesson.getLessonCode())
+                .lessonTitle(lesson.getTitle())
+                .score(attempt.getScore())
+                .totalQuestions(attempt.getTotalQuestions())
+                .correctCount(attempt.getCorrectCount())
+                .status(attempt.getStatus())
+                .submittedAt(attempt.getCreatedAt())
+                .answers(answerDetails)
+                .build();
+    }
+
     private String normalizeAnswer(String value) {
         if (value == null) return "";
         return value.trim().toUpperCase();
+    }
+
+    private StudentQuizAttemptHistoryResponse toAttemptHistoryResponse(QuizAttempt attempt) {
+        Quiz quiz = attempt.getQuiz();
+        Lesson lesson = quiz.getLesson();
+
+        return StudentQuizAttemptHistoryResponse.builder()
+                .attemptCode(attempt.getAttemptCode())
+                .quizCode(quiz.getQuizCode())
+                .quizTitle(quiz.getTitle())
+                .lessonCode(lesson.getLessonCode())
+                .lessonTitle(lesson.getTitle())
+                .score(attempt.getScore())
+                .totalQuestions(attempt.getTotalQuestions())
+                .correctCount(attempt.getCorrectCount())
+                .status(attempt.getStatus())
+                .submittedAt(attempt.getCreatedAt())
+                .build();
     }
 }

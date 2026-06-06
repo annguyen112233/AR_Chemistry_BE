@@ -1,7 +1,7 @@
 package com.chemistry.demo.services.quiz.impl;
 
 import com.chemistry.demo.dto.request.quiz.QuizImportUploadUrlRequest;
-import com.chemistry.demo.dto.response.quiz.QuizImportUploadUrlResponse;
+import com.chemistry.demo.dto.response.quiz.staff.QuizImportUploadUrlResponse;
 import com.chemistry.demo.repository.LessonRepository;
 import com.chemistry.demo.services.aws.S3Service;
 import com.chemistry.demo.services.quiz.QuizImportUploadService;
@@ -41,7 +41,7 @@ public class QuizImportUploadServiceImpl implements QuizImportUploadService {
 
         String safeLessonCode = request.getLessonCode().replaceAll("[^a-zA-Z0-9_-]", "_");
 
-        String key = "quiz-import/"
+        String key = "quizCSV-import/"
                 + LocalDate.now()
                 + "/"
                 + safeLessonCode

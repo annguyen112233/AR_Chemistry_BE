@@ -3,7 +3,7 @@ package com.chemistry.demo.controller.staff;
 import com.chemistry.demo.dto.ApiResponse;
 import com.chemistry.demo.dto.request.quiz.QuizImportUploadUrlRequest;
 import com.chemistry.demo.dto.request.quiz.StartQuizImportRequest;
-import com.chemistry.demo.dto.response.quiz.StartQuizImportResponse;
+import com.chemistry.demo.dto.response.quiz.staff.StartQuizImportResponse;
 import com.chemistry.demo.services.quiz.QuizImportService;
 import com.chemistry.demo.services.quiz.QuizImportUploadService;
 import lombok.RequiredArgsConstructor;

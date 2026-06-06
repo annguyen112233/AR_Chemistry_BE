@@ -1,6 +1,6 @@
 package com.chemistry.demo.config;
 
-import com.chemistry.demo.dto.quiz.QuizCsvRow;
+import com.chemistry.demo.dto.quizCSV.QuizCsvRow;
 import com.chemistry.demo.entity.Lesson;
 import com.chemistry.demo.entity.Quiz;
 import com.chemistry.demo.entity.QuizImportJob;

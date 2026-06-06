@@ -2,9 +2,9 @@ package com.chemistry.demo.controller.staff;
 
 import com.chemistry.demo.dto.ApiResponse;
 import com.chemistry.demo.dto.PageResponse;
-import com.chemistry.demo.dto.response.quiz.StaffLessonQuizOverviewResponse;
-import com.chemistry.demo.dto.response.quiz.StaffQuizDetailResponse;
-import com.chemistry.demo.dto.response.quiz.StaffQuizSummaryResponse;
+import com.chemistry.demo.dto.response.quiz.staff.StaffLessonQuizOverviewResponse;
+import com.chemistry.demo.dto.response.quiz.staff.StaffQuizDetailResponse;
+import com.chemistry.demo.dto.response.quiz.staff.StaffQuizSummaryResponse;
 import com.chemistry.demo.services.lesson.LessonService;
 import com.chemistry.demo.services.quiz.StaffQuizManagementService;
 import lombok.RequiredArgsConstructor;

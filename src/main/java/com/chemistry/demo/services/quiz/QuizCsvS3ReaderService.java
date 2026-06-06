@@ -1,6 +1,6 @@
 package com.chemistry.demo.services.quiz;
 
-import com.chemistry.demo.dto.quiz.QuizCsvRow;
+import com.chemistry.demo.dto.quizCSV.QuizCsvRow;
 
 import java.util.List;
 

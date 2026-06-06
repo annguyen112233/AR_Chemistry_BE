@@ -1,0 +1,15 @@
+package com.chemistry.demo.enums;
+
+public enum ArSceneKey {
+    METAL_ACID_GAS,
+    METAL_WATER_GAS,
+    PRECIPITATION,
+    THERMAL_DECOMPOSITION_GAS,
+    NEUTRALIZATION,
+    COMBUSTION,
+    COMBUSTION_GAS,
+    GAS_EVOLUTION,
+    REDOX_GAS,
+    NO_REACTION,
+    DEFAULT
+}

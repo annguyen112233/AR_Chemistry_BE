@@ -1,7 +1,7 @@
 package com.chemistry.demo.services.quiz.impl;
 
 import com.chemistry.demo.config.properties.AwsProperties;
-import com.chemistry.demo.dto.quiz.QuizCsvRow;
+import com.chemistry.demo.dto.quizCSV.QuizCsvRow;
 import com.chemistry.demo.services.quiz.QuizCsvS3ReaderService;
 import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +44,7 @@ public class QuizCsvS3ReaderServiceImpl implements QuizCsvS3ReaderService {
             }
 
         } catch (Exception e) {
-            throw new RuntimeException("Read quiz CSV from S3 failed: " + e.getMessage(), e);
+            throw new RuntimeException("Read quizCSV CSV from S3 failed: " + e.getMessage(), e);
         }
     }
 }

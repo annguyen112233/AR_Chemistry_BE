@@ -1,13 +1,12 @@
 package com.chemistry.demo.controller.student;
 
 import com.chemistry.demo.dto.ApiResponse;
+import com.chemistry.demo.dto.PageResponse;
 import com.chemistry.demo.dto.request.quiz.student.SubmitQuizRequest;
-import com.chemistry.demo.dto.response.quiz.student.StudentPublishedQuizResponse;
-import com.chemistry.demo.dto.response.quiz.student.StudentQuizDetailResponse;
-import com.chemistry.demo.dto.response.quiz.student.StudentQuizSummaryResponse;
-import com.chemistry.demo.dto.response.quiz.student.SubmitQuizResponse;
+import com.chemistry.demo.dto.response.quiz.student.*;
 import com.chemistry.demo.services.quiz.StudentQuizService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -50,6 +49,25 @@ public class StudentQuizController {
     public ApiResponse<List<StudentPublishedQuizResponse>> getPublishedQuizzes() {
         return ApiResponse.<List<StudentPublishedQuizResponse>>ok()
                 .data(studentQuizService.getPublishedQuizzes())
+                .build();
+    }
+
+    @GetMapping("/quiz-attempts")
+    public ApiResponse<PageResponse<StudentQuizAttemptHistoryResponse>> getMyQuizAttemptHistory(
+            @RequestParam(required = false) String quizCode,
+            Pageable pageable
+    ) {
+        return ApiResponse.<PageResponse<StudentQuizAttemptHistoryResponse>>ok()
+                .data(studentQuizService.getMyQuizAttemptHistory(quizCode, pageable))
+                .build();
+    }
+
+    @GetMapping("/quiz-attempts/{attemptCode}")
+    public ApiResponse<StudentQuizAttemptDetailResponse> getMyQuizAttemptDetail(
+            @PathVariable String attemptCode
+    ) {
+        return ApiResponse.<StudentQuizAttemptDetailResponse>ok()
+                .data(studentQuizService.getMyQuizAttemptDetail(attemptCode))
                 .build();
     }
 }

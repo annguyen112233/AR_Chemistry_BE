@@ -1,12 +1,10 @@
 package com.chemistry.demo.services.quiz;
 
 import com.chemistry.demo.dto.PageResponse;
-import com.chemistry.demo.dto.response.quiz.StaffLessonQuizOverviewResponse;
-import com.chemistry.demo.dto.response.quiz.StaffQuizDetailResponse;
-import com.chemistry.demo.dto.response.quiz.StaffQuizSummaryResponse;
+import com.chemistry.demo.dto.response.quiz.staff.StaffLessonQuizOverviewResponse;
+import com.chemistry.demo.dto.response.quiz.staff.StaffQuizDetailResponse;
+import com.chemistry.demo.dto.response.quiz.staff.StaffQuizSummaryResponse;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
 
 
 public interface StaffQuizManagementService {
@@ -14,4 +12,5 @@ public interface StaffQuizManagementService {
     PageResponse<StaffQuizSummaryResponse> getQuizzesByLesson(String lessonCode, Pageable pageable);
     StaffQuizDetailResponse getQuizDetail(String quizCode, Pageable pageable);
     StaffQuizSummaryResponse publishQuiz(String quizCode);
+
 }

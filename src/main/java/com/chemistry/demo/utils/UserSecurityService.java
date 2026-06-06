@@ -1,6 +1,6 @@
 package com.chemistry.demo.utils;
 
-import com.chemistry.demo.dto.response.UserResponse;
+import com.chemistry.demo.dto.response.user.UserResponse;
 import com.chemistry.demo.entity.User;
 import com.chemistry.demo.exception.AppException;
 import com.chemistry.demo.exception.UserErrorCode;
@@ -8,7 +8,6 @@ import com.chemistry.demo.mapper.UserMapper;
 import com.chemistry.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +20,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service

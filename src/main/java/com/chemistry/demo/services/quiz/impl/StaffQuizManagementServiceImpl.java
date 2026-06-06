@@ -1,10 +1,10 @@
 package com.chemistry.demo.services.quiz.impl;
 
 import com.chemistry.demo.dto.PageResponse;
-import com.chemistry.demo.dto.response.quiz.StaffLessonQuizOverviewResponse;
-import com.chemistry.demo.dto.response.quiz.StaffQuizDetailResponse;
-import com.chemistry.demo.dto.response.quiz.StaffQuizQuestionResponse;
-import com.chemistry.demo.dto.response.quiz.StaffQuizSummaryResponse;
+import com.chemistry.demo.dto.response.quiz.staff.StaffLessonQuizOverviewResponse;
+import com.chemistry.demo.dto.response.quiz.staff.StaffQuizDetailResponse;
+import com.chemistry.demo.dto.response.quiz.staff.StaffQuizQuestionResponse;
+import com.chemistry.demo.dto.response.quiz.staff.StaffQuizSummaryResponse;
 import com.chemistry.demo.entity.Lesson;
 import com.chemistry.demo.entity.Quiz;
 import com.chemistry.demo.entity.QuizQuestion;

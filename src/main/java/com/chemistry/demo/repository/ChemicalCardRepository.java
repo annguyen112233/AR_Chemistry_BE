@@ -12,14 +12,15 @@ import java.util.Optional;
 @Repository
 public interface ChemicalCardRepository extends JpaRepository<ChemicalCard, String> {
 
-    Optional<ChemicalCard> findBySymbol(String symbol);
+    Optional<ChemicalCard> findByCardCode(String cardCode);
 
-    boolean existsBySymbol(String symbol);
+    Optional<ChemicalCard> findByQrPayload(String qrPayload);
 
-    boolean existsByAtomicNumber(Integer atomicNumber);
+    boolean existsByCardCode(String cardCode);
 
-    Page<ChemicalCard> findByActiveTrueAndPurchasableTrue(Pageable pageable);
+    boolean existsByQrPayload(String qrPayload);
 
-    Page<ChemicalCard> findByPurchasable(Boolean purchasable, Pageable pageable);
+    Page<ChemicalCard> findByActiveTrue(Pageable pageable);
 
+    Page<ChemicalCard> findBySubstance_Id(String substanceId, Pageable pageable);
 }
