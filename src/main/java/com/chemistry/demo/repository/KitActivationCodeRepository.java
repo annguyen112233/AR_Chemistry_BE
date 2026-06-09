@@ -1,6 +1,7 @@
 package com.chemistry.demo.repository;
 
 import com.chemistry.demo.entity.KitActivationCode;
+import com.chemistry.demo.entity.User;
 import com.chemistry.demo.enums.ActivationCodeStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,4 +36,6 @@ public interface KitActivationCodeRepository extends JpaRepository<KitActivation
             String kitId,
             ActivationCodeStatus status
     );
+
+    Optional<KitActivationCode> findByIdAndUsedByUser(String id, User user);
 }

@@ -23,4 +23,6 @@ public interface S3Service {
      * @return public URL
      */
     String buildFileUrl(String key);
+
+    String generatePresignedGetUrl(String key);
 }

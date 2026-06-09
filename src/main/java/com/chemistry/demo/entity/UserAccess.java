@@ -44,5 +44,17 @@ public class UserAccess {
     @Column(nullable = false)
     private AccessStatus status;
 
+    /**
+     * Trỏ tới nguồn tạo quyền:
+     *
+     * source = KIT_ACTIVATION
+     * referenceId = activationCode.id
+     *
+     * source = AR_PACKAGE_PURCHASE
+     * referenceId = arPackagePurchase.id
+     *
+     * source = SINGLE_CARD_PURCHASE
+     * referenceId = singleCardPurchase.id
+     */
     private String referenceId;
 }

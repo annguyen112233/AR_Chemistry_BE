@@ -34,7 +34,7 @@ public class DevPaymentServiceImpl implements DevPaymentService {
         UserAccess userAccess = UserAccess.builder()
                 .user(user)
                 .accessType(AccessType.AR_30_DAYS)
-                .source(AccessSource.DEV_FAKE_PAYMENT)
+                .source(AccessSource.AR_PACKAGE_PURCHASE)
                 .startAt(now)
                 .expiredAt(expiredAt)
                 .status(AccessStatus.ACTIVE)

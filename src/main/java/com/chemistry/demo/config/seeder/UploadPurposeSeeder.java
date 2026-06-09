@@ -50,17 +50,17 @@ public class UploadPurposeSeeder implements DataSeeder {
                         .active(true)
                         .build(),
                 UploadPurpose.builder()
-                        .code("PAYMENT_PROOF")
-                        .folderPrefix("payment-proofs")
-                        .maxFileSize(5 * 1024 * 1024L)
-                        .allowedContentTypes("image/png,image/jpeg")
-                        .active(true)
-                        .build(),
-                UploadPurpose.builder()
                         .code("QUIZ_IMPORT")
                         .folderPrefix("quizCSV-import")
                         .maxFileSize(10 * 1024 * 1024L)
                         .allowedContentTypes("text/csv,application/vnd.ms-excel")
+                        .active(true)
+                        .build(),
+                UploadPurpose.builder()
+                        .code("SINGLE_CARD_QR")
+                        .folderPrefix("single-cards")
+                        .maxFileSize(5 * 1024 * 1024L)
+                        .allowedContentTypes("image/png,image/jpeg,image/webp")
                         .active(true)
                         .build()
                 );

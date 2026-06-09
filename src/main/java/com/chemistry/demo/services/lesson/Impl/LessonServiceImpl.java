@@ -37,7 +37,8 @@ public class LessonServiceImpl implements LessonService {
         try {
             List<LessonImportRequest> requests = objectMapper.readValue(
                     file.getInputStream(),
-                    new TypeReference<List<LessonImportRequest>>() {}
+                    new TypeReference<>() {
+                    }
             );
 
             int created = 0;

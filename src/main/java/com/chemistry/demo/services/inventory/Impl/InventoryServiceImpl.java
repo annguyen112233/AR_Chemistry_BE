@@ -128,7 +128,7 @@ public class InventoryServiceImpl implements InventoryService {
                 UserAccess.builder()
                         .user(user)
                         .accessType(AccessType.KIT_TRIAL)
-                        .source(AccessSource.KIT_CODE)
+                        .source(AccessSource.KIT_ACTIVATION)
                         .startAt(now)
                         .expiredAt(expiredAt)
                         .status(AccessStatus.ACTIVE)

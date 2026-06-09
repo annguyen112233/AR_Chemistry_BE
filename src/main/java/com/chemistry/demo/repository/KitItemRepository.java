@@ -1,5 +1,6 @@
 package com.chemistry.demo.repository;
 
+import com.chemistry.demo.entity.Kit;
 import com.chemistry.demo.entity.KitItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -18,4 +19,6 @@ public interface KitItemRepository extends JpaRepository<KitItem, String> {
             String kitId,
             String substanceId
     );
+
+    List<KitItem> findByKit(Kit kit);
 }

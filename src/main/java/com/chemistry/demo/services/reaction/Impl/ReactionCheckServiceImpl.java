@@ -28,16 +28,6 @@ public class ReactionCheckServiceImpl implements com.chemistry.demo.services.rea
     public CheckReactionResponse checkReaction(CheckReactionRequest request) {
         User user = securityUtils.getCurrentUserCognitoSub();
 
-        if (!arAccessService.canScanAR(user)) {
-            return CheckReactionResponse.builder()
-                    .matched(false)
-                    .reason("AR_ACCESS_REQUIRED")
-                    .message("Bạn cần kích hoạt mã kit hoặc mua gói AR 30 Days để quét AR.")
-                    .missingSubstances(List.of())
-                    .reactants(List.of())
-                    .products(List.of())
-                    .build();
-        }
 
         List<String> qrPayloads = request.getQrPayloads()
                 .stream()
@@ -109,6 +99,21 @@ public class ReactionCheckServiceImpl implements com.chemistry.demo.services.rea
                     .reason("SUBSTANCE_INACTIVE")
                     .message("Có chất đang bị tắt trong hệ thống.")
                     .missingSubstances(inactiveSubstances)
+                    .reactants(List.of())
+                    .products(List.of())
+                    .build();
+        }
+
+        if (!arAccessService.canScanSubstances(user, substances)) {
+            return CheckReactionResponse.builder()
+                    .matched(false)
+                    .reason("AR_ACCESS_REQUIRED")
+                    .message("Bạn chưa có quyền quét một hoặc nhiều chất trong phản ứng này.")
+                    .missingSubstances(
+                            substances.stream()
+                                    .map(ChemicalSubstance::getFormula)
+                                    .toList()
+                    )
                     .reactants(List.of())
                     .products(List.of())
                     .build();

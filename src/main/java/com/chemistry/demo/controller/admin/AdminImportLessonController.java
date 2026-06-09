@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,7 +24,10 @@ public class AdminImportLessonController {
 
     private final LessonService lessonService;
 
-    @PostMapping("/import-lessons")
+    @PostMapping(
+            value = "/import-lessons",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
     public ApiResponse<?> importLessons(@RequestParam("file") MultipartFile file) {
         LessonImportResponse result = lessonService.importLessons(file);
         return ApiResponse.ok()
