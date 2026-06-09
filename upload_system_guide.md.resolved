@@ -1,0 +1,416 @@
+# 📁 Hướng dẫn hệ thống Upload File - Database Driven Architecture
+
+> Tài liệu này mô tả chi tiết kiến trúc, flow hoạt động, và cách mở rộng của hệ thống Upload File trong Spring Boot project AR Chemistry.
+
+---
+
+## 1. Tổng quan kiến trúc
+
+Hệ thống Upload File được thiết kế theo nguyên tắc **Database-Driven** và **SOLID**, tách biệt rõ ràng giữa:
+
+- **Logic nghiệp vụ Upload** (`services/upload/`) — validate, sanitize, lưu DB
+- **Logic AWS S3** (`services/aws/`) — chỉ giao tiếp với SDK của Amazon
+
+```mermaid
+flowchart LR
+    FE[Frontend] -->|POST /files/presigned-url| CTRL[FileUploadController]
+    CTRL --> US[UploadServiceImpl]
+    US -->|validate rules| DB[(Database)]
+    US -->|delegate S3| S3[S3ServiceImpl]
+    S3 -->|presign| AWS[AWS S3]
+    US -->|save record| DB
+    CTRL -->|response| FE
+    FE -->|PUT file| AWS
+```
+
+---
+
+## 2. Cấu trúc thư mục (Package Structure)
+
+```
+services/
+├── aws/                              ← Chỉ chứa logic thuần AWS
+│   ├── S3Service.java                ← Interface S3
+│   └── impl/
+│       └── S3ServiceImpl.java        ← Gọi AWS SDK, tạo presigned URL, build fileUrl
+│
+└── upload/                           ← Logic nghiệp vụ Upload
+    ├── UploadService.java            ← Interface upload file
+    ├── UploadPurposeService.java     ← Interface CRUD quản lý rules upload
+    └── impl/
+        ├── UploadServiceImpl.java            ← Validate, sanitize, lưu DB, gọi S3Service
+        └── UploadPurposeServiceImpl.java     ← CRUD quản lý UploadPurpose
+
+entity/
+├── UploadPurpose.java    ← Bảng cấu hình rules upload (lưu trong DB)
+└── UploadFile.java       ← Bảng lịch sử upload (audit log)
+
+enums/
+└── UploadStatus.java     ← PENDING | UPLOADED | FAILED | USED
+
+exception/
+└── UploadErrorCode.java  ← Tất cả mã lỗi liên quan upload
+
+config/seeder/
+└── UploadPurposeSeeder.java  ← Tự động seed dữ liệu rules khi server khởi động
+```
+
+---
+
+## 3. Data Models (Entity)
+
+### 3.1. UploadPurpose — "Người gác cổng"
+
+Mỗi dòng trong bảng `upload_purposes` đại diện cho **một bộ luật** quy định ai được upload loại file gì, kích thước bao nhiêu, lưu vào folder nào trên S3.
+
+| Field | Type | Ý nghĩa |
+|-------|------|---------|
+| `id` | Long | Khóa chính tự tăng |
+| `code` | String | Mã định danh duy nhất (VD: `FEEDBACK`, `AVATAR`) |
+| `folderPrefix` | String | Thư mục trên S3 (VD: `feedback`, `avatars`) |
+| `maxFileSize` | Long | Kích thước tối đa cho phép (bytes) |
+| `allowedContentTypes` | String | Danh sách MIME types, phân cách bởi dấu phẩy |
+| `active` | Boolean | Công tắc bật/tắt. `false` = chặn upload ngay lập tức |
+| `createdAt` | Instant | Thời gian tạo (tự động) |
+| `updatedAt` | Instant | Thời gian cập nhật (tự động) |
+
+**Dữ liệu mặc định được seed:**
+
+| Code | Folder | Max Size | Allowed Types |
+|------|--------|----------|---------------|
+| `FEEDBACK` | `feedback` | 10 MB | `image/png`, `image/jpeg`, `application/pdf` |
+| `EXERCISE_IMPORT` | `exercise-import` | 50 MB | `application/pdf`, `.docx`, `.xlsx`, `image/*`, `text/plain` |
+| `AVATAR` | `avatars` | 5 MB | `image/png`, `image/jpeg` |
+| `DOCUMENT` | `documents` | 30 MB | `application/pdf`, `.docx`, `.xlsx` |
+
+### 3.2. UploadFile — "Sổ nhật ký upload"
+
+Mỗi dòng trong bảng `upload_files` ghi nhận **một lượt cấp phát presigned URL**.
+
+| Field | Type | Ý nghĩa |
+|-------|------|---------|
+| `id` | Long | Khóa chính |
+| `originalFileName` | String | Tên gốc file trên máy user (VD: `Báo cáo hóa.pdf`) |
+| `safeFileName` | String | Tên đã sanitize (VD: `Bao_cao_hoa.pdf`) |
+| `contentType` | String | MIME type (VD: `application/pdf`) |
+| `fileSize` | Long | Kích thước file (bytes) |
+| `storageKey` | String | Đường dẫn đầy đủ trên S3 (VD: `feedback/2026/05/21/uuid-file.pdf`) |
+| `fileUrl` | String | URL công khai để truy cập file |
+| `purposeCode` | String | Mã mục đích (VD: `FEEDBACK`) |
+| `uploadStatus` | Enum | Trạng thái: `PENDING` → `UPLOADED` → `USED` |
+| `uploadedBy` | String | Cognito Sub của user đã upload |
+| `createdAt` | Instant | Thời gian tạo record |
+| `updatedAt` | Instant | Thời gian cập nhật |
+
+### 3.3. UploadStatus — Vòng đời trạng thái
+
+```
+PENDING  ──→  UPLOADED  ──→  USED
+                │
+                └──→  FAILED
+```
+
+| Trạng thái | Ý nghĩa |
+|------------|---------|
+| `PENDING` | Backend đã cấp presigned URL, chờ frontend upload lên S3 |
+| `UPLOADED` | Frontend đã upload thành công lên S3 |
+| `FAILED` | Upload thất bại |
+| `USED` | File đã được gắn vào một entity khác (feedback, avatar...) |
+
+---
+
+## 4. Flow chi tiết — Upload File
+
+### Bước 1: Frontend chọn file
+
+Khi user chọn file từ máy, hệ điều hành (trình duyệt / Android / iOS) tự động cung cấp metadata:
+
+```javascript
+// Web (React/Vue/Angular)
+const file = event.target.files[0];
+console.log(file.name);  // "BaoCao.pdf"
+console.log(file.type);  // "application/pdf"
+console.log(file.size);  // 1572864 (bytes)
+```
+
+```dart
+// Flutter
+FilePickerResult? result = await FilePicker.platform.pickFiles();
+PlatformFile file = result!.files.first;
+print(file.name);  // "BaoCao.pdf"
+print(file.size);  // 1572864
+```
+
+> [!NOTE]
+> `fileSize` **không phải** do người dùng tự nhập. Hệ điều hành tự cung cấp metadata này ngay khi file được chọn, trước khi bất kỳ byte nào được gửi đi.
+
+### Bước 2: Frontend gọi API xin Presigned URL
+
+```
+POST /files/presigned-url
+Content-Type: application/json
+Authorization: Bearer <jwt_token>
+```
+
+```json
+{
+    "fileName": "BaoCao.pdf",
+    "contentType": "application/pdf",
+    "fileSize": 1572864,
+    "purposeCode": "EXERCISE_IMPORT"
+}
+```
+
+### Bước 3: Backend xử lý (UploadServiceImpl)
+
+```mermaid
+flowchart TD
+    A[Nhận Request] --> B[Xác thực User qua SecurityUtils]
+    B --> C[Query UploadPurpose từ DB theo purposeCode]
+    C -->|Không tìm thấy| E1[❌ UPLOAD_PURPOSE_NOT_FOUND]
+    C -->|Tìm thấy| D[Validate fileSize <= maxFileSize]
+    D -->|Vượt quá| E2[❌ FILE_SIZE_EXCEEDED]
+    D -->|OK| F[Validate contentType in allowedContentTypes]
+    F -->|Không hợp lệ| E3[❌ INVALID_CONTENT_TYPE]
+    F -->|OK| G[Sanitize fileName → safeFileName]
+    G -->|Rỗng sau sanitize| E4[❌ INVALID_FILE_NAME]
+    G -->|OK| H["Build storageKey: {folder}/{yyyy/MM/dd}/{uuid}-{safeFileName}"]
+    H --> I[Lưu UploadFile vào DB với status PENDING]
+    I --> J[Gọi S3Service.generatePresignedPutUrl]
+    J --> K[Gọi S3Service.buildFileUrl]
+    K --> L[Cập nhật fileUrl vào UploadFile]
+    L --> M[Trả response cho Frontend]
+```
+
+**Chi tiết các bước validate:**
+
+1. **Query UploadPurpose**: [findByCodeAndActiveTrue("EXERCISE_IMPORT")](file:///c:/Users/ACER/Documents/GitHub/AR_Project/AR_Chemistry_BE/src/main/java/com/chemistry/demo/repository/UploadPurposeRepository.java#11-12)
+   - Nếu không có hoặc `active = false` → ném lỗi ngay
+2. **Validate fileSize**: `1,572,864 <= 52,428,800 (50MB)` → ✅ Pass
+3. **Validate contentType**: `"application/pdf"` có trong `"application/pdf,application/vnd..."` → ✅ Pass
+4. **Sanitize fileName**: Loại bỏ ký tự đặc biệt, Unicode, khoảng trắng
+5. **Build storageKey**: `exercise-import/2026/05/21/a1b2c3d4-BaoCao.pdf`
+6. **Lưu DB**: Insert record [UploadFile](file:///c:/Users/ACER/Documents/GitHub/AR_Project/AR_Chemistry_BE/src/main/java/com/chemistry/demo/entity/UploadFile.java#16-59) với status `PENDING`
+7. **Gọi S3Service**: Tạo presigned URL với `contentLength` khóa cứng (bảo mật)
+
+### Bước 4: Backend trả Response
+
+```json
+{
+    "code": 200,
+    "data": {
+        "uploadFileId": 42,
+        "uploadUrl": "https://bucket.s3.amazonaws.com/exercise-import/2026/05/21/uuid-BaoCao.pdf?X-Amz-Algorithm=...",
+        "fileUrl": "https://bucket.s3.ap-southeast-1.amazonaws.com/exercise-import/2026/05/21/uuid-BaoCao.pdf",
+        "storageKey": "exercise-import/2026/05/21/uuid-BaoCao.pdf",
+        "contentType": "application/pdf"
+    }
+}
+```
+
+### Bước 5: Frontend upload file trực tiếp lên S3
+
+```javascript
+// Frontend dùng uploadUrl để PUT file trực tiếp lên AWS S3
+await fetch(response.data.uploadUrl, {
+    method: 'PUT',
+    headers: {
+        'Content-Type': 'application/pdf',
+        'Content-Length': file.size
+    },
+    body: file  // Binary data gốc
+});
+```
+
+> [!IMPORTANT]
+> AWS S3 sẽ **tự động từ chối** (HTTP 403) nếu:
+> - `Content-Length` không khớp với `fileSize` đã khai báo
+> - `Content-Type` không khớp
+> - URL đã hết hạn (sau 5 phút)
+> 
+> Đây là lớp bảo vệ phía AWS, độc lập với backend.
+
+---
+
+## 5. Flow chi tiết — CRUD UploadPurpose (Admin)
+
+Admin có thể quản lý các rules upload qua REST API mà không cần sửa code.
+
+### API Endpoints
+
+| Method | URL | Mô tả |
+|--------|-----|-------|
+| `GET` | `/api/v1/upload-purposes` | Lấy danh sách phân trang |
+| `GET` | `/api/v1/upload-purposes/{id}` | Xem chi tiết 1 rule |
+| `POST` | `/api/v1/upload-purposes` | Tạo mới rule |
+| `PUT` | `/api/v1/upload-purposes/{id}` | Cập nhật rule |
+| `DELETE` | `/api/v1/upload-purposes/{id}` | Xóa rule |
+
+> [!WARNING]
+> Tất cả API trên đều yêu cầu quyền `ROLE_ADMIN`. User thường (Student/Teacher) không thể truy cập.
+
+### Ví dụ: Tạo mới rule cho Lab Report
+
+```
+POST /api/v1/upload-purposes
+```
+
+```json
+{
+    "code": "LAB_REPORT",
+    "folderPrefix": "lab-reports",
+    "maxFileSize": 20971520,
+    "allowedContentTypes": "application/pdf,image/png,image/jpeg",
+    "active": true
+}
+```
+
+Sau khi insert dòng này vào DB, Frontend **ngay lập tức** có thể gọi upload với `"purposeCode": "LAB_REPORT"` mà backend không cần deploy lại.
+
+---
+
+## 6. Bảo mật (Security)
+
+### 6.1. Lớp bảo vệ nhiều tầng
+
+```
+┌──────────────────────────────────────────────────┐
+│  Tầng 1: Spring Security (@PreAuthorize)         │
+│  → Kiểm tra user có quyền UPLOAD_FILE không      │
+├──────────────────────────────────────────────────┤
+│  Tầng 2: UploadPurpose Validation                │
+│  → Kiểm tra purpose tồn tại và active            │
+│  → Kiểm tra fileSize <= maxFileSize               │
+│  → Kiểm tra contentType trong allowedContentTypes │
+├──────────────────────────────────────────────────┤
+│  Tầng 3: File Name Sanitization                  │
+│  → Loại bỏ ký tự đặc biệt, ngăn path traversal  │
+├──────────────────────────────────────────────────┤
+│  Tầng 4: AWS S3 Content-Length Enforcement        │
+│  → Presigned URL khóa cứng content-length         │
+│  → AWS tự reject nếu file thực tế khác khai báo  │
+└──────────────────────────────────────────────────┘
+```
+
+### 6.2. Permission hiện tại
+
+| Permission | Mô tả |
+|-----------|-------|
+| `UPLOAD_FILE` | Quyền cơ bản upload file |
+| `UPLOAD_EXERCISE_IMPORT` | Quyền upload bài tập (dành cho Teacher) |
+| `UPLOAD_DOCUMENT` | Quyền upload tài liệu (dành cho Teacher) |
+
+### 6.3. Đề xuất phân quyền theo role
+
+| Role | Permissions |
+|------|------------|
+| **STUDENT** | `UPLOAD_FILE` (FEEDBACK, AVATAR) |
+| **TEACHER** | `UPLOAD_FILE` + `UPLOAD_EXERCISE_IMPORT` + `UPLOAD_DOCUMENT` |
+| **ADMIN** | Tất cả |
+
+---
+
+## 7. Error Codes
+
+Tất cả mã lỗi upload được tập trung trong [UploadErrorCode.java](file:///c:/Users/ACER/Documents/GitHub/AR_Project/AR_Chemistry_BE/src/main/java/com/chemistry/demo/exception/UploadErrorCode.java):
+
+| Error Code | HTTP Status | Mô tả |
+|-----------|-------------|-------|
+| `UPLOAD_PURPOSE_NOT_FOUND` | 404 | Không tìm thấy purpose code trong DB |
+| `UPLOAD_PURPOSE_ALREADY_EXISTS` | 409 | Purpose code đã tồn tại (khi tạo mới) |
+| `UPLOAD_PURPOSE_INACTIVE` | 400 | Purpose đang bị tắt (active=false) |
+| `INVALID_FILE_NAME` | 400 | Tên file rỗng sau khi sanitize |
+| `INVALID_CONTENT_TYPE` | 400 | MIME type không nằm trong danh sách cho phép |
+| `INVALID_FILE_SIZE` | 400 | File size không hợp lệ |
+| `FILE_SIZE_EXCEEDED` | 400 | File vượt quá maxFileSize của purpose |
+| `PRESIGNED_URL_GENERATE_FAILED` | 500 | Lỗi khi gọi AWS SDK tạo presigned URL |
+
+---
+
+## 8. Cách mở rộng (Không cần sửa code)
+
+### Thêm loại upload mới
+
+Chỉ cần **insert 1 dòng vào database** (hoặc gọi API Admin):
+
+```sql
+INSERT INTO upload_purposes (code, folder_prefix, max_file_size, allowed_content_types, active)
+VALUES ('CHEMICAL_IMAGE', 'chemical-images', 15728640, 'image/png,image/jpeg,image/webp', true);
+```
+
+→ Frontend ngay lập tức có thể upload với `"purposeCode": "CHEMICAL_IMAGE"`.
+
+### Thay đổi giới hạn
+
+```sql
+-- Nâng avatar lên 10MB
+UPDATE upload_purposes SET max_file_size = 10485760 WHERE code = 'AVATAR';
+
+-- Tạm dừng upload feedback
+UPDATE upload_purposes SET active = false WHERE code = 'FEEDBACK';
+```
+
+→ Có hiệu lực ngay lập tức, **không cần restart server**.
+
+### Đổi Cloud Provider (VD: từ AWS sang GCS)
+
+Chỉ cần tạo class mới implement [S3Service](file:///c:/Users/ACER/Documents/GitHub/AR_Project/AR_Chemistry_BE/src/main/java/com/chemistry/demo/services/aws/S3Service.java#7-27):
+
+```java
+@Service
+@ConditionalOnProperty(name = "storage.provider", havingValue = "gcs")
+public class GcsServiceImpl implements S3Service {
+    // Implement generatePresignedPutUrl() và buildFileUrl()
+    // dùng Google Cloud Storage SDK
+}
+```
+
+→ Toàn bộ logic upload ([UploadServiceImpl](file:///c:/Users/ACER/Documents/GitHub/AR_Project/AR_Chemistry_BE/src/main/java/com/chemistry/demo/services/upload/impl/UploadServiceImpl.java#24-98)) **không cần sửa 1 dòng nào**.
+
+---
+
+## 9. Sơ đồ quan hệ giữa các thành phần
+
+```mermaid
+graph TD
+    subgraph Controller Layer
+        FUC[FileUploadController]
+        UPC[UploadPurposeController]
+    end
+
+    subgraph Upload Service Layer
+        US[UploadServiceImpl]
+        UPS[UploadPurposeServiceImpl]
+    end
+
+    subgraph AWS Service Layer
+        S3[S3ServiceImpl]
+    end
+
+    subgraph Data Layer
+        UPR[(UploadPurposeRepo)]
+        UFR[(UploadFileRepo)]
+    end
+
+    subgraph External
+        AWS[AWS S3 Bucket]
+    end
+
+    FUC --> US
+    UPC --> UPS
+    US --> S3
+    US --> UPR
+    US --> UFR
+    UPS --> UPR
+    S3 --> AWS
+
+    style S3 fill:#ff9900,color:#fff
+    style AWS fill:#ff9900,color:#fff
+    style US fill:#2196F3,color:#fff
+    style UPS fill:#2196F3,color:#fff
+```
+
+---
+
+> [!TIP]
+> **Nguyên tắc vàng**: Mọi thay đổi về rule upload (thêm loại mới, đổi size, đổi format) đều thực hiện qua **Database hoặc API Admin**, không bao giờ sửa code Java.

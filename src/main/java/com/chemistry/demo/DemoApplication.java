@@ -7,10 +7,12 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableCaching
 @ConfigurationPropertiesScan
+@EnableScheduling
 public class DemoApplication {
 
     public static void main(String[] args) {

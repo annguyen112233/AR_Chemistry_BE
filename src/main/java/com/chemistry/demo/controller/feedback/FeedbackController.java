@@ -39,7 +39,7 @@ public class FeedbackController {
             ) Pageable pageable
     ) {
         return ApiResponse.<PageResponse<FeedbackListResponse>>ok()
-                .data(feedbackService.getFeedbacksForAdmin(pageable))
+                .data(feedbackService.getFeedbacksForStaff(pageable))
                 .build();
     }
 
@@ -48,7 +48,7 @@ public class FeedbackController {
             @RequestParam String feedbackId
     ) {
         return ApiResponse.<FeedbackResponse>ok()
-                .data(feedbackService.getFeedbackForAdmin(feedbackId))
+                .data(feedbackService.getFeedbackForStaff(feedbackId))
                 .build();
     }
 

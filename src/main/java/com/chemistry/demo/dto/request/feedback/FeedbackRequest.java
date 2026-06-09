@@ -25,4 +25,8 @@ public class FeedbackRequest {
     private Boolean anonymous;
 
     private String imageUrl;
+
+    private String appVersion;
+
+    private String deviceInfo;
 }
