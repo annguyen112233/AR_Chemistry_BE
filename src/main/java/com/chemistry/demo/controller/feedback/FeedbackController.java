@@ -61,4 +61,15 @@ public class FeedbackController {
                 .data(feedbackService.handleFeedback(feedbackId, request))
                 .build();
     }
+
+
+
+    @GetMapping("/my-feedbacks/{feedbackId}")
+    public ApiResponse<FeedbackResponse> getUserFeedback(
+            @PathVariable String feedbackId
+    ) {
+        return ApiResponse.<FeedbackResponse>ok()
+                .data(feedbackService.getUserFeedback(feedbackId))
+                .build();
+    }
 }

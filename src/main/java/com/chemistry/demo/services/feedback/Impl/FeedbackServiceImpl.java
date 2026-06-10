@@ -100,4 +100,13 @@ public class FeedbackServiceImpl implements FeedbackService {
             setter.accept(value);
         }
     }
+    @Override
+    @PreAuthorize("hasAnyAuthority('ROLE_STUDENT')")
+    public FeedbackResponse getUserFeedback(String feedbackId) {
+        User user = securityUtils.getCurrentUserCognitoSub();
+
+        return feedbackRepository.findByIdAndUser(feedbackId, user)
+                .map(feedbackMapper::toFeedbackResponse)
+                .orElseThrow(() -> new AppException(FeedbackErrorCode.FEEDBACK_NOT_FOUND));
+    }
 }
