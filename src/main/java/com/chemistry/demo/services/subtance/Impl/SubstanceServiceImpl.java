@@ -75,22 +75,64 @@ public class SubstanceServiceImpl implements com.chemistry.demo.services.subtanc
     ) {
         Page<ChemicalSubstance> page;
 
-        if (Boolean.TRUE.equals(active) && chemicalGroup != null) {
+        if (Boolean.TRUE.equals(active)
+                && Boolean.TRUE.equals(includedInFullKit)
+                && type != null) {
+            page = chemicalSubstanceRepository.findByTypeAndIncludedInFullKitTrue(
+                    type,
+                    pageable
+            );
+
+        } else if (Boolean.TRUE.equals(active)
+                && Boolean.FALSE.equals(includedInFullKit)
+                && type != null) {
+            page = chemicalSubstanceRepository.findByTypeAndIncludedInFullKitFalse(
+                    type,
+                    pageable
+            );
+
+        } else if (Boolean.TRUE.equals(active) && chemicalGroup != null) {
             page = chemicalSubstanceRepository.findByChemicalGroupAndActiveTrue(
                     chemicalGroup,
                     pageable
             );
+
         } else if (Boolean.TRUE.equals(active) && type != null) {
             page = chemicalSubstanceRepository.findByTypeAndActiveTrue(
                     type,
                     pageable
             );
-        } else if (Boolean.TRUE.equals(active) && Boolean.TRUE.equals(includedInFullKit)) {
+
+        } else if (Boolean.TRUE.equals(active)
+                && Boolean.TRUE.equals(includedInFullKit)) {
             page = chemicalSubstanceRepository.findByIncludedInFullKitTrueAndActiveTrue(
                     pageable
             );
+
         } else if (Boolean.TRUE.equals(active)) {
             page = chemicalSubstanceRepository.findByActiveTrue(pageable);
+
+        } else if (Boolean.FALSE.equals(active)) {
+            page = chemicalSubstanceRepository.findByActiveFalse(pageable);
+
+        } else if (chemicalGroup != null) {
+            page = chemicalSubstanceRepository.findByChemicalGroup(
+                    chemicalGroup,
+                    pageable
+            );
+
+        } else if (type != null) {
+            page = chemicalSubstanceRepository.findByType(
+                    type,
+                    pageable
+            );
+
+        } else if (Boolean.TRUE.equals(includedInFullKit)) {
+            page = chemicalSubstanceRepository.findByIncludedInFullKitTrue(pageable);
+
+        } else if (Boolean.FALSE.equals(includedInFullKit)) {
+            page = chemicalSubstanceRepository.findByIncludedInFullKitFalse(pageable);
+
         } else {
             page = chemicalSubstanceRepository.findAll(pageable);
         }

@@ -133,22 +133,49 @@ public class ActivationCodeServiceImpl implements ActivationCodeService {
     @Override
     @Transactional
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ActivationCodeResponse updateStatus(String id, UpdateActivationCodeStatusRequest request) {
+    public ActivationCodeResponse updateStatus(
+            String id,
+            UpdateActivationCodeStatusRequest request
+    ) {
         KitActivationCode activationCode = kitActivationCodeRepository.findById(id)
                 .orElseThrow(() -> new AppException(
                         ActivationCodeErrorCode.ACTIVATION_CODE_NOT_FOUND, id
                 ));
 
-        activationCode.setStatus(request.getStatus());
+        ActivationCodeStatus currentStatus = activationCode.getStatus();
+        ActivationCodeStatus newStatus = request.getStatus();
 
-        if (request.getStatus() == ActivationCodeStatus.LOCKED) {
+        if (currentStatus == ActivationCodeStatus.USED) {
+            throw new AppException(
+                    ActivationCodeErrorCode.CANNOT_UPDATE_USED_ACTIVATION_CODE,
+                    activationCode.getCode()
+            );
+        }
+
+        if (newStatus == ActivationCodeStatus.USED) {
+            throw new AppException(
+                    ActivationCodeErrorCode.CANNOT_MARK_ACTIVATION_CODE_AS_USED_MANUALLY,
+                    activationCode.getCode()
+            );
+        }
+
+        activationCode.setStatus(newStatus);
+
+        if (newStatus == ActivationCodeStatus.LOCKED) {
             activationCode.setActive(false);
         }
 
-        if (request.getStatus() == ActivationCodeStatus.UNUSED) {
+        if (newStatus == ActivationCodeStatus.UNUSED) {
             activationCode.setActive(true);
+
+            // Không cần clear usedAt/usedByUser ở đây nữa,
+            // vì nếu đã USED thì đã bị chặn bên trên.
             activationCode.setUsedAt(null);
             activationCode.setUsedByUser(null);
+        }
+
+        if (newStatus == ActivationCodeStatus.EXPIRED) {
+            activationCode.setActive(false);
         }
 
         KitActivationCode saved = kitActivationCodeRepository.save(activationCode);

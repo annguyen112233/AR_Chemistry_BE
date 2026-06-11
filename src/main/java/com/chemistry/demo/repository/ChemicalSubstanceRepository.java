@@ -39,4 +39,36 @@ public interface ChemicalSubstanceRepository extends JpaRepository<ChemicalSubst
     );
     long countByActiveTrueAndIncludedInFullKitTrue();
 
+    Page<ChemicalSubstance> findByType(
+            ChemicalSubstanceType type,
+            Pageable pageable
+    );
+
+    Page<ChemicalSubstance> findByChemicalGroup(
+            ChemicalGroup chemicalGroup,
+            Pageable pageable
+    );
+
+    Page<ChemicalSubstance> findByIncludedInFullKitTrue(
+            Pageable pageable
+    );
+
+    Page<ChemicalSubstance> findByIncludedInFullKitFalse(
+            Pageable pageable
+    );
+
+    Page<ChemicalSubstance> findByActiveFalse(
+            Pageable pageable
+    );
+
+    Page<ChemicalSubstance> findByTypeAndIncludedInFullKitTrue(
+            ChemicalSubstanceType type,
+            Pageable pageable
+    );
+
+    Page<ChemicalSubstance> findByTypeAndIncludedInFullKitFalse(
+            ChemicalSubstanceType type,
+            Pageable pageable
+    );
+
 }
