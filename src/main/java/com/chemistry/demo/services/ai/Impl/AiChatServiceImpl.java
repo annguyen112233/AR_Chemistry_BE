@@ -8,6 +8,7 @@ import com.chemistry.demo.dto.response.ai.ConversationResponse;
 import com.chemistry.demo.entity.Conversation;
 import com.chemistry.demo.entity.ConversationMessage;
 import com.chemistry.demo.entity.User;
+import com.chemistry.demo.enums.FeatureCode;
 import com.chemistry.demo.enums.MessageRole;
 import com.chemistry.demo.exception.AiErrorCode;
 import com.chemistry.demo.exception.AppErrorCode;

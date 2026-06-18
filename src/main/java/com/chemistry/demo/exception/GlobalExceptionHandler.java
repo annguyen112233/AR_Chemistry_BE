@@ -10,32 +10,32 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
 
-        @ExceptionHandler(AppException.class)
-        public ResponseEntity<ApiResponse<Object>> handleAppException(
-                        AppException exception,
-                        HttpServletRequest request) {
-                IErrorCode errorCode = exception.getErrorCode();
+    @ExceptionHandler(AppException.class)
+    public ResponseEntity<ApiResponse<Object>> handleAppException(
+            AppException exception,
+            HttpServletRequest request) {
+        IErrorCode errorCode = exception.getErrorCode();
 
-                return ResponseEntity
-                                .status(errorCode.getHttpStatus())
-                                .body(ApiResponse.error()
-                                                .code(errorCode.getCode())
-                                                .message(errorCode.getMessage())
-                                                .path(request.getRequestURI())
-                                                .build());
-        }
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(ApiResponse.error()
+                        .code(errorCode.getCode())
+                        .message(exception.getMessage())
+                        .path(request.getRequestURI())
+                        .build());
+    }
 
-        @ExceptionHandler(Exception.class)
-        public ResponseEntity<ApiResponse<Object>> handleException(
-                        Exception ex,
-                        HttpServletRequest request) {
-                IErrorCode errorCode = AppErrorCode.UNCATEGORIZED_EXCEPTION;
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiResponse<Object>> handleException(
+            Exception ex,
+            HttpServletRequest request) {
+        IErrorCode errorCode = AppErrorCode.UNCATEGORIZED_EXCEPTION;
 
-                return ResponseEntity.status(errorCode.getHttpStatus())
-                                .body(ApiResponse.error()
-                                                .code(errorCode.getCode())
-                                                .message(ex.getMessage())
-                                                .path(request.getRequestURI())
-                                                .build());
-        }
+        return ResponseEntity.status(errorCode.getHttpStatus())
+                .body(ApiResponse.error()
+                        .code(errorCode.getCode())
+                        .message(ex.getMessage())
+                        .path(request.getRequestURI())
+                        .build());
+    }
 }

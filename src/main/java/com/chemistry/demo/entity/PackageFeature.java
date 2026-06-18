@@ -17,8 +17,8 @@ public class PackageFeature {
     private String id;
 
     @ManyToOne
-    private Packages packageEntity;
+    private Packages packages;
 
     @ManyToOne
-    private Feature featureEntity;
+    private Features features;
 }

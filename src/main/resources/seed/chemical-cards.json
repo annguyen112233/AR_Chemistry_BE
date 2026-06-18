@@ -1,0 +1,18 @@
+[
+  { "formula": "Al", "cardCode": "CARD-Al", "qrPayload": "Al" },
+  { "formula": "BaCl2", "cardCode": "CARD-BaCl2", "qrPayload": "BaCl2" },
+  { "formula": "Ca", "cardCode": "CARD-Ca", "qrPayload": "Ca" },
+  { "formula": "C", "cardCode": "CARD-C", "qrPayload": "C" },
+  { "formula": "Cu", "cardCode": "CARD-Cu", "qrPayload": "Cu" },
+  { "formula": "Fe", "cardCode": "CARD-Fe", "qrPayload": "Fe" },
+  { "formula": "H2O", "cardCode": "CARD-H2O", "qrPayload": "H2O" },
+  { "formula": "HCl", "cardCode": "CARD-HCl", "qrPayload": "HCl" },
+  { "formula": "K", "cardCode": "CARD-K", "qrPayload": "K" },
+  { "formula": "KClO3", "cardCode": "CARD-KClO3", "qrPayload": "KClO3" },
+  { "formula": "KMnO4", "cardCode": "CARD-KMnO4", "qrPayload": "KMnO4" },
+  { "formula": "Mg", "cardCode": "CARD-Mg", "qrPayload": "Mg" },
+  { "formula": "Na", "cardCode": "CARD-Na", "qrPayload": "Na" },
+  { "formula": "Na2SO4", "cardCode": "CARD-Na2SO4", "qrPayload": "Na2SO4" },
+  { "formula": "S", "cardCode": "CARD-S", "qrPayload": "S" },
+  { "formula": "Zn", "cardCode": "CARD-Zn", "qrPayload": "Zn" }
+]

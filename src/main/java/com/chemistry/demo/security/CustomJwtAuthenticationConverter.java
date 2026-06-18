@@ -18,7 +18,9 @@ public class CustomJwtAuthenticationConverter
 
         @Override
         public AbstractAuthenticationToken convert(Jwt jwt) {
+
                 var authorities = authoritiesProvider.getAuthorities(jwt.getSubject());
+
                 return new JwtAuthenticationToken(jwt, authorities);
         }
 }

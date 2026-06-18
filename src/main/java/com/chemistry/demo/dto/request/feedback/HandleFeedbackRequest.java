@@ -15,5 +15,5 @@ public class HandleFeedbackRequest {
 
     private FeedbackPriority priority;
 
-    private String adminReply;
+    private String staffReply;
 }

@@ -1,0 +1,98 @@
+[
+  {
+    "formula": "Al",
+    "cardCode": "CARD-Al",
+    "qrPayload": "Al",
+    "qrS3Key": "single-cards/Al.png"
+  },
+  {
+    "formula": "BaCl2",
+    "cardCode": "CARD-BaCl2",
+    "qrPayload": "BaCl2",
+    "qrS3Key": "single-cards/BaCl2.png"
+  },
+  {
+    "formula": "Ca",
+    "cardCode": "CARD-Ca",
+    "qrPayload": "Ca",
+    "qrS3Key": "single-cards/Ca.png"
+  },
+  {
+    "formula": "C",
+    "cardCode": "CARD-C",
+    "qrPayload": "C",
+    "qrS3Key": "single-cards/C.png"
+  },
+  {
+    "formula": "Cu",
+    "cardCode": "CARD-Cu",
+    "qrPayload": "Cu",
+    "qrS3Key": "single-cards/Cu.png"
+  },
+  {
+    "formula": "Fe",
+    "cardCode": "CARD-Fe",
+    "qrPayload": "Fe",
+    "qrS3Key": "single-cards/Fe.png"
+  },
+  {
+    "formula": "H2O",
+    "cardCode": "CARD-H2O",
+    "qrPayload": "H2O",
+    "qrS3Key": "single-cards/H2O.png"
+  },
+  {
+    "formula": "HCl",
+    "cardCode": "CARD-HCl",
+    "qrPayload": "HCl",
+    "qrS3Key": "single-cards/HCl.png"
+  },
+  {
+    "formula": "K",
+    "cardCode": "CARD-K",
+    "qrPayload": "K",
+    "qrS3Key": "single-cards/K.png"
+  },
+  {
+    "formula": "KClO3",
+    "cardCode": "CARD-KClO3",
+    "qrPayload": "KClO3",
+    "qrS3Key": "single-cards/KClO3.png"
+  },
+  {
+    "formula": "KMnO4",
+    "cardCode": "CARD-KMnO4",
+    "qrPayload": "KMnO4",
+    "qrS3Key": "single-cards/KMnO4.png"
+  },
+  {
+    "formula": "Mg",
+    "cardCode": "CARD-Mg",
+    "qrPayload": "Mg",
+    "qrS3Key": "single-cards/Mg.png"
+  },
+  {
+    "formula": "Na",
+    "cardCode": "CARD-Na",
+    "qrPayload": "Na",
+    "qrS3Key": "single-cards/Na.png"
+  },
+  {
+    "formula": "Na2SO4",
+    "cardCode": "CARD-Na2SO4",
+    "qrPayload": "Na2SO4",
+    "qrS3Key": "single-cards/Na2SO4.png"
+  },
+  {
+    "formula": "S",
+    "cardCode": "CARD-S",
+    "qrPayload": "S",
+    "qrS3Key": "single-cards/S.png"
+  },
+  {
+    "formula": "Zn",
+    "cardCode": "CARD-Zn",
+    "qrPayload": "Zn",
+    "qrS3Key": "single-cards/Zn.png"
+  }
+]
