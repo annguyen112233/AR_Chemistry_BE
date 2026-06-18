@@ -2,7 +2,6 @@ server:
   port: ${SERVER_PORT}
   servlet:
     context-path: ${SERVER_SERVLET_CONTEXT_PATH}
-  address: ${SERVER_ADDRESS}
 
 spring:
   batch:
@@ -35,7 +34,7 @@ spring:
           issuer-uri: https://cognito-idp.ap-southeast-2.amazonaws.com/ap-southeast-2_wuMjdreND
   ai:
     openai:
-      api-key: ${OPENROUTER_API_KEY}
+      api-key: ${OPEN_ROUTER_API_KEY}
 
       # Route qua OpenRouter
       base-url: https://openrouter.ai/api
