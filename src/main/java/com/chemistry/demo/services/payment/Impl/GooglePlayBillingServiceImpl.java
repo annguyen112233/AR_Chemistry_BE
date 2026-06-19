@@ -64,7 +64,7 @@ public class GooglePlayBillingServiceImpl implements GooglePlayBillingService {
         return arAccessService.getMyArAccess();
     }
 
-    private UserAccess grantGooglePlayAr30Days(User user, Payment payment, Packages packageEntity) {
+    private void grantGooglePlayAr30Days(User user, Payment payment, Packages packageEntity) {
         Instant now = Instant.now();
 
         Optional<UserAccess> currentAccessOpt =
@@ -92,6 +92,6 @@ public class GooglePlayBillingServiceImpl implements GooglePlayBillingService {
                 .referenceId(payment.getId())
                 .build();
 
-        return userAccessRepository.save(access);
+        userAccessRepository.save(access);
     }
 }
