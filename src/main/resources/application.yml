@@ -83,4 +83,7 @@ staff:
   email: ${STAFF_EMAIL}
   password: ${STAFF_PASSWORD}
 
-
+google:
+  play:
+    package-name: ${GOOGLE_PLAY_PACKAGE_NAME}
+    service-account-path: ${GOOGLE_PLAY_SERVICE_ACCOUNT_PATH:}
