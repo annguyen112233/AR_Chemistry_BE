@@ -37,6 +37,7 @@ public class UserAccess {
     @Column(nullable = false)
     private Instant startAt;
 
+
     @Column(nullable = false)
     private Instant expiredAt;
 

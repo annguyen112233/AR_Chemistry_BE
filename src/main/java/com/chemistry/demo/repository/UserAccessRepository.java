@@ -36,4 +36,8 @@ public interface UserAccessRepository extends JpaRepository<UserAccess, String> 
 
 
     List<UserAccess> findByUserAndStatusAndExpiredAtAfter(User user, AccessStatus accessStatus, Instant now);
+
+    boolean existsByReferenceIdAndSource(String id, AccessSource accessSource);
+
+    Optional<UserAccess> findFirstByUserAndAccessTypeAndStatusAndExpiredAtAfterOrderByExpiredAtDesc(User user, AccessType accessType, AccessStatus accessStatus, Instant now);
 }

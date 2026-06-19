@@ -61,7 +61,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_STAFF')")
     public PageResponse<FeedbackListResponse> getFeedbacksForStaff(Pageable pageable) {
         Page<Feedback> feedbacks = feedbackRepository.findAll(pageable);
 

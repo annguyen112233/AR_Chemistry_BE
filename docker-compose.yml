@@ -94,6 +94,19 @@ services:
     depends_on:
       - elasticsearch
 
+
+  backend:
+    build: .
+    container_name: ar-chemistry-backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - redis
+
 volumes:
   postgres_master_data:
   postgres_replica_data:

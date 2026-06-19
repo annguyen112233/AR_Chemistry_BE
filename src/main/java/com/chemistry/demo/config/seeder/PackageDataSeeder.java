@@ -70,6 +70,7 @@ public class PackageDataSeeder implements DataSeeder {
                         .name("AR Access 30 Days")
                         .price(BigDecimal.valueOf(299000))
                         .durationDays(30)
+                        .googleProductId("ar_access_30_days")
                         .build()
         );
 

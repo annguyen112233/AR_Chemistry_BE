@@ -27,4 +27,7 @@ public class Packages {
     private BigDecimal price;
 
     private Integer durationDays;
+
+    @Column(unique = true)
+    private String googleProductId;
 }
