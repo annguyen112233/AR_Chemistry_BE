@@ -10,6 +10,7 @@ import lombok.*;
         name = "reaction_definitions",
         indexes = {
                 @Index(name = "idx_reaction_code", columnList = "code"),
+                @Index(name = "idx_reaction_reactant_key", columnList = "reactantKey", unique = true),
                 @Index(name = "idx_reaction_active", columnList = "active")
         }
 )
@@ -26,6 +27,11 @@ public class ReactionDefinition {
 
     @Column(nullable = false, unique = true, length = 100)
     private String code;
+
+    // Nullable during the Hibernate schema-update step so existing databases can
+    // add the column before the startup seeder backfills and validates every row.
+    @Column(unique = true, length = 500)
+    private String reactantKey;
 
     @Column(nullable = false, length = 255)
     private String name;

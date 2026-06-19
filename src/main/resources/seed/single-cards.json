@@ -84,6 +84,18 @@
     "qrS3Key": "single-cards/Na2SO4.png"
   },
   {
+    "formula": "NaNO3",
+    "cardCode": "CARD-NaNO3",
+    "qrPayload": "NaNO3",
+    "qrS3Key": "single-cards/NaNO3.png"
+  },
+  {
+    "formula": "NaOH",
+    "cardCode": "CARD-NaOH",
+    "qrPayload": "NaOH",
+    "qrS3Key": "single-cards/NaOH.png"
+  },
+  {
     "formula": "S",
     "cardCode": "CARD-S",
     "qrPayload": "S",

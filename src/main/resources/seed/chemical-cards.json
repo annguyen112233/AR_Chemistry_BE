@@ -13,6 +13,8 @@
   { "formula": "Mg", "cardCode": "CARD-Mg", "qrPayload": "Mg" },
   { "formula": "Na", "cardCode": "CARD-Na", "qrPayload": "Na" },
   { "formula": "Na2SO4", "cardCode": "CARD-Na2SO4", "qrPayload": "Na2SO4" },
+  { "formula": "NaNO3", "cardCode": "CARD-NaNO3", "qrPayload": "NaNO3" },
+  { "formula": "NaOH", "cardCode": "CARD-NaOH", "qrPayload": "NaOH" },
   { "formula": "S", "cardCode": "CARD-S", "qrPayload": "S" },
   { "formula": "Zn", "cardCode": "CARD-Zn", "qrPayload": "Zn" }
 ]

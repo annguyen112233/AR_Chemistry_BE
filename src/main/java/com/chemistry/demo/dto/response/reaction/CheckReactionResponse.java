@@ -31,6 +31,10 @@ public class CheckReactionResponse {
 
     private List<String> missingSubstances;
 
+    private List<String> affectedQrPayloads;
+
+    private List<String> affectedFormulas;
+
     private List<ReactionSubstanceResponse> reactants;
 
     private List<ReactionSubstanceResponse> products;

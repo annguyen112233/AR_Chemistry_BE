@@ -122,7 +122,7 @@
     "state": "AQUEOUS",
     "molarMass": 40.0,
     "active": true,
-    "includedInFullKit": false,
+    "includedInFullKit": true,
     "description": "Natri hiđroxit, bazơ mạnh, thường dùng trong phản ứng trung hòa với axit.",
     "safetyNote": "Có tính ăn mòn, cần sử dụng theo hướng dẫn.",
     "iupacName": "Sodium hydroxide",
@@ -340,5 +340,41 @@
     "usageNote": "Sản phẩm khí trong phản ứng cháy.",
     "reactionProductOnly": true,
     "physicalInKit": false
+  },
+  {
+    "formula": "NaNO3", "name": "Sodium nitrate", "vietnameseName": "Natri nitrat",
+    "type": "COMPOUND", "chemicalGroup": "SALT", "state": "SOLID", "molarMass": 84.995,
+    "active": true, "includedInFullKit": true, "description": "Nitrate reagent used by the AR reaction.",
+    "safetyNote": "Use only as directed.", "iupacName": "Sodium nitrate", "casNumber": "7631-99-4",
+    "compoundClass": "SALT", "usageNote": "Reactant in the copper acidic nitrate simulation.",
+    "reactionProductOnly": false, "physicalInKit": true
+  },
+  {
+    "formula": "FeS", "name": "Iron sulfide", "vietnameseName": "Sắt sulfide",
+    "type": "COMPOUND", "chemicalGroup": "SALT", "state": "SOLID", "molarMass": 87.91,
+    "active": true, "includedInFullKit": false, "description": "Product of iron and sulfur synthesis.",
+    "safetyNote": "AR reaction product only.", "iupacName": "Iron(II) sulfide", "casNumber": "1317-37-9",
+    "compoundClass": "SALT", "usageNote": "Reaction product.", "reactionProductOnly": true, "physicalInKit": false
+  },
+  {
+    "formula": "CO2", "name": "Carbon dioxide", "vietnameseName": "Carbon dioxide",
+    "type": "COMPOUND", "chemicalGroup": "GAS", "state": "GAS", "molarMass": 44.01,
+    "active": true, "includedInFullKit": false, "description": "Product of carbon combustion.",
+    "safetyNote": "AR reaction product only.", "iupacName": "Carbon dioxide", "casNumber": "124-38-9",
+    "compoundClass": "GAS", "usageNote": "Reaction product.", "reactionProductOnly": true, "physicalInKit": false
+  },
+  {
+    "formula": "CuCl2", "name": "Copper(II) chloride", "vietnameseName": "Đồng(II) chloride",
+    "type": "COMPOUND", "chemicalGroup": "SALT", "state": "AQUEOUS", "molarMass": 134.45,
+    "active": true, "includedInFullKit": false, "description": "Product of copper oxidation.",
+    "safetyNote": "AR reaction product only.", "iupacName": "Copper(II) chloride", "casNumber": "7447-39-4",
+    "compoundClass": "SALT", "usageNote": "Reaction product.", "reactionProductOnly": true, "physicalInKit": false
+  },
+  {
+    "formula": "NO", "name": "Nitric oxide", "vietnameseName": "Nitric oxide",
+    "type": "COMPOUND", "chemicalGroup": "GAS", "state": "GAS", "molarMass": 30.006,
+    "active": true, "includedInFullKit": false, "description": "Gas product of acidic nitrate oxidation.",
+    "safetyNote": "AR reaction product only.", "iupacName": "Nitrogen monoxide", "casNumber": "10102-43-9",
+    "compoundClass": "GAS", "usageNote": "Reaction product.", "reactionProductOnly": true, "physicalInKit": false
   }
 ]

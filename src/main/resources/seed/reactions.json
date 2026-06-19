@@ -230,10 +230,6 @@
       {
         "formula": "S",
         "coefficient": 1
-      },
-      {
-        "formula": "O2",
-        "coefficient": 1
       }
     ],
     "products": [
@@ -241,6 +237,68 @@
         "formula": "SO2",
         "coefficient": 1
       }
+    ]
+  },
+  {
+    "code": "C_O2",
+    "name": "Carbon combustion in oxygen",
+    "equation": "C + O2 -> CO2",
+    "reactionType": "COMBUSTION",
+    "arSceneKey": "COMBUSTION_GAS",
+    "description": "Carbon burns in the oxygen environment represented by the AR scene.",
+    "active": true,
+    "reactants": [{ "formula": "C", "coefficient": 1 }],
+    "products": [{ "formula": "CO2", "coefficient": 1 }]
+  },
+  {
+    "code": "FE_S",
+    "name": "Iron and sulfur synthesis",
+    "equation": "Fe + S -> FeS",
+    "reactionType": "OTHER",
+    "arSceneKey": "DEFAULT",
+    "description": "Iron and sulfur combine to form iron sulfide.",
+    "active": true,
+    "reactants": [
+      { "formula": "Fe", "coefficient": 1 },
+      { "formula": "S", "coefficient": 1 }
+    ],
+    "products": [{ "formula": "FeS", "coefficient": 1 }]
+  },
+  {
+    "code": "NAOH_HCL",
+    "name": "Sodium hydroxide neutralization",
+    "equation": "NaOH + HCl -> NaCl + H2O",
+    "reactionType": "NEUTRALIZATION",
+    "arSceneKey": "NEUTRALIZATION",
+    "description": "Hydrochloric acid neutralizes sodium hydroxide.",
+    "active": true,
+    "reactants": [
+      { "formula": "NaOH", "coefficient": 1 },
+      { "formula": "HCl", "coefficient": 1 }
+    ],
+    "products": [
+      { "formula": "NaCl", "coefficient": 1 },
+      { "formula": "H2O", "coefficient": 1 }
+    ]
+  },
+  {
+    "code": "CU_HCL_NANO3",
+    "name": "Copper oxidation in acidic nitrate",
+    "equation": "3Cu + 2NaNO3 + 8HCl -> 3CuCl2 + 2NO + 4H2O + 2NaCl",
+    "reactionType": "REDOX",
+    "arSceneKey": "REDOX_GAS",
+    "description": "Nitrate oxidizes copper in an acidic chloride environment.",
+    "active": true,
+    "reactants": [
+      { "formula": "Cu", "coefficient": 3 },
+      { "formula": "HCl", "coefficient": 8 },
+      { "formula": "NaNO3", "coefficient": 2 }
+    ],
+    "products": [
+      { "formula": "CuCl2", "coefficient": 3 },
+      { "formula": "NO", "coefficient": 2 },
+      { "formula": "H2O", "coefficient": 4 },
+      { "formula": "NaCl", "coefficient": 2 }
     ]
   }
 ]
