@@ -9,83 +9,136 @@ import com.chemistry.demo.entity.UserAccess;
 import com.chemistry.demo.enums.*;
 import com.chemistry.demo.repository.PackageRepository;
 import com.chemistry.demo.services.payment.GooglePlayBillingService;
+import com.chemistry.demo.services.payment.GooglePlayVerifier;
 import com.chemistry.demo.utils.SecurityUtils;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.services.androidpublisher.AndroidPublisher;
-import com.google.api.services.androidpublisher.AndroidPublisherScopes;
 import com.google.api.services.androidpublisher.model.ProductPurchase;
-import com.google.api.services.androidpublisher.model.ProductPurchasesAcknowledgeRequest;
-import com.google.auth.http.HttpCredentialsAdapter;
-import com.google.auth.oauth2.GoogleCredentials;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.FileInputStream;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class GooglePlayBillingServiceImpl implements GooglePlayBillingService {
-    @Value("${google.play.package-name}")
-    private String packageName;
+    private final SecurityUtils securityUtils;
+    private final PackageRepository packagesRepository;
+    private final com.chemistry.demo.repository.PaymentRepository paymentRepository;
+    private final com.chemistry.demo.repository.UserAccessRepository userAccessRepository;
+    private final com.chemistry.demo.services.reaction.ArAccessService arAccessService;
+    private final GooglePlayVerifier googlePlayVerifier;
+    @Override
+    @Transactional
+    @PreAuthorize("hasAnyAuthority('ROLE_STUDENT')")
+    public ArAccessResponse verify(GooglePlayVerifyRequest request) {
+        User user = securityUtils.getCurrentUserCognitoSub();
 
-    @Value("${google.play.service-account-path}")
-    private String serviceAccountPath;
+        Packages packageEntity = packagesRepository.findByGoogleProductId(request.getProductId())
+                .orElseThrow(() -> new RuntimeException("Package not found"));
 
-    private AndroidPublisher androidPublisher() {
-        try {
-            GoogleCredentials credentials = GoogleCredentials
-                    .fromStream(new FileInputStream(serviceAccountPath))
-                    .createScoped(List.of(AndroidPublisherScopes.ANDROIDPUBLISHER));
+        Optional<Payment> existingPaymentOpt =
+                paymentRepository.findByGooglePurchaseToken(request.getPurchaseToken());
 
-            return new AndroidPublisher.Builder(
-                    GoogleNetHttpTransport.newTrustedTransport(),
-                    GsonFactory.getDefaultInstance(),
-                    new HttpCredentialsAdapter(credentials)
-            )
-                    .setApplicationName("LAB EDU Backend")
-                    .build();
+        if (existingPaymentOpt.isPresent()) {
+            Payment existingPayment = existingPaymentOpt.get();
 
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to create Google Play client", e);
+            boolean alreadyGranted = userAccessRepository.existsByReferenceIdAndSource(
+                    existingPayment.getId(),
+                    AccessSource.GOOGLE_PLAY_PURCHASE
+            );
+
+            if (!alreadyGranted) {
+                grantGooglePlayAr30Days(user, existingPayment, packageEntity);
+            }
+
+            return arAccessService.getMyArAccess();
         }
+
+        ProductPurchase productPurchase = googlePlayVerifier.verifyProductPurchase(
+                request.getProductId(),
+                request.getPurchaseToken()
+        );
+
+        if (productPurchase.getPurchaseState() == null || productPurchase.getPurchaseState() != 0) {
+            throw new RuntimeException("Google Play purchase is not completed");
+        }
+
+        boolean acknowledged = productPurchase.getAcknowledgementState() != null
+                && productPurchase.getAcknowledgementState() == 1;
+
+        Instant now = Instant.now();
+
+        Payment payment = paymentRepository.save(
+                Payment.builder()
+                        .user(user)
+                        .itemType(PaymentItemType.PACKAGE)
+                        .packageEntity(packageEntity)
+                        .amount(packageEntity.getPrice())
+                        .provider(PaymentProvider.GOOGLE_PLAY)
+                        .status(PaymentStatus.APPROVED)
+                        .googleProductId(request.getProductId())
+                        .googlePurchaseToken(request.getPurchaseToken())
+                        .googleOrderId(productPurchase.getOrderId())
+                        .googlePurchaseState(productPurchase.getPurchaseState())
+                        .googleAcknowledged(acknowledged)
+                        .purchasedAt(
+                                productPurchase.getPurchaseTimeMillis() != null
+                                        ? Instant.ofEpochMilli(productPurchase.getPurchaseTimeMillis())
+                                        : now
+                        )
+                        .createdAt(now)
+                        .updatedAt(now)
+                        .build()
+        );
+
+        grantGooglePlayAr30Days(user, payment, packageEntity);
+
+        if (!acknowledged) {
+            googlePlayVerifier.acknowledgeProductPurchase(
+                    request.getProductId(),
+                    request.getPurchaseToken()
+            );
+
+            payment.setGoogleAcknowledged(true);
+            payment.setUpdatedAt(Instant.now());
+            paymentRepository.save(payment);
+        }
+
+        return arAccessService.getMyArAccess();
     }
 
-    @Override
-    public ProductPurchase verifyProductPurchase(String productId, String purchaseToken) {
-        try {
-            return androidPublisher()
-                    .purchases()
-                    .products()
-                    .get(packageName, productId, purchaseToken)
-                    .execute();
 
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to verify Google Play purchase", e);
-        }
-    }
+    private void grantGooglePlayAr30Days(User user, Payment payment, Packages packageEntity) {
+        Instant now = Instant.now();
 
-    @Override
-    public void acknowledgeProductPurchase(String productId, String purchaseToken) {
-        try {
-            ProductPurchasesAcknowledgeRequest request =
-                    new ProductPurchasesAcknowledgeRequest();
+        Optional<UserAccess> currentAccessOpt =
+                userAccessRepository.findFirstByUserAndAccessTypeAndStatusAndExpiredAtAfterOrderByExpiredAtDesc(
+                        user,
+                        AccessType.AR_30_DAYS,
+                        AccessStatus.ACTIVE,
+                        now
+                );
 
-            androidPublisher()
-                    .purchases()
-                    .products()
-                    .acknowledge(packageName, productId, purchaseToken, request)
-                    .execute();
+        Instant startAt = currentAccessOpt
+                .map(UserAccess::getExpiredAt)
+                .filter(expiredAt -> expiredAt.isAfter(now))
+                .orElse(now);
 
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to acknowledge Google Play purchase", e);
-        }
+        Instant expiredAt = startAt.plus(Duration.ofDays(packageEntity.getDurationDays()));
+
+        UserAccess access = UserAccess.builder()
+                .user(user)
+                .accessType(AccessType.AR_30_DAYS)
+                .source(AccessSource.GOOGLE_PLAY_PURCHASE)
+                .startAt(startAt)
+                .expiredAt(expiredAt)
+                .status(AccessStatus.ACTIVE)
+                .referenceId(payment.getId())
+                .build();
+
+        userAccessRepository.save(access);
     }
 }
