@@ -29,6 +29,8 @@ public class ChemicalCardMapper {
                 .state(substance != null ? substance.getState() : null)
                 .displayName(card.getDisplayName())
                 .imageUrl(card.getImageUrl())
+                .frontImageUrl(card.getFrontImageKey())
+                .backImageUrl(card.getBackImageKey())
                 .active(card.getActive())
                 .build();
     }

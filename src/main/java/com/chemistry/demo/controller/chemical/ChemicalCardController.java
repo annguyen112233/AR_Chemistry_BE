@@ -2,9 +2,11 @@ package com.chemistry.demo.controller.chemical;
 
 import com.chemistry.demo.dto.ApiResponse;
 import com.chemistry.demo.dto.PageResponse;
+import com.chemistry.demo.dto.request.chemical.CardImageUploadUrlRequest;
 import com.chemistry.demo.dto.request.chemical.CreateChemicalCardRequest;
 import com.chemistry.demo.dto.request.chemical.UpdateChemicalCardRequest;
 import com.chemistry.demo.dto.request.subtance.UpdateActiveRequest;
+import com.chemistry.demo.dto.response.chemical.CardImageUploadUrlResponse;
 import com.chemistry.demo.dto.response.chemical.ChemicalCardResponse;
 import com.chemistry.demo.services.chemical.ChemicalCardService;
 import jakarta.validation.Valid;
@@ -106,5 +108,16 @@ public class ChemicalCardController {
         return ApiResponse.<ChemicalCardResponse>ok()
                 .data(response)
                 .build();
+    }
+
+    @PostMapping("/{cardId}/images/upload-url")
+    public ApiResponse<CardImageUploadUrlResponse> generateCardImageUploadUrls(
+            @PathVariable String cardId,
+            @RequestBody CardImageUploadUrlRequest request
+    ) {
+        return ApiResponse.<CardImageUploadUrlResponse>ok()
+                .data(chemicalCardService.generateCardImageUploadUrls(cardId, request))
+                .build(
+        );
     }
 }

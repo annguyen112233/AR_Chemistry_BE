@@ -13,4 +13,5 @@ import java.util.Optional;
 public interface FeedbackRepository extends JpaRepository<Feedback, String> {
     Page<Feedback> findByUser(User user, Pageable pageable);
     Optional<Feedback> findByIdAndUser(String id, User user);
+
 }

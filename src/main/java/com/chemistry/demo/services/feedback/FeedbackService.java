@@ -15,7 +15,7 @@ public interface FeedbackService {
 
     FeedbackResponse getFeedbackForStaff(String feedbackId);FeedbackResponse handleFeedback(String feedbackId, HandleFeedbackRequest handleFeedbackRequest);
 
-
+    PageResponse<FeedbackListResponse> getFeedbacksForUser(Pageable pageable);
     FeedbackResponse getUserFeedback(String feedbackId);
 }
 

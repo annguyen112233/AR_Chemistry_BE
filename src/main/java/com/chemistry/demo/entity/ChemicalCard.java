@@ -65,6 +65,12 @@ public class ChemicalCard {
     @Column(length = 500)
     private String imageUrl;
 
+    @Column(length = 500)
+    private String frontImageKey;
+
+    @Column(length = 500)
+    private String backImageKey;
+
     @Column(nullable = false)
     private Boolean active;
 }

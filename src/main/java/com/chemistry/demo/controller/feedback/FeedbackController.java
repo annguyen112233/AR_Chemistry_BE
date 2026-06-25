@@ -30,7 +30,7 @@ public class FeedbackController {
     }
 
     @GetMapping
-    public ApiResponse<PageResponse<FeedbackListResponse>> getFeedbacksForAdmin(
+    public ApiResponse<PageResponse<FeedbackListResponse>> getFeedbacksForStaff(
             @PageableDefault(
                     size = 10,
                     sort = "createdAt",
@@ -44,7 +44,7 @@ public class FeedbackController {
     }
 
     @GetMapping("/details")
-    public ApiResponse<FeedbackResponse> getFeedbackForAdmin(
+    public ApiResponse<FeedbackResponse> getFeedbackForStaff(
             @RequestParam String feedbackId
     ) {
         return ApiResponse.<FeedbackResponse>ok()
@@ -62,7 +62,18 @@ public class FeedbackController {
                 .build();
     }
 
-
+    @GetMapping("/my-feedbacks")
+    public ApiResponse<PageResponse<FeedbackListResponse>> getMyFeedbacks(
+            @PageableDefault(
+                    size = 10,
+                    sort = "createdAt",
+                    direction = Sort.Direction.DESC
+            ) Pageable pageable
+    ) {
+        return ApiResponse.<PageResponse<FeedbackListResponse>>ok()
+                .data(feedbackService.getFeedbacksForUser(pageable))
+                .build();
+    }
 
     @GetMapping("/my-feedbacks/{feedbackId}")
     public ApiResponse<FeedbackResponse> getUserFeedback(

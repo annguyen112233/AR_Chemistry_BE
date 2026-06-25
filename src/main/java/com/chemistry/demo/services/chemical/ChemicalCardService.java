@@ -1,10 +1,13 @@
 package com.chemistry.demo.services.chemical;
 
 import com.chemistry.demo.dto.PageResponse;
+import com.chemistry.demo.dto.request.chemical.CardImageUploadUrlRequest;
 import com.chemistry.demo.dto.request.chemical.CreateChemicalCardRequest;
 import com.chemistry.demo.dto.request.chemical.UpdateChemicalCardRequest;
+import com.chemistry.demo.dto.response.chemical.CardImageUploadUrlResponse;
 import com.chemistry.demo.dto.response.chemical.ChemicalCardResponse;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface ChemicalCardService {
     ChemicalCardResponse createCard(CreateChemicalCardRequest request);
@@ -20,5 +23,10 @@ public interface ChemicalCardService {
     ChemicalCardResponse getByQrPayload(String qrPayload);
     ChemicalCardResponse updateCard(String id, UpdateChemicalCardRequest request);
     ChemicalCardResponse updateActiveStatus(String id, Boolean active);
+
+    CardImageUploadUrlResponse generateCardImageUploadUrls(
+            String cardId,
+            CardImageUploadUrlRequest request
+    );
 
 }

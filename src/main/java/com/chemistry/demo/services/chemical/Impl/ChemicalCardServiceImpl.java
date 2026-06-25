@@ -1,14 +1,17 @@
 package com.chemistry.demo.services.chemical.Impl;
 
 import com.chemistry.demo.dto.PageResponse;
+import com.chemistry.demo.dto.request.chemical.CardImageUploadUrlRequest;
 import com.chemistry.demo.dto.request.chemical.CreateChemicalCardRequest;
 import com.chemistry.demo.dto.request.chemical.UpdateChemicalCardRequest;
+import com.chemistry.demo.dto.response.chemical.CardImageUploadUrlResponse;
 import com.chemistry.demo.dto.response.chemical.ChemicalCardResponse;
 import com.chemistry.demo.entity.ChemicalCard;
 import com.chemistry.demo.entity.ChemicalSubstance;
 import com.chemistry.demo.mapper.ChemicalCardMapper;
 import com.chemistry.demo.repository.ChemicalCardRepository;
 import com.chemistry.demo.repository.ChemicalSubstanceRepository;
+import com.chemistry.demo.services.aws.S3Service;
 import com.chemistry.demo.services.chemical.ChemicalCardService;
 import com.chemistry.demo.utils.PageResponseUtils;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Service
@@ -25,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ChemicalCardServiceImpl implements ChemicalCardService {
     private final ChemicalCardRepository chemicalCardRepository;
     private final ChemicalSubstanceRepository chemicalSubstanceRepository;
+    private final S3Service s3Service;
 
     @Transactional
     @Override
@@ -83,7 +88,23 @@ public class ChemicalCardServiceImpl implements ChemicalCardService {
             page = chemicalCardRepository.findAll(pageable);
         }
 
-        return PageResponseUtils.toPageResponse(page, ChemicalCardMapper::toResponse);
+        return PageResponseUtils.toPageResponse(page, card -> {
+            ChemicalCardResponse response = ChemicalCardMapper.toResponse(card);
+
+            response.setFrontImageUrl(
+                    card.getFrontImageKey() == null
+                            ? null
+                            : s3Service.generatePresignedGetUrl(card.getFrontImageKey())
+            );
+
+            response.setBackImageUrl(
+                    card.getBackImageKey() == null
+                            ? null
+                            : s3Service.generatePresignedGetUrl(card.getBackImageKey())
+            );
+
+            return response;
+        });
     }
 
     @Transactional(readOnly = true)
@@ -159,6 +180,44 @@ public class ChemicalCardServiceImpl implements ChemicalCardService {
 
         return ChemicalCardMapper.toResponse(saved);
     }
+
+    @Override
+    public CardImageUploadUrlResponse generateCardImageUploadUrls(
+            String cardId,
+            CardImageUploadUrlRequest request
+    ) {
+        ChemicalCard card = chemicalCardRepository.findById(cardId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy card"));
+
+        String folder = "chemical-cards/" + card.getCardCode();
+
+        String frontKey = folder + "/front.png";
+        String backKey = folder + "/back.png";
+
+        String frontUploadUrl = s3Service.generatePresignedPutUrl(
+                frontKey,
+                request.getFrontContentType(),
+                request.getFrontFileSize()
+        );
+
+        String backUploadUrl = s3Service.generatePresignedPutUrl(
+                backKey,
+                request.getBackContentType(),
+                request.getBackFileSize()
+        );
+
+        card.setFrontImageKey(frontKey);
+        card.setBackImageKey(backKey);
+        chemicalCardRepository.save(card);
+
+        return CardImageUploadUrlResponse.builder()
+                .frontUploadUrl(frontUploadUrl)
+                .backUploadUrl(backUploadUrl)
+                .frontImageKey(frontKey)
+                .backImageKey(backKey)
+                .build();
+    }
+
 
     private String buildDefaultDisplayName(ChemicalSubstance substance) {
         if (substance.getVietnameseName() != null && !substance.getVietnameseName().isBlank()) {

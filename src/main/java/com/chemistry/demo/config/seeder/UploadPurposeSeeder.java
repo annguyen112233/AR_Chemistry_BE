@@ -62,6 +62,13 @@ public class UploadPurposeSeeder implements DataSeeder {
                         .maxFileSize(5 * 1024 * 1024L)
                         .allowedContentTypes("image/png,image/jpeg,image/webp")
                         .active(true)
+                        .build(),
+                UploadPurpose.builder()
+                        .code("CHEMICAL_CARD")
+                        .folderPrefix("chemical-cards")
+                        .maxFileSize(10 * 1024 * 1024L)
+                        .allowedContentTypes("image/png,image/jpeg,image/webp")
+                        .active(true)
                         .build()
                 );
 

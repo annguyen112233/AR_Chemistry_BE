@@ -35,6 +35,8 @@ public class ChemicalCardResponse {
     private String displayName;
 
     private String imageUrl;
+    private String frontImageUrl;
+    private String backImageUrl;
 
     private Boolean active;
 }

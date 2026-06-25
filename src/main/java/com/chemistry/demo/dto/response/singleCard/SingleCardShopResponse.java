@@ -33,4 +33,7 @@ public class SingleCardShopResponse {
     private String substanceName;
 
     private String substanceVietnameseName;
+
+    private String frontImageUrl;
+    private String backImageUrl;
 }

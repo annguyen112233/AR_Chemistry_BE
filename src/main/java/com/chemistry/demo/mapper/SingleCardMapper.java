@@ -29,6 +29,8 @@ public class SingleCardMapper {
                 .substanceFormula(substance != null ? substance.getFormula() : null)
                 .substanceName(substance != null ? substance.getName() : null)
                 .substanceVietnameseName(substance != null ? substance.getVietnameseName() : null)
+                .frontImageUrl(null)
+                .backImageUrl(null)
                 .build();
     }
 }

@@ -32,7 +32,7 @@ public class FeedbackResponse {
 
     private String imageUrl;
 
-    private String adminReply;
+    private String staffReply;
 
     private String appVersion;
 

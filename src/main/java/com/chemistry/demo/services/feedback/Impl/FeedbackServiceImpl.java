@@ -73,7 +73,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_STAFF')")
     public FeedbackResponse getFeedbackForStaff(String feedbackId) {
         return feedbackRepository.findById(feedbackId)
                 .map(feedbackMapper::toFeedbackResponse)
@@ -81,18 +81,33 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_STAFF')")
     public FeedbackResponse handleFeedback(String id, HandleFeedbackRequest request) {
+        User user = securityUtils.getCurrentUserCognitoSub();
+
         Feedback feedback = feedbackRepository.findById(id)
                 .orElseThrow(() -> new AppException(FeedbackErrorCode.FEEDBACK_NOT_FOUND));
 
         updateIfNotNull(request.getStatus(), feedback::setStatus);
         updateIfNotNull(request.getPriority(), feedback::setPriority);
         updateIfNotNull(request.getStaffReply(), feedback::setStaffReply);
+        feedback.setRepliedBy(user);
 
         Feedback savedFeedback = feedbackRepository.save(feedback);
 
         return feedbackMapper.toFeedbackResponse(savedFeedback);
+    }
+
+    @Override
+    @PreAuthorize("hasAuthority('ROLE_STUDENT')")
+    public PageResponse<FeedbackListResponse> getFeedbacksForUser(Pageable pageable) {
+        User user = securityUtils.getCurrentUserCognitoSub();
+        Page<Feedback> feedbacks = feedbackRepository.findByUser(user, pageable);
+
+        return PageResponseUtils.toPageResponse(
+                feedbacks,
+                feedbackMapper::toFeedbackListResponse
+        );
     }
 
     private <T> void updateIfNotNull(T value, Consumer<T> setter) {
