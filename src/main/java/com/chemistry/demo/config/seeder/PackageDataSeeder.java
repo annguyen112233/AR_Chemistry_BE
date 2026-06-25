@@ -68,7 +68,7 @@ public class PackageDataSeeder implements DataSeeder {
                 Packages.builder()
                         .packageType(PackageType.AR_30_DAYS)
                         .name("AR Access 30 Days")
-                        .price(BigDecimal.valueOf(299000))
+                        .price(BigDecimal.valueOf(139000))
                         .durationDays(30)
                         .googleProductId("ar_access_30_days")
                         .build()
