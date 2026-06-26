@@ -4,7 +4,10 @@ import com.chemistry.demo.config.properties.AwsProperties;
 import com.chemistry.demo.services.aws.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.HeadObjectRequest;
+import software.amazon.awssdk.services.s3.model.HeadObjectResponse;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
@@ -19,6 +22,7 @@ import java.time.Duration;
 public class S3ServiceImpl implements S3Service {
 
     private final S3Presigner s3Presigner;
+    private final S3Client s3Client;
     private final AwsProperties awsProperties;
 
     @Override
@@ -65,5 +69,17 @@ public class S3ServiceImpl implements S3Service {
                 s3Presigner.presignGetObject(presignRequest);
 
         return presignedRequest.url().toString();
+    }
+
+    @Override
+    public Long getObjectSize(String key) {
+        HeadObjectRequest request = HeadObjectRequest.builder()
+                .bucket(awsProperties.getS3().getBucketName())
+                .key(key)
+                .build();
+
+        HeadObjectResponse response = s3Client.headObject(request);
+
+        return response.contentLength();
     }
 }

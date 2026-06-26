@@ -25,4 +25,6 @@ public interface S3Service {
     String buildFileUrl(String key);
 
     String generatePresignedGetUrl(String key);
+
+    Long getObjectSize(String key);
 }

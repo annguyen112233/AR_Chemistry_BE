@@ -12,4 +12,6 @@ public class ArAssetResponse {
     private int reactionVersion;
     private String markerUrl;
     private String reactionUrl;
+    private Long markerSizeBytes;
+    private Long reactionSizeBytes;
 }
