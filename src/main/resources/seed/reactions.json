@@ -87,6 +87,35 @@
     ]
   },
   {
+    "code": "NAOH_HCL",
+    "name": "Natri hiđroxit phản ứng với axit clohidric",
+    "equation": "NaOH + HCl -> NaCl + H2O",
+    "reactionType": "NEUTRALIZATION",
+    "arSceneKey": "NEUTRALIZATION",
+    "description": "Natri hiđroxit phản ứng với axit clohidric tạo natri clorua và nước.",
+    "active": true,
+    "reactants": [
+      {
+        "formula": "NaOH",
+        "coefficient": 1
+      },
+      {
+        "formula": "HCl",
+        "coefficient": 1
+      }
+    ],
+    "products": [
+      {
+        "formula": "NaCl",
+        "coefficient": 1
+      },
+      {
+        "formula": "H2O",
+        "coefficient": 1
+      }
+    ]
+  },
+  {
     "code": "BACL2_NA2SO4",
     "name": "Bari clorua phản ứng với natri sunfat",
     "equation": "BaCl2 + Na2SO4 -> BaSO4 + 2NaCl",

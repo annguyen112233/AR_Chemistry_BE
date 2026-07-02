@@ -21,7 +21,7 @@ public class SeedSingleCardItem {
 
     private String description;
 
-    private BigDecimal price;
+    private Long kpPrice;
 
     private Integer durationDays;
 

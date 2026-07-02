@@ -4,11 +4,13 @@ import com.chemistry.demo.dto.request.profile.UpdateProfileRequest;
 import com.chemistry.demo.dto.response.profile.UpdateProfileResponse;
 import com.chemistry.demo.dto.response.user.UserResponse;
 import com.chemistry.demo.dto.response.profile.UserProfileResponse;
+import com.chemistry.demo.entity.KnowledgePointWallet;
 import com.chemistry.demo.entity.Role;
 import com.chemistry.demo.entity.User;
 import com.chemistry.demo.enums.RoleName;
 import com.chemistry.demo.mapper.UserMapper;
 import com.chemistry.demo.mapper.UserProfileMapper;
+import com.chemistry.demo.repository.KnowledgePointWalletRepository;
 import com.chemistry.demo.repository.RoleRepository;
 import com.chemistry.demo.repository.UserRepository;
 import com.chemistry.demo.services.aws.CognitoService;
@@ -33,6 +35,7 @@ public class UserServiceImpl implements UserService {
     private final UserProfileMapper userProfileMapper;
     private final SecurityUtils securityUtils;
     private final CognitoService cognitoService;
+    private final KnowledgePointWalletRepository knowledgePointWalletRepository;
 
     @Override
     @Transactional
@@ -41,11 +44,10 @@ public class UserServiceImpl implements UserService {
             String cognitoUsername,
             String cognitoSub
     ) {
-
         AtomicBoolean isNewUser = new AtomicBoolean(false);
 
         Role studentRole = roleRepository.findByRoleName(RoleName.ROLE_STUDENT)
-                .orElseThrow(() -> new RuntimeException("Role ADMIN not found"));
+                .orElseThrow(() -> new RuntimeException("Role STUDENT not found"));
 
         User user = userRepository.findByCognitoSub(cognitoSub)
                 .orElseGet(() -> {
@@ -54,24 +56,33 @@ public class UserServiceImpl implements UserService {
                             .cognitoSub(cognitoSub)
                             .email(email)
                             .roles(new java.util.HashSet<>(java.util.List.of(studentRole)))
-                        .build();
-
+                            .build();
                 });
 
+        User savedUser = userRepository.save(user);
 
-        user = userRepository.save(user);
+        String walletUserId = savedUser.getCognitoSub();
+
+        knowledgePointWalletRepository.findByUserId(walletUserId)
+                .orElseGet(() -> knowledgePointWalletRepository.save(
+                        KnowledgePointWallet.builder()
+                                .userId(walletUserId)
+                                .balance(30000L)
+                                .totalEarned(30000L)
+                                .totalSpent(0L)
+                                .build()
+                ));
+
         userSecurityCacheService.evictUserSecurity(cognitoSub);
 
         if (isNewUser.get()) {
-
-            cognitoService
-                    .addUserToGroup(
-                            cognitoUsername,
-                            RoleName.ROLE_STUDENT.name()
-                    );
+            cognitoService.addUserToGroup(
+                    cognitoUsername,
+                    RoleName.ROLE_STUDENT.name()
+            );
         }
 
-        return userMapper.toUserResponse(user);
+        return userMapper.toUserResponse(savedUser);
     }
 
     @Override

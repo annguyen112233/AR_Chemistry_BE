@@ -18,7 +18,7 @@ public class SingleCardShopResponse {
 
     private String description;
 
-    private BigDecimal price;
+    private Long kpPrice;
 
     private Integer durationDays;
 

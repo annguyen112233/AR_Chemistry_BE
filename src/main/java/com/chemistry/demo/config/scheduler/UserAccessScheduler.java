@@ -19,7 +19,7 @@ public class UserAccessScheduler {
 
     private final UserAccessRepository userAccessRepository;
 
-    @Scheduled(fixedRate = 60 * 60 * 1000)
+    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Ho_Chi_Minh")
     @Transactional
     public void expireUserAccess() {
         Instant now = Instant.now();

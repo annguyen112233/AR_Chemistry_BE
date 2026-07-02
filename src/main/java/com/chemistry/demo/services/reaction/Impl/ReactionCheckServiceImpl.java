@@ -1,12 +1,14 @@
 package com.chemistry.demo.services.reaction.Impl;
 
 import com.chemistry.demo.dto.request.reaction.CheckReactionRequest;
+import com.chemistry.demo.dto.response.knowledgePoint.ArScanRewardResponse;
 import com.chemistry.demo.dto.response.reaction.CheckReactionResponse;
 import com.chemistry.demo.entity.*;
 import com.chemistry.demo.enums.ReactionRole;
 import com.chemistry.demo.mapper.ReactionMapper;
 import com.chemistry.demo.repository.ChemicalCardRepository;
 import com.chemistry.demo.repository.ReactionSubstanceRepository;
+import com.chemistry.demo.services.knowledgePoint.KnowledgePointService;
 import com.chemistry.demo.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,8 +25,9 @@ public class ReactionCheckServiceImpl implements com.chemistry.demo.services.rea
     private final ArAccessServiceImpl arAccessService;
     private final ReactionSubstanceRepository reactionSubstanceRepository;
     private final ChemicalCardRepository chemicalCardRepository;
+    private final KnowledgePointService knowledgePointService;
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public CheckReactionResponse checkReaction(CheckReactionRequest request) {
         User user = securityUtils.getCurrentUserCognitoSub();
 
@@ -147,6 +150,9 @@ public class ReactionCheckServiceImpl implements com.chemistry.demo.services.rea
                                 ReactionRole.PRODUCT
                         );
 
+                ArScanRewardResponse reward =
+                        knowledgePointService.rewardArScan("REACTION:" + candidate.getCode());
+
                 return CheckReactionResponse.builder()
                         .matched(true)
                         .reason("REACTION_MATCHED")
@@ -156,6 +162,7 @@ public class ReactionCheckServiceImpl implements com.chemistry.demo.services.rea
                         .equation(candidate.getEquation())
                         .reactionType(candidate.getReactionType())
                         .arSceneKey(candidate.getArSceneKey())
+                        .reward(reward)
                         .missingSubstances(List.of())
                         .reactants(
                                 reactants.stream()

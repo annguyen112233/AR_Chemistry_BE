@@ -7,7 +7,7 @@ import com.chemistry.demo.entity.User;
 import org.springframework.data.domain.Pageable;
 
 public interface SingleCardPurchaseService {
-    SingleCardPurchaseResponse fakeBuySingleCard(String singleCardId);
+    SingleCardPurchaseResponse buySingleCardWithKnowledgePoint(String singleCardId);
 
     PageResponse<MySingleCardPurchaseResponse> getMySingleCardPurchases(Pageable pageable);
 

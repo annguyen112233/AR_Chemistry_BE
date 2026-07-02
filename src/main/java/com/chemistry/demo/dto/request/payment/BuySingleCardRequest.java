@@ -9,7 +9,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FakeBuySingleCardRequest {
+public class BuySingleCardRequest {
 
     @NotBlank
     private String singleCardId;

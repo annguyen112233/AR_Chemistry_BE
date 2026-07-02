@@ -122,7 +122,7 @@
     "state": "AQUEOUS",
     "molarMass": 40.0,
     "active": true,
-    "includedInFullKit": false,
+    "includedInFullKit": true,
     "description": "Natri hiđroxit, bazơ mạnh, thường dùng trong phản ứng trung hòa với axit.",
     "safetyNote": "Có tính ăn mòn, cần sử dụng theo hướng dẫn.",
     "iupacName": "Sodium hydroxide",

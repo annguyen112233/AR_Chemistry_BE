@@ -1,6 +1,5 @@
 package com.chemistry.demo.config.seeder;
 
-import com.chemistry.demo.config.seeder.DataSeeder;
 import com.chemistry.demo.dto.seed.SeedSingleCardItem;
 import com.chemistry.demo.entity.ChemicalSubstance;
 import com.chemistry.demo.entity.SingleCard;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.util.List;
 
 @Component
@@ -25,9 +23,8 @@ public class SingleCardSeeder implements DataSeeder {
     private final ChemicalSubstanceRepository chemicalSubstanceRepository;
     private final SingleCardRepository singleCardRepository;
 
-    private static final BigDecimal DEFAULT_PRICE = BigDecimal.valueOf(15000);
+    private static final long DEFAULT_KP_PRICE = 15000L;
     private static final int DEFAULT_DURATION_DAYS = 30;
-    private static final String DEFAULT_GOOGLE_PLAY_PRODUCT_ID = "single_card_15k";
 
     @Override
     @Transactional
@@ -50,36 +47,30 @@ public class SingleCardSeeder implements DataSeeder {
             singleCard.setCode(code);
             singleCard.setSubstance(substance);
             singleCard.setQrContent(qrContent);
-            singleCard.setQrS3Key(item.getQrS3Key());
+            singleCard.setQrS3Key(normalizeQrS3Key(item.getQrS3Key()));
 
             singleCard.setName(
                     item.getName() != null && !item.getName().isBlank()
-                            ? item.getName()
+                            ? item.getName().trim()
                             : buildDefaultName(substance)
             );
 
             singleCard.setDescription(
                     item.getDescription() != null && !item.getDescription().isBlank()
-                            ? item.getDescription()
+                            ? item.getDescription().trim()
                             : buildDefaultDescription(substance)
             );
 
-            singleCard.setPrice(
-                    item.getPrice() != null
-                            ? item.getPrice()
-                            : DEFAULT_PRICE
+            singleCard.setKpPrice(
+                    item.getKpPrice() != null && item.getKpPrice() > 0
+                            ? item.getKpPrice()
+                            : DEFAULT_KP_PRICE
             );
 
             singleCard.setDurationDays(
-                    item.getDurationDays() != null
+                    item.getDurationDays() != null && item.getDurationDays() > 0
                             ? item.getDurationDays()
                             : DEFAULT_DURATION_DAYS
-            );
-
-            singleCard.setGooglePlayProductId(
-                    item.getGooglePlayProductId() != null && !item.getGooglePlayProductId().isBlank()
-                            ? item.getGooglePlayProductId()
-                            : DEFAULT_GOOGLE_PLAY_PRODUCT_ID
             );
 
             singleCard.setActive(item.getActive() != null ? item.getActive() : true);
@@ -99,7 +90,7 @@ public class SingleCardSeeder implements DataSeeder {
             try (InputStream inputStream = resource.getInputStream()) {
                 return objectMapper.readValue(
                         inputStream,
-                        new TypeReference<>() {
+                        new TypeReference<List<SeedSingleCardItem>>() {
                         }
                 );
             }
@@ -130,6 +121,14 @@ public class SingleCardSeeder implements DataSeeder {
         }
 
         return qrPayload.trim();
+    }
+
+    private String normalizeQrS3Key(String qrS3Key) {
+        if (qrS3Key == null || qrS3Key.isBlank()) {
+            throw new RuntimeException("Single card QR S3 key is required");
+        }
+
+        return qrS3Key.trim();
     }
 
     private String buildDefaultName(ChemicalSubstance substance) {

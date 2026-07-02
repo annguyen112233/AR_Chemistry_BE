@@ -5,7 +5,6 @@ import com.chemistry.demo.enums.PurchaseStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 
 @Entity
@@ -15,6 +14,8 @@ import java.time.Instant;
                 @Index(name = "idx_single_card_purchase_user_id", columnList = "user_id"),
                 @Index(name = "idx_single_card_purchase_card_id", columnList = "single_card_id"),
                 @Index(name = "idx_single_card_purchase_status", columnList = "status"),
+                @Index(name = "idx_single_card_purchase_provider", columnList = "payment_provider"),
+                @Index(name = "idx_single_card_purchase_kp_tx", columnList = "kp_transaction_id")
         }
 )
 @Getter
@@ -43,44 +44,79 @@ public class SingleCardPurchase {
     private SingleCard singleCard;
 
     /**
-     * DEV_FAKE_PAYMENT hiện tại, GOOGLE_PLAY sau này.
+     * Hiện tại chỉ dùng KNOWLEDGE_POINT.
      */
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 50)
+    @Column(name = "payment_provider", nullable = false, length = 50)
     private PaymentProvider paymentProvider;
 
+    /**
+     * PENDING, PAID, FAILED, CANCELLED...
+     */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
     private PurchaseStatus status;
 
     /**
-     * Giá tại thời điểm mua.
-     * Nên lưu lại để sau này dù SingleCard đổi giá,
-     * lịch sử mua vẫn đúng.
+     * Giá KP tại thời điểm mua.
      */
-    @Column(nullable = false, precision = 12, scale = 2)
-    private BigDecimal price;
-
+    @Column(name = "kp_price", nullable = false)
+    private Long kpPrice;
 
     /**
-     * Google Play product id.
-     * Fake payment vẫn lưu để sau này flow giống Google Play hơn.
+     * Transaction trừ KP tương ứng.
      */
-    @Column(length = 100)
-    private String googlePlayProductId;
+    @Column(name = "kp_transaction_id", length = 100)
+    private String kpTransactionId;
 
     /**
-     * Sau này tích hợp Google Play mới có.
+     * Thời điểm user bấm mua.
      */
-    @Column(length = 500)
-    private String googlePlayPurchaseToken;
-
-    /**
-     * Sau này tích hợp Google Play mới có.
-     */
-    @Column(length = 255)
-    private String googlePlayOrderId;
-
     @Column(nullable = false)
     private Instant purchasedAt;
+
+    /**
+     * Thời điểm thanh toán KP thành công.
+     */
+    private Instant paidAt;
+
+    /**
+     * Thời điểm quyền AR hết hạn.
+     */
+    @Column(nullable = false)
+    private Instant expiredAt;
+
+    /**
+     * Lý do thất bại nếu mua lỗi.
+     */
+    @Column(length = 1000)
+    private String failureReason;
+
+    @Column(nullable = false, updatable = false)
+    private Instant createdAt;
+
+    @Column(nullable = false)
+    private Instant updatedAt;
+
+    @PrePersist
+    void prePersist() {
+        Instant now = Instant.now();
+
+        if (createdAt == null) {
+            createdAt = now;
+        }
+
+        if (updatedAt == null) {
+            updatedAt = now;
+        }
+
+        if (purchasedAt == null) {
+            purchasedAt = now;
+        }
+    }
+
+    @PreUpdate
+    void preUpdate() {
+        updatedAt = Instant.now();
+    }
 }

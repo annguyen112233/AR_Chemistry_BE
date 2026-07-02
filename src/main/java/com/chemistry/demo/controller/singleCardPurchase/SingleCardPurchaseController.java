@@ -2,7 +2,7 @@ package com.chemistry.demo.controller.singleCardPurchase;
 
 import com.chemistry.demo.dto.ApiResponse;
 import com.chemistry.demo.dto.PageResponse;
-import com.chemistry.demo.dto.request.payment.FakeBuySingleCardRequest;
+import com.chemistry.demo.dto.request.payment.BuySingleCardRequest;
 import com.chemistry.demo.dto.response.singleCardPurchase.MySingleCardPurchaseResponse;
 import com.chemistry.demo.dto.response.singleCardPurchase.SingleCardPurchaseResponse;
 import com.chemistry.demo.services.singleCardPurchase.SingleCardPurchaseService;
@@ -19,12 +19,12 @@ import org.springframework.web.bind.annotation.*;
 public class SingleCardPurchaseController {
     private final SingleCardPurchaseService singleCardPurchaseService;
 
-    @PostMapping("/fake-buy")
+    @PostMapping("/buy")
     public ApiResponse<SingleCardPurchaseResponse> fakeBuySingleCard(
-            @Valid @RequestBody FakeBuySingleCardRequest request
+            @Valid @RequestBody BuySingleCardRequest request
     ) {
 
-        SingleCardPurchaseResponse response = singleCardPurchaseService.fakeBuySingleCard(request.getSingleCardId());
+        SingleCardPurchaseResponse response = singleCardPurchaseService.buySingleCardWithKnowledgePoint(request.getSingleCardId());
 
         return ApiResponse.<SingleCardPurchaseResponse>ok()
                 .data(response)

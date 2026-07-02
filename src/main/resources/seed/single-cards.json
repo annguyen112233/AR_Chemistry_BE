@@ -6,6 +6,12 @@
     "qrS3Key": "single-cards/Al.png"
   },
   {
+    "formula": "NaOH",
+    "cardCode": "CARD-NaOH",
+    "qrPayload": "NaOH",
+    "qrS3Key": "single-cards/NaOH.png"
+  },
+  {
     "formula": "BaCl2",
     "cardCode": "CARD-BaCl2",
     "qrPayload": "BaCl2",

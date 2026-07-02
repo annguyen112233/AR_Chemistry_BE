@@ -3,16 +3,14 @@ package com.chemistry.demo.services.singleCardPurchase.Impl;
 import com.chemistry.demo.dto.PageResponse;
 import com.chemistry.demo.dto.response.singleCardPurchase.MySingleCardPurchaseResponse;
 import com.chemistry.demo.dto.response.singleCardPurchase.SingleCardPurchaseResponse;
-import com.chemistry.demo.entity.SingleCard;
-import com.chemistry.demo.entity.SingleCardPurchase;
-import com.chemistry.demo.entity.User;
-import com.chemistry.demo.entity.UserAccess;
+import com.chemistry.demo.entity.*;
 import com.chemistry.demo.enums.*;
 import com.chemistry.demo.mapper.SingleCardPurchaseMapper;
 import com.chemistry.demo.repository.SingleCardPurchaseRepository;
 import com.chemistry.demo.repository.SingleCardRepository;
 import com.chemistry.demo.repository.UserAccessRepository;
 import com.chemistry.demo.services.aws.S3Service;
+import com.chemistry.demo.services.knowledgePoint.KnowledgePointService;
 import com.chemistry.demo.utils.PageResponseUtils;
 import com.chemistry.demo.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
@@ -31,13 +29,14 @@ public class SingleCardPurchaseServiceImpl implements com.chemistry.demo.service
     private final SingleCardRepository singleCardRepository;
     private final SingleCardPurchaseRepository singleCardPurchaseRepository;
     private final UserAccessRepository userAccessRepository;
+    private final KnowledgePointService knowledgePointService;
 
     private final S3Service s3Service;
     private final SecurityUtils securityUtils;
 
     @Override
     @Transactional
-    public SingleCardPurchaseResponse fakeBuySingleCard(String singleCardId) {
+    public SingleCardPurchaseResponse buySingleCardWithKnowledgePoint(String singleCardId) {
         User user = securityUtils.getCurrentUserCognitoSub();
 
         SingleCard singleCard = singleCardRepository.findById(singleCardId)
@@ -47,19 +46,39 @@ public class SingleCardPurchaseServiceImpl implements com.chemistry.demo.service
             throw new RuntimeException("Single card is not active");
         }
 
+        Long kpPriceObject = singleCard.getKpPrice();
+        if (kpPriceObject == null || kpPriceObject <= 0) {
+            throw new RuntimeException("Invalid single card KP price");
+        }
+
+        long kpPrice = kpPriceObject;
+
         Instant now = Instant.now();
         Instant expiredAt = now.plus(singleCard.getDurationDays(), ChronoUnit.DAYS);
 
         SingleCardPurchase purchase = SingleCardPurchase.builder()
                 .user(user)
                 .singleCard(singleCard)
-                .paymentProvider(PaymentProvider.DEV_FAKE_PAYMENT)
-                .status(PurchaseStatus.PAID)
-                .price(singleCard.getPrice())
-                .googlePlayProductId(singleCard.getGooglePlayProductId())
+                .paymentProvider(PaymentProvider.KNOWLEDGE_POINT)
+                .status(PurchaseStatus.PENDING)
+                .kpPrice(kpPrice)
                 .purchasedAt(now)
+                .expiredAt(expiredAt)
                 .build();
 
+        purchase = singleCardPurchaseRepository.save(purchase);
+
+        KnowledgePointTransaction kpTransaction = knowledgePointService.spend(
+                user,
+                kpPrice,
+                KnowledgePointTransactionType.SPEND_DIGITAL_CARD,
+                "Mua thẻ digital " + singleCard.getName(),
+                purchase.getId()
+        );
+
+        purchase.setStatus(PurchaseStatus.PAID);
+        purchase.setPaidAt(now);
+        purchase.setKpTransactionId(kpTransaction.getId());
         purchase = singleCardPurchaseRepository.save(purchase);
 
         UserAccess userAccess = UserAccess.builder()
@@ -90,8 +109,10 @@ public class SingleCardPurchaseServiceImpl implements com.chemistry.demo.service
                 .qrContent(singleCard.getQrContent())
                 .qrImageUrl(qrImageUrl)
                 .purchasedAt(purchase.getPurchasedAt())
-                .expiredAt(expiredAt)
+                .expiredAt(purchase.getExpiredAt())
                 .status(purchase.getStatus().name())
+                .kpSpent(kpPrice)
+                .currentBalance(kpTransaction.getBalanceAfter())
                 .build();
     }
 

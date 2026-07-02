@@ -1,5 +1,6 @@
 package com.chemistry.demo.dto.response.reaction;
 
+import com.chemistry.demo.dto.response.knowledgePoint.ArScanRewardResponse;
 import com.chemistry.demo.enums.ArSceneKey;
 import com.chemistry.demo.enums.ReactionType;
 import lombok.*;
@@ -34,4 +35,6 @@ public class CheckReactionResponse {
     private List<ReactionSubstanceResponse> reactants;
 
     private List<ReactionSubstanceResponse> products;
+
+    private ArScanRewardResponse reward;
 }

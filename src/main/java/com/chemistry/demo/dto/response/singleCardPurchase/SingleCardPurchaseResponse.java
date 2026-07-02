@@ -29,4 +29,6 @@ public class SingleCardPurchaseResponse {
     private Instant expiredAt;
 
     private String status;
+    private Long kpSpent;
+    private Long currentBalance;
 }

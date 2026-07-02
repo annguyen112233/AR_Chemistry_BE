@@ -14,5 +14,6 @@
   { "formula": "Na", "cardCode": "CARD-Na", "qrPayload": "Na" },
   { "formula": "Na2SO4", "cardCode": "CARD-Na2SO4", "qrPayload": "Na2SO4" },
   { "formula": "S", "cardCode": "CARD-S", "qrPayload": "S" },
-  { "formula": "Zn", "cardCode": "CARD-Zn", "qrPayload": "Zn" }
+  { "formula": "Zn", "cardCode": "CARD-Zn", "qrPayload": "Zn" },
+  { "formula": "NaOH", "cardCode": "CARD-NaOH", "qrPayload": "NaOH" }
 ]
