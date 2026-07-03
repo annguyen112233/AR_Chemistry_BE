@@ -13,6 +13,7 @@ import com.chemistry.demo.services.payment.GooglePlayVerifier;
 import com.chemistry.demo.utils.SecurityUtils;
 import com.google.api.services.androidpublisher.model.ProductPurchase;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GooglePlayBillingServiceImpl implements GooglePlayBillingService {
@@ -62,8 +64,22 @@ public class GooglePlayBillingServiceImpl implements GooglePlayBillingService {
                 request.getPurchaseToken()
         );
 
-        if (productPurchase.getPurchaseState() == null || productPurchase.getPurchaseState() != 0) {
-            throw new RuntimeException("Google Play purchase is not completed");
+        Integer purchaseState = productPurchase.getPurchaseState();
+
+        log.info(
+                "[GOOGLE_PLAY_VERIFY] productId={}, orderId={}, purchaseState={}, acknowledgementState={}, purchaseTimeMillis={}, tokenPrefix={}",
+                request.getProductId(),
+                productPurchase.getOrderId(),
+                purchaseState,
+                productPurchase.getAcknowledgementState(),
+                productPurchase.getPurchaseTimeMillis(),
+                request.getPurchaseToken() == null
+                        ? null
+                        : request.getPurchaseToken().substring(0, Math.min(12, request.getPurchaseToken().length()))
+        );
+
+        if (purchaseState == null || purchaseState != 0) {
+            throw new RuntimeException("Google Play purchase is not completed. state=" + purchaseState);
         }
 
         boolean acknowledged = productPurchase.getAcknowledgementState() != null
