@@ -136,23 +136,41 @@ public class ArAccessServiceImpl implements ArAccessService {
         return allowedSubstanceIds.containsAll(requiredSubstanceIds);
     }
 
-    @Override
     public PackageOwnershipResponse getMyAr30DaysOwnership() {
         User user = securityUtils.getCurrentUserCognitoSub();
         Instant now = Instant.now();
 
-        boolean owned = userAccessRepository
-                .existsByUserAndAccessTypeAndStatusAndExpiredAtAfter(
+        Optional<UserAccess> accessOpt =
+                userAccessRepository.findFirstByUserAndAccessTypeAndStatusAndExpiredAtAfterOrderByExpiredAtDesc(
                         user,
                         AccessType.AR_30_DAYS,
                         AccessStatus.ACTIVE,
                         now
                 );
 
+        if (accessOpt.isEmpty()) {
+            return PackageOwnershipResponse.builder()
+                    .owned(false)
+                    .accessType(AccessType.AR_30_DAYS.name())
+                    .startAt(null)
+                    .expiredAt(null)
+                    .remainingDays(0)
+                    .message("Bạn chưa sở hữu gói AR 30 Days.")
+                    .build();
+        }
+
+        UserAccess access = accessOpt.get();
+
+        long remainingSeconds = Duration.between(now, access.getExpiredAt()).getSeconds();
+        long remainingDays = (long) Math.ceil(remainingSeconds / 86400.0);
+
         return PackageOwnershipResponse.builder()
-                .owned(owned)
-                .accessType(AccessType.AR_30_DAYS.name())
-                .message(owned ? "Bạn đang sở hữu gói AR 30 Days." : "Bạn chưa sở hữu gói AR 30 Days.")
+                .owned(true)
+                .accessType(access.getAccessType().name())
+                .startAt(access.getStartAt())
+                .expiredAt(access.getExpiredAt())
+                .remainingDays(Math.max(remainingDays, 0))
+                .message("Bạn đang sở hữu gói AR 30 Days.")
                 .build();
     }
 
