@@ -5,6 +5,7 @@ import com.chemistry.demo.dto.request.profile.AvatarRequest;
 import com.chemistry.demo.dto.request.profile.UpdateProfileRequest;
 import com.chemistry.demo.dto.response.profile.UpdateProfileResponse;
 import com.chemistry.demo.dto.response.reaction.ArAccessResponse;
+import com.chemistry.demo.dto.response.reaction.PackageOwnershipResponse;
 import com.chemistry.demo.dto.response.user.UserResponse;
 import com.chemistry.demo.dto.response.profile.UserProfileResponse;
 import com.chemistry.demo.entity.User;
@@ -74,5 +75,11 @@ public class UserController {
                 .build();
     }
 
+    @GetMapping("/packages/ar-30-days/ownership")
+    public ApiResponse<PackageOwnershipResponse> getMyAr30DaysOwnership() {
+        return ApiResponse.<PackageOwnershipResponse>ok()
+                .data(arAccessService.getMyAr30DaysOwnership())
+                .build();
+    }
 
 }

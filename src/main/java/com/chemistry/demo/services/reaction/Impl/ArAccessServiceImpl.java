@@ -1,6 +1,7 @@
 package com.chemistry.demo.services.reaction.Impl;
 
 import com.chemistry.demo.dto.response.reaction.ArAccessResponse;
+import com.chemistry.demo.dto.response.reaction.PackageOwnershipResponse;
 import com.chemistry.demo.entity.*;
 import com.chemistry.demo.enums.AccessSource;
 import com.chemistry.demo.enums.AccessStatus;
@@ -133,6 +134,26 @@ public class ArAccessServiceImpl implements ArAccessService {
         }
 
         return allowedSubstanceIds.containsAll(requiredSubstanceIds);
+    }
+
+    @Override
+    public PackageOwnershipResponse getMyAr30DaysOwnership() {
+        User user = securityUtils.getCurrentUserCognitoSub();
+        Instant now = Instant.now();
+
+        boolean owned = userAccessRepository
+                .existsByUserAndAccessTypeAndStatusAndExpiredAtAfter(
+                        user,
+                        AccessType.AR_30_DAYS,
+                        AccessStatus.ACTIVE,
+                        now
+                );
+
+        return PackageOwnershipResponse.builder()
+                .owned(owned)
+                .accessType(AccessType.AR_30_DAYS.name())
+                .message(owned ? "Bạn đang sở hữu gói AR 30 Days." : "Bạn chưa sở hữu gói AR 30 Days.")
+                .build();
     }
 
     private void addAllowedSubstancesFromKitTrialAccess(
