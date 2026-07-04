@@ -28,7 +28,7 @@ public class KnowledgePointServiceImpl implements KnowledgePointService {
     private final ArScanRewardLogRepository arScanRewardLogRepository;
     private final KnowledgePointTransactionRepository transactionRepository;
 
-    private static final long AR_SCAN_REWARD_KP = 500L;
+    private static final long AR_SCAN_REWARD_KP = 200L;
     private static final long AR_SCAN_DAILY_LIMIT = 5L;
     private static final ZoneId VN_ZONE = ZoneId.of("Asia/Ho_Chi_Minh");
 
