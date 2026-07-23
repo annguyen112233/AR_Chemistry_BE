@@ -1,6 +1,7 @@
 package com.chemistry.demo.entity;
 
 import com.chemistry.demo.enums.ArSceneKey;
+import com.chemistry.demo.enums.ReactionCategory;
 import com.chemistry.demo.enums.ReactionType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,8 +10,18 @@ import lombok.*;
 @Table(
         name = "reaction_definitions",
         indexes = {
-                @Index(name = "idx_reaction_code", columnList = "code"),
-                @Index(name = "idx_reaction_active", columnList = "active")
+                @Index(
+                        name = "idx_reaction_code",
+                        columnList = "code"
+                ),
+                @Index(
+                        name = "idx_reaction_active",
+                        columnList = "active"
+                ),
+                @Index(
+                        name = "idx_reaction_grade_category_active",
+                        columnList = "grade, reaction_category, active"
+                )
         }
 )
 @Getter
@@ -18,46 +29,80 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ReactionDefinition {
+public class ReactionDefinition extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(nullable = false, unique = true, length = 100)
+    @Column(
+            name = "code",
+            nullable = false,
+            unique = true,
+            length = 100
+    )
     private String code;
 
-    @Column(nullable = false, length = 255)
+    @Column(
+            name = "name",
+            nullable = false,
+            length = 255
+    )
     private String name;
 
-    @Column(nullable = false, length = 500)
+    @Column(
+            name = "equation",
+            nullable = false,
+            length = 500
+    )
     private String equation;
 
-    /**
-     * Ví dụ:
-     * METAL_ACID
-     * PRECIPITATION
-     * NEUTRALIZATION
-     * THERMAL_DECOMPOSITION
-     */
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 100)
+    @Column(
+            name = "reaction_category",
+            nullable = false,
+            length = 30
+    )
+    private ReactionCategory reactionCategory;
+
+    @Enumerated(EnumType.STRING)
+    @Column(
+            name = "reaction_type",
+            nullable = false,
+            length = 100
+    )
     private ReactionType reactionType;
 
-    /**
-     * Unity dùng field này để chọn template AR.
-     * Ví dụ:
-     * METAL_ACID_GAS
-     * PRECIPITATION
-     * THERMAL_DECOMPOSITION_GAS
-     */
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 100)
+    @Column(
+            name = "ar_scene_key",
+            nullable = false,
+            length = 100
+    )
     private ArSceneKey arSceneKey;
 
-    @Column(length = 1000)
+    @Column(
+            name = "description",
+            length = 1000
+    )
     private String description;
 
-    @Column(nullable = false)
-    private Boolean active;
+    @Column(
+            name = "reaction_script",
+            columnDefinition = "TEXT"
+    )
+    private String script;
+
+    @Column(
+            name = "grade",
+            nullable = false
+    )
+    private Integer grade;
+
+    @Column(
+            name = "active",
+            nullable = false
+    )
+    @Builder.Default
+    private Boolean active = true;
 }

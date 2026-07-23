@@ -23,4 +23,6 @@ public class ReactionSubstanceResponse {
     private SubstanceState state;
 
     private Integer coefficient;
+    private Integer substanceOrder;
+
 }

@@ -1,15 +1,13 @@
-package com.chemistry.demo.dto.quizCSV.staff;
+package com.chemistry.demo.dto.response.quiz.staff;
 
-import lombok.*;
+import com.chemistry.demo.enums.QuizAttemptStatus;
+import lombok.Builder;
+import lombok.Getter;
 
 import java.time.Instant;
 
-@Data
-@Builder
 @Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder
 public class StaffQuizAttemptResponse {
 
     private String attemptCode;
@@ -21,13 +19,20 @@ public class StaffQuizAttemptResponse {
     private String quizCode;
     private String quizTitle;
 
-    private String lessonCode;
-    private String lessonTitle;
+    private String reactionId;
+    private String reactionCode;
+    private String reactionName;
+    private String equation;
+    private Integer grade;
+    private String reactionCategory;
 
-    private Integer score;
+    private Double score;
     private Integer totalQuestions;
     private Integer correctCount;
 
-    private String status;
+    private QuizAttemptStatus status;
+
+    private Instant startedAt;
+    private Instant expiredAt;
     private Instant submittedAt;
 }

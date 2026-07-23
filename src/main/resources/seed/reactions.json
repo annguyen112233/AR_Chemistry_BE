@@ -4,8 +4,11 @@
     "name": "Nhiệt phân kali pemanganat",
     "equation": "2KMnO4 -> K2MnO4 + MnO2 + O2",
     "reactionType": "THERMAL_DECOMPOSITION",
+    "reactionCategory": "SALT",
     "arSceneKey": "THERMAL_DECOMPOSITION_GAS",
+    "grade": 8,
     "description": "Kali pemanganat bị nhiệt phân tạo kali manganat, mangan đioxit và khí oxi.",
+    "script": "Khi đun nóng kali pemanganat, chất rắn màu tím bị phân hủy. Sau phản ứng hình thành kali manganat, mangan đioxit màu nâu đen và khí oxi thoát ra. Đây là phản ứng nhiệt phân chỉ cần quét một flash card KMnO4 trước khi thực hiện thao tác đun nóng trong AR.",
     "active": true,
     "reactants": [
       {
@@ -33,8 +36,11 @@
     "name": "Natri phản ứng với nước",
     "equation": "2Na + 2H2O -> 2NaOH + H2",
     "reactionType": "METAL_WATER",
+    "reactionCategory": "METAL",
     "arSceneKey": "METAL_WATER_GAS",
+    "grade": 9,
     "description": "Natri phản ứng mạnh với nước tạo natri hiđroxit và khí hidro.",
+    "script": "Khi natri tiếp xúc với nước, natri chuyển động nhanh trên bề mặt nước, tan dần và giải phóng khí hidro. Dung dịch sau phản ứng chứa natri hiđroxit. Trong thí nghiệm AR, người dùng cần quét đúng hai flash card Na và H2O.",
     "active": true,
     "reactants": [
       {
@@ -62,8 +68,11 @@
     "name": "Kẽm phản ứng với axit clohidric",
     "equation": "Zn + 2HCl -> ZnCl2 + H2",
     "reactionType": "METAL_ACID",
+    "reactionCategory": "ACID",
     "arSceneKey": "METAL_ACID_GAS",
+    "grade": 9,
     "description": "Kẽm phản ứng với axit clohidric tạo kẽm clorua và khí hidro.",
+    "script": "Khi cho kẽm vào dung dịch axit clohidric, trên bề mặt kẽm xuất hiện các bọt khí. Kẽm tan dần, tạo dung dịch kẽm clorua và giải phóng khí hidro. Người dùng cần quét đúng hai flash card Zn và HCl.",
     "active": true,
     "reactants": [
       {
@@ -91,8 +100,11 @@
     "name": "Natri hiđroxit phản ứng với axit clohidric",
     "equation": "NaOH + HCl -> NaCl + H2O",
     "reactionType": "NEUTRALIZATION",
+    "reactionCategory": "BASE",
     "arSceneKey": "NEUTRALIZATION",
+    "grade": 9,
     "description": "Natri hiđroxit phản ứng với axit clohidric tạo natri clorua và nước.",
+    "script": "Dung dịch natri hiđroxit phản ứng với dung dịch axit clohidric theo phản ứng trung hòa. Sản phẩm tạo thành là natri clorua và nước. Phản ứng thường không tạo khí hay kết tủa, nhưng có thể làm nhiệt độ dung dịch tăng nhẹ. Người dùng cần quét đúng hai flash card NaOH và HCl.",
     "active": true,
     "reactants": [
       {
@@ -120,8 +132,11 @@
     "name": "Bari clorua phản ứng với natri sunfat",
     "equation": "BaCl2 + Na2SO4 -> BaSO4 + 2NaCl",
     "reactionType": "PRECIPITATION",
+    "reactionCategory": "SALT",
     "arSceneKey": "PRECIPITATION",
+    "grade": 9,
     "description": "Bari clorua phản ứng với natri sunfat tạo kết tủa bari sunfat màu trắng.",
+    "script": "Khi trộn dung dịch bari clorua với dung dịch natri sunfat, kết tủa bari sunfat màu trắng xuất hiện. Natri clorua còn lại trong dung dịch. Người dùng cần quét đúng hai flash card BaCl2 và Na2SO4.",
     "active": true,
     "reactants": [
       {
@@ -149,8 +164,11 @@
     "name": "Sắt phản ứng với axit clohidric",
     "equation": "Fe + 2HCl -> FeCl2 + H2",
     "reactionType": "METAL_ACID",
+    "reactionCategory": "ACID",
     "arSceneKey": "METAL_ACID_GAS",
+    "grade": 9,
     "description": "Sắt phản ứng với axit clohidric tạo sắt(II) clorua và khí hidro.",
+    "script": "Khi cho sắt vào dung dịch axit clohidric, sắt tan dần và xuất hiện bọt khí hidro. Dung dịch sắt(II) clorua được tạo thành. Người dùng cần quét đúng hai flash card Fe và HCl.",
     "active": true,
     "reactants": [
       {
@@ -178,8 +196,11 @@
     "name": "Đồng với axit clohidric",
     "equation": "Cu + HCl -> No reaction",
     "reactionType": "NO_REACTION",
+    "reactionCategory": "ACID",
     "arSceneKey": "NO_REACTION",
+    "grade": 9,
     "description": "Đồng không phản ứng với axit clohidric loãng trong điều kiện thường.",
+    "script": "Khi cho đồng vào dung dịch axit clohidric loãng ở điều kiện thường, không xuất hiện bọt khí và đồng không tan. Điều này minh họa rằng đồng không đẩy được hidro ra khỏi axit clohidric. Người dùng cần quét đúng hai flash card Cu và HCl.",
     "active": true,
     "reactants": [
       {
@@ -198,8 +219,11 @@
     "name": "Nhôm phản ứng với axit clohidric",
     "equation": "2Al + 6HCl -> 2AlCl3 + 3H2",
     "reactionType": "METAL_ACID",
+    "reactionCategory": "ACID",
     "arSceneKey": "METAL_ACID_GAS",
+    "grade": 9,
     "description": "Nhôm phản ứng với axit clohidric tạo nhôm clorua và khí hidro.",
+    "script": "Khi lớp oxit bảo vệ trên bề mặt nhôm bị phá vỡ, nhôm phản ứng với axit clohidric, tan dần và giải phóng khí hidro. Dung dịch nhôm clorua được tạo thành. Người dùng cần quét đúng hai flash card Al và HCl.",
     "active": true,
     "reactants": [
       {
@@ -227,8 +251,11 @@
     "name": "Nhiệt phân kali clorat",
     "equation": "2KClO3 -> 2KCl + 3O2",
     "reactionType": "THERMAL_DECOMPOSITION",
+    "reactionCategory": "SALT",
     "arSceneKey": "THERMAL_DECOMPOSITION_GAS",
+    "grade": 8,
     "description": "Kali clorat bị nhiệt phân tạo kali clorua và khí oxi.",
+    "script": "Khi đun nóng kali clorat, chất này bị phân hủy tạo kali clorua và khí oxi. Trong mô phỏng AR, người dùng chỉ cần quét flash card KClO3 rồi thực hiện thao tác đun nóng để bắt đầu phản ứng.",
     "active": true,
     "reactants": [
       {
@@ -252,8 +279,11 @@
     "name": "Lưu huỳnh cháy trong oxi",
     "equation": "S + O2 -> SO2",
     "reactionType": "COMBUSTION",
+    "reactionCategory": "OTHER",
     "arSceneKey": "COMBUSTION_GAS",
+    "grade": 8,
     "description": "Lưu huỳnh cháy trong oxi tạo khí lưu huỳnh đioxit.",
+    "script": "Khi lưu huỳnh cháy trong oxi, lưu huỳnh cháy với ngọn lửa màu xanh và tạo khí lưu huỳnh đioxit. Người dùng cần quét đúng hai flash card S và O2. Phản ứng này được xếp vào OTHER vì không thuộc bốn nhóm METAL, ACID, BASE hoặc SALT của màn hình quiz.",
     "active": true,
     "reactants": [
       {

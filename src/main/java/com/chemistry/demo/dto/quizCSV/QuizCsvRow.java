@@ -1,50 +1,66 @@
 package com.chemistry.demo.dto.quizCSV;
 
 import com.opencsv.bean.CsvBindByName;
-import com.opencsv.bean.CsvBindByNames;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class QuizCsvRow {
 
-    @CsvBindByNames({
-            @CsvBindByName(column = "lesson_code"),
-            @CsvBindByName(column = "\uFEFFlesson_code")
-    })
-    private String lessonCode;
-
-    @CsvBindByName(column = "quiz_title")
+    @CsvBindByName(
+            column = "quiz_title",
+            required = true
+    )
     private String quizTitle;
 
-    @CsvBindByName(column = "question_order")
+    @CsvBindByName(
+            column = "question_order",
+            required = true
+    )
     private Integer questionOrder;
 
-    @CsvBindByName(column = "type")
-    private String type;
-
-    @CsvBindByName(column = "question_text")
+    @CsvBindByName(
+            column = "question_text",
+            required = true
+    )
     private String questionText;
 
-    @CsvBindByName(column = "option_a")
+    @CsvBindByName(
+            column = "option_a",
+            required = true
+    )
     private String optionA;
 
-    @CsvBindByName(column = "option_b")
+    @CsvBindByName(
+            column = "option_b",
+            required = true
+    )
     private String optionB;
 
-    @CsvBindByName(column = "option_c")
+    @CsvBindByName(
+            column = "option_c",
+            required = true
+    )
     private String optionC;
 
-    @CsvBindByName(column = "option_d")
+    @CsvBindByName(
+            column = "option_d",
+            required = true
+    )
     private String optionD;
 
-    @CsvBindByName(column = "correct_answer")
+    @CsvBindByName(
+            column = "correct_answer",
+            required = true
+    )
     private String correctAnswer;
 
-    @CsvBindByName(column = "explanation")
+    @CsvBindByName(
+            column = "explanation",
+            required = true
+    )
     private String explanation;
-
-    @CsvBindByName(column = "difficulty")
-    private String difficulty;
 }

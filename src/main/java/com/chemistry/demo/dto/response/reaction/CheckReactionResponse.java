@@ -37,4 +37,6 @@ public class CheckReactionResponse {
     private List<ReactionSubstanceResponse> products;
 
     private ArScanRewardResponse reward;
+    private List<String> affectedQrPayloads;
+
 }

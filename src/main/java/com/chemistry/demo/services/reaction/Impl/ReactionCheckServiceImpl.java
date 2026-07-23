@@ -67,6 +67,7 @@ public class ReactionCheckServiceImpl implements com.chemistry.demo.services.rea
                     .missingSubstances(notFoundQrPayloads)
                     .reactants(List.of())
                     .products(List.of())
+                    .affectedQrPayloads(qrPayloads)
                     .build();
         }
 
@@ -83,6 +84,7 @@ public class ReactionCheckServiceImpl implements com.chemistry.demo.services.rea
                     .missingSubstances(inactiveCards)
                     .reactants(List.of())
                     .products(List.of())
+                    .affectedQrPayloads(qrPayloads)
                     .build();
         }
 
@@ -104,6 +106,7 @@ public class ReactionCheckServiceImpl implements com.chemistry.demo.services.rea
                     .missingSubstances(inactiveSubstances)
                     .reactants(List.of())
                     .products(List.of())
+                    .affectedQrPayloads(qrPayloads)
                     .build();
         }
 
@@ -119,6 +122,7 @@ public class ReactionCheckServiceImpl implements com.chemistry.demo.services.rea
                     )
                     .reactants(List.of())
                     .products(List.of())
+                    .affectedQrPayloads(qrPayloads)
                     .build();
         }
 
@@ -174,6 +178,7 @@ public class ReactionCheckServiceImpl implements com.chemistry.demo.services.rea
                                         .map(ReactionMapper::toSubstanceResponse)
                                         .toList()
                         )
+                        .affectedQrPayloads(qrPayloads)
                         .build();
             }
         }

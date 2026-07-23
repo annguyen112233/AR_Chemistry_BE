@@ -1,0 +1,1522 @@
+[
+  {
+    "quizCode": "QUIZ_KMNO4_THERMAL_DECOMPOSITION_V1",
+    "reactionCode": "KMNO4_THERMAL_DECOMPOSITION",
+    "title": "Nhiệt phân kali pemanganat",
+    "generatedBy": "MANUAL",
+    "status": "PUBLISHED",
+    "version": 1,
+    "questionLimit": 5,
+    "durationSeconds": 420,
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "Chất ban đầu được sử dụng trong phản ứng này là chất nào?",
+        "correctAnswer": "A",
+        "explanation": "Phản ứng bắt đầu từ kali pemanganat có công thức KMnO4.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "KMnO4",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "KClO3",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "Na2SO4",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "BaCl2",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "Hiện tượng chính quan sát được khi phản ứng xảy ra là gì?",
+        "correctAnswer": "B",
+        "explanation": "Khi đun nóng KMnO4, khí oxi được tạo thành và thoát ra.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "Xuất hiện kết tủa xanh",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "Có khí thoát ra",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "Kim loại tan trong nước",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "Không có thay đổi",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 3,
+        "questionText": "Khí được tạo ra trong phản ứng là khí nào?",
+        "correctAnswer": "C",
+        "explanation": "Sản phẩm khí của phản ứng nhiệt phân KMnO4 là O2.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "H2",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "CO2",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "O2",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "SO2",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 4,
+        "questionText": "Sản phẩm rắn nào có màu nâu đen được tạo thành?",
+        "correctAnswer": "D",
+        "explanation": "MnO2 là chất rắn có màu nâu đen được tạo thành trong phản ứng.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "NaCl",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "KCl",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "BaSO4",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "MnO2",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 5,
+        "questionText": "Điều kiện cần để phản ứng xảy ra là gì?",
+        "correctAnswer": "A",
+        "explanation": "KMnO4 cần được đun nóng để xảy ra phản ứng nhiệt phân.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "Đun nóng",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "Làm lạnh",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "Chiếu sáng",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "Thêm nước",
+            "optionOrder": 4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "quizCode": "QUIZ_NA_H2O_V1",
+    "reactionCode": "NA_H2O",
+    "title": "Natri phản ứng với nước",
+    "generatedBy": "MANUAL",
+    "status": "PUBLISHED",
+    "version": 1,
+    "questionLimit": 5,
+    "durationSeconds": 420,
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "Hai chất cần dùng để thực hiện phản ứng là gì?",
+        "correctAnswer": "A",
+        "explanation": "Phản ứng xảy ra giữa natri và nước.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "Na và H2O",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "Na và HCl",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "NaOH và HCl",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "Na2SO4 và BaCl2",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "Hiện tượng nào phù hợp nhất khi natri tiếp xúc với nước?",
+        "correctAnswer": "B",
+        "explanation": "Natri phản ứng mạnh, chạy trên mặt nước và giải phóng khí hidro.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "Xuất hiện kết tủa trắng",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "Natri chuyển động và có khí thoát ra",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "Dung dịch chuyển màu xanh",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "Không có phản ứng",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 3,
+        "questionText": "Dung dịch tạo thành chứa chất nào?",
+        "correctAnswer": "C",
+        "explanation": "Natri phản ứng với nước tạo natri hiđroxit NaOH.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "NaCl",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "Na2SO4",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "NaOH",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "HCl",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 4,
+        "questionText": "Khí sinh ra trong phản ứng là khí nào?",
+        "correctAnswer": "D",
+        "explanation": "Khí hidro H2 được giải phóng trong phản ứng.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "O2",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "CO2",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "SO2",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "H2",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 5,
+        "questionText": "Hệ số của Na trong phương trình cân bằng là bao nhiêu?",
+        "correctAnswer": "B",
+        "explanation": "Phương trình cân bằng là 2Na + 2H2O → 2NaOH + H2.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "1",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "2",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "3",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "4",
+            "optionOrder": 4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "quizCode": "QUIZ_ZN_HCL_V1",
+    "reactionCode": "ZN_HCL",
+    "title": "Kẽm phản ứng với axit clohidric",
+    "generatedBy": "MANUAL",
+    "status": "PUBLISHED",
+    "version": 1,
+    "questionLimit": 5,
+    "durationSeconds": 420,
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "Hai flash card đúng để thực hiện phản ứng là gì?",
+        "correctAnswer": "A",
+        "explanation": "Phản ứng xảy ra giữa Zn và HCl.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "Zn và HCl",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "Zn và H2O",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "Fe và HCl",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "Cu và HCl",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "Hiện tượng chính khi cho Zn vào dung dịch HCl là gì?",
+        "correctAnswer": "B",
+        "explanation": "Kẽm tan dần và có bọt khí hidro thoát ra.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "Xuất hiện kết tủa trắng",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "Kẽm tan dần và có bọt khí",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "Dung dịch chuyển màu tím",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "Không có hiện tượng",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 3,
+        "questionText": "Muối được tạo thành là chất nào?",
+        "correctAnswer": "C",
+        "explanation": "Sản phẩm muối là kẽm clorua ZnCl2.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "FeCl2",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "AlCl3",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "ZnCl2",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "NaCl",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 4,
+        "questionText": "Khí sinh ra là khí nào?",
+        "correctAnswer": "D",
+        "explanation": "Kim loại Zn đẩy hidro ra khỏi axit HCl, tạo khí H2.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "O2",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "CO2",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "SO2",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "H2",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 5,
+        "questionText": "Hệ số của HCl trong phương trình cân bằng là bao nhiêu?",
+        "correctAnswer": "B",
+        "explanation": "Phương trình là Zn + 2HCl → ZnCl2 + H2.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "1",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "2",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "3",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "4",
+            "optionOrder": 4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "quizCode": "QUIZ_NAOH_HCL_V1",
+    "reactionCode": "NAOH_HCL",
+    "title": "Natri hiđroxit phản ứng với axit clohidric",
+    "generatedBy": "MANUAL",
+    "status": "PUBLISHED",
+    "version": 1,
+    "questionLimit": 5,
+    "durationSeconds": 420,
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "Hai chất tham gia phản ứng là gì?",
+        "correctAnswer": "A",
+        "explanation": "Phản ứng trung hòa xảy ra giữa NaOH và HCl.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "NaOH và HCl",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "Na và H2O",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "Zn và HCl",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "BaCl2 và Na2SO4",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "Phản ứng này thuộc loại phản ứng nào?",
+        "correctAnswer": "B",
+        "explanation": "Axit phản ứng với bazơ tạo muối và nước là phản ứng trung hòa.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "Nhiệt phân",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "Trung hòa",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "Cháy",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "Kim loại tác dụng với nước",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 3,
+        "questionText": "Muối tạo thành là chất nào?",
+        "correctAnswer": "C",
+        "explanation": "NaOH và HCl tạo natri clorua NaCl.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "ZnCl2",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "FeCl2",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "NaCl",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "BaSO4",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 4,
+        "questionText": "Sản phẩm còn lại ngoài muối là gì?",
+        "correctAnswer": "D",
+        "explanation": "Phản ứng trung hòa tạo muối NaCl và nước H2O.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "H2",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "O2",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "SO2",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "H2O",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 5,
+        "questionText": "Tỉ lệ hệ số của NaOH và HCl trong phương trình là bao nhiêu?",
+        "correctAnswer": "A",
+        "explanation": "Phương trình NaOH + HCl → NaCl + H2O có tỉ lệ 1:1.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "1 : 1",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "1 : 2",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "2 : 1",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "2 : 3",
+            "optionOrder": 4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "quizCode": "QUIZ_BACL2_NA2SO4_V1",
+    "reactionCode": "BACL2_NA2SO4",
+    "title": "Bari clorua phản ứng với natri sunfat",
+    "generatedBy": "MANUAL",
+    "status": "PUBLISHED",
+    "version": 1,
+    "questionLimit": 5,
+    "durationSeconds": 420,
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "Hai chất cần quét để thực hiện phản ứng là gì?",
+        "correctAnswer": "A",
+        "explanation": "Phản ứng xảy ra giữa BaCl2 và Na2SO4.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "BaCl2 và Na2SO4",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "NaOH và HCl",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "Zn và HCl",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "Na và H2O",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "Hiện tượng quan sát được là gì?",
+        "correctAnswer": "B",
+        "explanation": "BaSO4 không tan được tạo thành dưới dạng kết tủa trắng.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "Có khí thoát ra",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "Xuất hiện kết tủa trắng",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "Kim loại tan dần",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "Dung dịch chuyển màu đỏ",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 3,
+        "questionText": "Chất kết tủa được tạo thành là chất nào?",
+        "correctAnswer": "C",
+        "explanation": "Bari sunfat BaSO4 là chất kết tủa trắng.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "NaCl",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "BaCl2",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "BaSO4",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "NaOH",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 4,
+        "questionText": "Sản phẩm tan còn lại trong dung dịch là gì?",
+        "correctAnswer": "D",
+        "explanation": "Sản phẩm còn lại là natri clorua NaCl.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "HCl",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "H2",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "O2",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "NaCl",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 5,
+        "questionText": "Hệ số của NaCl trong phương trình cân bằng là bao nhiêu?",
+        "correctAnswer": "B",
+        "explanation": "Phương trình là BaCl2 + Na2SO4 → BaSO4 + 2NaCl.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "1",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "2",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "3",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "4",
+            "optionOrder": 4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "quizCode": "QUIZ_FE_HCL_V1",
+    "reactionCode": "FE_HCL",
+    "title": "Sắt phản ứng với axit clohidric",
+    "generatedBy": "MANUAL",
+    "status": "PUBLISHED",
+    "version": 1,
+    "questionLimit": 5,
+    "durationSeconds": 420,
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "Hai chất tham gia phản ứng là gì?",
+        "correctAnswer": "A",
+        "explanation": "Phản ứng xảy ra giữa Fe và HCl.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "Fe và HCl",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "Fe và H2O",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "Cu và HCl",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "Al và H2O",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "Hiện tượng chính của phản ứng là gì?",
+        "correctAnswer": "B",
+        "explanation": "Sắt tan dần và khí hidro thoát ra.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "Xuất hiện kết tủa trắng",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "Sắt tan dần và có bọt khí",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "Dung dịch chuyển màu tím",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "Không có phản ứng",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 3,
+        "questionText": "Muối tạo thành là chất nào?",
+        "correctAnswer": "C",
+        "explanation": "Sắt phản ứng với HCl tạo sắt(II) clorua FeCl2.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "FeCl3",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "ZnCl2",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "FeCl2",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "AlCl3",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 4,
+        "questionText": "Khí sinh ra là khí nào?",
+        "correctAnswer": "D",
+        "explanation": "Khí sinh ra là hidro H2.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "O2",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "CO2",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "SO2",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "H2",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 5,
+        "questionText": "Hệ số của HCl trong phương trình là bao nhiêu?",
+        "correctAnswer": "B",
+        "explanation": "Phương trình là Fe + 2HCl → FeCl2 + H2.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "1",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "2",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "3",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "4",
+            "optionOrder": 4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "quizCode": "QUIZ_CU_HCL_V1",
+    "reactionCode": "CU_HCL",
+    "title": "Đồng với axit clohidric",
+    "generatedBy": "MANUAL",
+    "status": "PUBLISHED",
+    "version": 1,
+    "questionLimit": 5,
+    "durationSeconds": 420,
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "Hai chất được đưa vào thí nghiệm là gì?",
+        "correctAnswer": "A",
+        "explanation": "Thí nghiệm sử dụng Cu và dung dịch HCl.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "Cu và HCl",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "Zn và HCl",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "Fe và HCl",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "Na và H2O",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "Hiện tượng quan sát được trong điều kiện thường là gì?",
+        "correctAnswer": "B",
+        "explanation": "Đồng không phản ứng với HCl loãng nên không có hiện tượng rõ rệt.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "Có nhiều bọt khí",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "Không có phản ứng",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "Xuất hiện kết tủa trắng",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "Đồng cháy sáng",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 3,
+        "questionText": "Có khí hidro được tạo ra không?",
+        "correctAnswer": "C",
+        "explanation": "Do Cu không phản ứng với HCl loãng nên không tạo khí H2.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "Có, rất nhiều",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "Có, nhưng rất ít",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "Không",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "Chỉ khi làm lạnh",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 4,
+        "questionText": "Trong phản ứng này, đồng có bị hòa tan không?",
+        "correctAnswer": "D",
+        "explanation": "Đồng không đẩy được hidro khỏi HCl loãng nên không bị hòa tan.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "Tan hoàn toàn",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "Tan một nửa",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "Tan và tạo kết tủa",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "Không tan do không phản ứng",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 5,
+        "questionText": "Kết luận phù hợp nhất là gì?",
+        "correctAnswer": "A",
+        "explanation": "Trong điều kiện thường, Cu không phản ứng với dung dịch HCl loãng.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "Cu không phản ứng với HCl loãng",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "Cu tạo CuCl2 và H2",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "Cu tạo CuO",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "Cu tạo kết tủa BaSO4",
+            "optionOrder": 4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "quizCode": "QUIZ_AL_HCL_V1",
+    "reactionCode": "AL_HCL",
+    "title": "Nhôm phản ứng với axit clohidric",
+    "generatedBy": "MANUAL",
+    "status": "PUBLISHED",
+    "version": 1,
+    "questionLimit": 5,
+    "durationSeconds": 420,
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "Hai chất tham gia phản ứng là gì?",
+        "correctAnswer": "A",
+        "explanation": "Phản ứng xảy ra giữa Al và HCl.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "Al và HCl",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "Al và H2O",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "Cu và HCl",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "Fe và H2O",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "Hiện tượng chính sau khi phản ứng diễn ra là gì?",
+        "correctAnswer": "B",
+        "explanation": "Nhôm tan dần và có khí hidro thoát ra.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "Xuất hiện kết tủa trắng",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "Nhôm tan dần và có bọt khí",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "Dung dịch chuyển màu tím",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "Không có hiện tượng",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 3,
+        "questionText": "Muối được tạo thành là chất nào?",
+        "correctAnswer": "C",
+        "explanation": "Nhôm phản ứng với HCl tạo nhôm clorua AlCl3.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "FeCl2",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "ZnCl2",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "AlCl3",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "NaCl",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 4,
+        "questionText": "Khí sinh ra trong phản ứng là gì?",
+        "correctAnswer": "D",
+        "explanation": "Khí hidro H2 được tạo thành.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "O2",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "CO2",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "SO2",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "H2",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 5,
+        "questionText": "Hệ số của HCl trong phương trình cân bằng là bao nhiêu?",
+        "correctAnswer": "C",
+        "explanation": "Phương trình là 2Al + 6HCl → 2AlCl3 + 3H2.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "2",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "3",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "6",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "8",
+            "optionOrder": 4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "quizCode": "QUIZ_KCLO3_THERMAL_DECOMPOSITION_V1",
+    "reactionCode": "KCLO3_THERMAL_DECOMPOSITION",
+    "title": "Nhiệt phân kali clorat",
+    "generatedBy": "MANUAL",
+    "status": "PUBLISHED",
+    "version": 1,
+    "questionLimit": 5,
+    "durationSeconds": 420,
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "Chất ban đầu được sử dụng là chất nào?",
+        "correctAnswer": "A",
+        "explanation": "Phản ứng nhiệt phân bắt đầu từ kali clorat KClO3.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "KClO3",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "KMnO4",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "NaCl",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "NaOH",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "Hiện tượng chính khi phản ứng xảy ra là gì?",
+        "correctAnswer": "B",
+        "explanation": "Khi KClO3 bị nhiệt phân, khí oxi được giải phóng.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "Xuất hiện kết tủa xanh",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "Có khí thoát ra",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "Kim loại tan trong nước",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "Không có thay đổi",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 3,
+        "questionText": "Khí tạo thành là khí nào?",
+        "correctAnswer": "C",
+        "explanation": "Sản phẩm khí của phản ứng là O2.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "H2",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "CO2",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "O2",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "SO2",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 4,
+        "questionText": "Chất rắn còn lại sau phản ứng là gì?",
+        "correctAnswer": "D",
+        "explanation": "Kali clorua KCl là sản phẩm rắn còn lại.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "NaCl",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "MnO2",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "BaSO4",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "KCl",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 5,
+        "questionText": "Hệ số của O2 trong phương trình cân bằng là bao nhiêu?",
+        "correctAnswer": "C",
+        "explanation": "Phương trình là 2KClO3 → 2KCl + 3O2.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "1",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "2",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "3",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "4",
+            "optionOrder": 4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "quizCode": "QUIZ_S_O2_V1",
+    "reactionCode": "S_O2",
+    "title": "Lưu huỳnh cháy trong oxi",
+    "generatedBy": "MANUAL",
+    "status": "PUBLISHED",
+    "version": 1,
+    "questionLimit": 5,
+    "durationSeconds": 420,
+    "questions": [
+      {
+        "questionOrder": 1,
+        "questionText": "Hai chất cần dùng để thực hiện phản ứng là gì?",
+        "correctAnswer": "A",
+        "explanation": "Phản ứng xảy ra giữa lưu huỳnh S và oxi O2.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "S và O2",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "S và H2",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "Na và H2O",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "Zn và HCl",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 2,
+        "questionText": "Hiện tượng phù hợp nhất khi lưu huỳnh cháy trong oxi là gì?",
+        "correctAnswer": "B",
+        "explanation": "Lưu huỳnh cháy với ngọn lửa màu xanh và tạo khí SO2.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "Xuất hiện kết tủa trắng",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "Cháy với ngọn lửa màu xanh",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "Kim loại tan dần",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "Không có hiện tượng",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 3,
+        "questionText": "Sản phẩm tạo thành là chất nào?",
+        "correctAnswer": "C",
+        "explanation": "Sản phẩm của phản ứng là lưu huỳnh đioxit SO2.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "CO2",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "H2S",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "SO2",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "SO3",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 4,
+        "questionText": "Phản ứng này thuộc loại nào?",
+        "correctAnswer": "D",
+        "explanation": "Lưu huỳnh cháy trong oxi là phản ứng cháy.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "Trung hòa",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "Kết tủa",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "Nhiệt phân",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "Phản ứng cháy",
+            "optionOrder": 4
+          }
+        ]
+      },
+      {
+        "questionOrder": 5,
+        "questionText": "Tỉ lệ hệ số của S và O2 trong phương trình là bao nhiêu?",
+        "correctAnswer": "A",
+        "explanation": "Phương trình S + O2 → SO2 có tỉ lệ hệ số 1:1.",
+        "options": [
+          {
+            "optionKey": "A",
+            "optionText": "1 : 1",
+            "optionOrder": 1
+          },
+          {
+            "optionKey": "B",
+            "optionText": "1 : 2",
+            "optionOrder": 2
+          },
+          {
+            "optionKey": "C",
+            "optionText": "2 : 1",
+            "optionOrder": 3
+          },
+          {
+            "optionKey": "D",
+            "optionText": "2 : 3",
+            "optionOrder": 4
+          }
+        ]
+      }
+    ]
+  }
+]

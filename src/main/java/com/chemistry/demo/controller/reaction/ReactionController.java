@@ -7,6 +7,7 @@ import com.chemistry.demo.dto.request.reaction.UpdateReactionRequest;
 import com.chemistry.demo.dto.request.subtance.UpdateActiveRequest;
 import com.chemistry.demo.dto.response.reaction.ReactionResponse;
 import com.chemistry.demo.enums.ArSceneKey;
+import com.chemistry.demo.enums.ReactionCategory;
 import com.chemistry.demo.enums.ReactionType;
 import com.chemistry.demo.services.reaction.ReactionService;
 import jakarta.validation.Valid;
@@ -37,24 +38,40 @@ public class ReactionController {
 
     @GetMapping
     public ApiResponse<PageResponse<ReactionResponse>> getReactions(
-            @RequestParam(required = false) Boolean active,
-            @RequestParam(required = false) ReactionType reactionType,
-            @RequestParam(required = false) ArSceneKey arSceneKey,
+            @RequestParam(required = false)
+            Boolean active,
+
+            @RequestParam(required = false)
+            ReactionType reactionType,
+
+            @RequestParam(required = false)
+            ArSceneKey arSceneKey,
+
+            @RequestParam(required = false)
+            ReactionCategory reactionCategory,
+
+            @RequestParam(required = false)
+            Integer grade,
 
             @PageableDefault(
                     size = 20,
                     sort = "code",
                     direction = Sort.Direction.ASC
-            ) Pageable pageable
+            )
+            Pageable pageable
     ) {
-        PageResponse<ReactionResponse> response = reactionService.getReactions(
-                active,
-                reactionType,
-                arSceneKey,
-                pageable
-        );
+        PageResponse<ReactionResponse> response =
+                reactionService.getReactions(
+                        active,
+                        reactionType,
+                        arSceneKey,
+                        reactionCategory,
+                        grade,
+                        pageable
+                );
 
-        return ApiResponse.<PageResponse<ReactionResponse>>ok()
+        return ApiResponse
+                .<PageResponse<ReactionResponse>>ok()
                 .data(response)
                 .build();
     }

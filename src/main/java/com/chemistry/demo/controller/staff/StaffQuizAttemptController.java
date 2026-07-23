@@ -2,6 +2,8 @@ package com.chemistry.demo.controller.staff;
 
 import com.chemistry.demo.dto.ApiResponse;
 import com.chemistry.demo.dto.PageResponse;
+import com.chemistry.demo.dto.response.quiz.staff.StaffQuizAttemptDetailResponse;
+import com.chemistry.demo.dto.response.quiz.staff.StaffQuizAttemptResponse;
 import com.chemistry.demo.services.quiz.StaffQuizAttemptService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -18,19 +20,19 @@ public class StaffQuizAttemptController {
     private final StaffQuizAttemptService staffQuizAttemptService;
 
     @GetMapping
-    public ApiResponse<PageResponse<com.chemistry.demo.dto.quizCSV.staff.StaffQuizAttemptResponse>> getQuizAttempts(
+    public ApiResponse<PageResponse<StaffQuizAttemptResponse>> getQuizAttempts(
             Pageable pageable
     ) {
-        return ApiResponse.<PageResponse<com.chemistry.demo.dto.quizCSV.staff.StaffQuizAttemptResponse>>ok()
+        return ApiResponse.<PageResponse<StaffQuizAttemptResponse>>ok()
                 .data(staffQuizAttemptService.getQuizAttempts(pageable))
                 .build();
     }
 
     @GetMapping("/{attemptCode}")
-    public ApiResponse<com.chemistry.demo.dto.quizCSV.staff.StaffQuizAttemptDetailResponse> getQuizAttemptDetail(
+    public ApiResponse<StaffQuizAttemptDetailResponse> getQuizAttemptDetail(
             @PathVariable String attemptCode
     ) {
-        return ApiResponse.<com.chemistry.demo.dto.quizCSV.staff.StaffQuizAttemptDetailResponse>ok()
+        return ApiResponse.<StaffQuizAttemptDetailResponse>ok()
                 .data(staffQuizAttemptService.getQuizAttemptDetail(attemptCode))
                 .build();
     }

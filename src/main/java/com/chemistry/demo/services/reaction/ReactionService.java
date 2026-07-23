@@ -5,6 +5,7 @@ import com.chemistry.demo.dto.request.reaction.CreateReactionRequest;
 import com.chemistry.demo.dto.request.reaction.UpdateReactionRequest;
 import com.chemistry.demo.dto.response.reaction.ReactionResponse;
 import com.chemistry.demo.enums.ArSceneKey;
+import com.chemistry.demo.enums.ReactionCategory;
 import com.chemistry.demo.enums.ReactionType;
 import org.springframework.data.domain.Pageable;
 
@@ -14,6 +15,8 @@ public interface ReactionService {
             Boolean active,
             ReactionType reactionType,
             ArSceneKey arSceneKey,
+            ReactionCategory reactionCategory,
+            Integer grade,
             Pageable pageable
     );
 

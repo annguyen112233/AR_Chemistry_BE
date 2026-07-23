@@ -34,4 +34,22 @@ public interface ReactionSubstanceRepository extends JpaRepository<ReactionSubst
     List<ReactionDefinition> findCandidateReactionsByReactantFormulas(
             List<String> formulas
     );
+
+
+    List<ReactionSubstance>
+    findByReactionAndRoleOrderByIdAsc(
+            ReactionDefinition reaction,
+            ReactionRole role
+    );
+
+    List<ReactionSubstance>
+    findByReactionAndRoleOrderBySubstanceOrderAsc(
+            ReactionDefinition reaction,
+            ReactionRole role
+    );
+
+    long countByReactionAndRole(
+            ReactionDefinition reaction,
+            ReactionRole role
+    );
 }

@@ -1,5 +1,8 @@
 package com.chemistry.demo.entity;
 
+import com.chemistry.demo.entity.BaseEntity;
+import com.chemistry.demo.entity.ChemicalSubstance;
+import com.chemistry.demo.entity.ReactionDefinition;
 import com.chemistry.demo.enums.ReactionRole;
 import jakarta.persistence.*;
 import lombok.*;
@@ -7,35 +10,59 @@ import lombok.*;
 @Entity
 @Table(
         name = "reaction_substances",
-        indexes = {
-                @Index(name = "idx_reaction_substance_reaction", columnList = "reaction_id"),
-                @Index(name = "idx_reaction_substance_substance", columnList = "substance_id"),
-                @Index(name = "idx_reaction_substance_role", columnList = "role")
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_reaction_role_order",
+                        columnNames = {
+                                "reaction_id",
+                                "role",
+                                "substance_order"
+                        }
+                )
         }
 )
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class ReactionSubstance {
+public class ReactionSubstance extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reaction_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(
+            name = "reaction_id",
+            nullable = false
+    )
     private ReactionDefinition reaction;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "substance_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(
+            name = "substance_id",
+            nullable = false
+    )
     private ChemicalSubstance substance;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 50)
+    @Column(
+            name = "role",
+            nullable = false,
+            length = 20
+    )
     private ReactionRole role;
 
-    @Column(nullable = false)
+    @Column(
+            name = "coefficient",
+            nullable = false
+    )
     private Integer coefficient;
+
+    @Column(
+            name = "substance_order",
+            nullable = false
+    )
+    private Integer substanceOrder;
 }

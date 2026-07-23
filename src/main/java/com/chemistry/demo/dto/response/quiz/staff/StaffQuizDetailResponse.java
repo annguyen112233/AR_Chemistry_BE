@@ -1,20 +1,39 @@
 package com.chemistry.demo.dto.response.quiz.staff;
 
 import com.chemistry.demo.dto.PageResponse;
-import lombok.*;
+import com.chemistry.demo.enums.QuizStatus;
+import lombok.Builder;
+import lombok.Getter;
 
-@Data
-@Builder
 @Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder
 public class StaffQuizDetailResponse {
+
     private String quizCode;
-    private String lessonCode;
+
+    private String reactionId;
+
+    private String reactionCode;
+
+    private String reactionName;
+
+    private String equation;
+
+    private Integer grade;
+
+    private String reactionCategory;
+
     private String title;
-    private String status;
+
+    private QuizStatus status;
+
     private String generatedBy;
+
     private Integer version;
+
+    private Integer questionLimit;
+
+    private Integer durationSeconds;
+
     private PageResponse<StaffQuizQuestionResponse> questions;
 }

@@ -1,15 +1,15 @@
 package com.chemistry.demo.dto.request.quiz;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-@Builder
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class StartQuizImportRequest {
-    private String lessonCode;
+
+    private String reactionCode;
+
     private String s3Key;
+
     private String originalFilename;
 }
