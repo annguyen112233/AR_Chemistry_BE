@@ -43,16 +43,45 @@ spring:
         completions-path: /v1/chat/completions
 
         options:
-          # Default model
+          # Default model (bị ghi đè bởi app.ai.chat-model ở dưới cho luồng chat)
           model: deepseek/deepseek-chat-v3-0324:free
 
           # Optional
-          temperature: 0.7
+          temperature: 0.2
           max-tokens: 1000
 
       embedding:
         options:
           model: openai/text-embedding-3-small
+
+app:
+  ai:
+    # Chuỗi model dự phòng cho luồng chat gia sư, thử theo đúng thứ tự này.
+    # Thứ tự dựa trên test thật ngày 2026-08-02: 4 câu hỏi Hoá học/model,
+    # chấm theo ngôn ngữ, độ chính xác, độ trễ và tỉ lệ lỗi.
+    #
+    #   1. ling-3.0-flash   4/4  tb  1,9s  - nhanh nhất, tiếng Việt chuẩn, không LaTeX
+    #   2. gemma-4-26b      4/4  tb 10,5s  - chất lượng cao nhất, LaTeX đã xử lý ở server
+    #   3. gpt-oss-20b      3/4  tb 14,6s  - ổn nhưng chậm và thỉnh thoảng trả rỗng
+    #   4. north-mini-code  3/4  tb 19,0s  - chậm (tới 34s), chỉ dùng làm chốt chặn
+    #
+    # ĐÃ XOÁ KHỎI CHUỖI (đều đã test và hỏng thật):
+    #   google/gemma-4-31b-it        - HTTP 429 liên tục 6/6 lần, không dùng được
+    #   nvidia/nemotron-3-super-120b - trả lời lẫn chữ Hán
+    #   nvidia/nemotron-3-nano-30b   - lộ chain-of-thought tiếng Anh ra màn hình
+    #   nvidia/nemotron-nano-9b-v2   - trả lời cụt giữa chừng
+    #   nvidia/nemotron-nano-12b-vl  - sai kiến thức hoá học
+    #   poolside/laguna-s + xs       - trả lời cụt giữa chừng
+    #
+    # LƯU Ý: OpenRouter free tier KHÔNG có model Gemini nào (chỉ có Gemma).
+    # Muốn Gemini thật phải dùng key riêng từ Google AI Studio.
+    #
+    # Phải ghim model ID cụ thể — KHÔNG dùng alias auto-router như
+    # "openrouter/free" vì nó chọn ngẫu nhiên model mỗi request nên output
+    # không ổn định và hay lẫn chữ Hán/Hangul.
+    # Danh mục free thay đổi liên tục: kiểm tra bằng GET /api/v1/models.
+    chat-models: "${AI_CHAT_MODELS:inclusionai/ling-3.0-flash:free,google/gemma-4-26b-a4b-it:free,openai/gpt-oss-20b:free,cohere/north-mini-code:free}"
+
 lbos:
   logging:
     logstash:

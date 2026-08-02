@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   # --- DATABASE SECTION (Postgres & PgPool) ---
   postgres-master:
@@ -101,12 +99,17 @@ services:
     restart: unless-stopped
     env_file:
       - .env
+    environment:
+      # .env targets localhost for running the app outside Docker; inside the
+      # network the services are reachable by their compose service names.
+      SPRING_DATASOURCE_URL: jdbc:postgresql://pgpool:9999/ar_chemistry
+      REDIS_HOST: redis
     ports:
       - "8080:8080"
     volumes:
       - ./secrets:/app/secrets:ro
     depends_on:
-      - postgres
+      - pgpool
       - redis
 
 volumes:

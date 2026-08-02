@@ -39,6 +39,7 @@ public class InventoryServiceImpl implements InventoryService {
     private final CompoundDetailRepository compoundDetailRepository;
 
     @Transactional
+    @com.chemistry.demo.aspect.AuditEvent("KIT_ACTIVATED")
     public ActivateKitResponse activateKit(
             ActivateKitRequest request
     ) {

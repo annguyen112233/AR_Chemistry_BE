@@ -36,6 +36,7 @@ public class SingleCardPurchaseServiceImpl implements com.chemistry.demo.service
 
     @Override
     @Transactional
+    @com.chemistry.demo.aspect.AuditEvent("SINGLE_CARD_PURCHASED")
     public SingleCardPurchaseResponse buySingleCardWithKnowledgePoint(String singleCardId) {
         User user = securityUtils.getCurrentUserCognitoSub();
 

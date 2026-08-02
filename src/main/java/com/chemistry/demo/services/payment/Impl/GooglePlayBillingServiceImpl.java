@@ -35,6 +35,7 @@ public class GooglePlayBillingServiceImpl implements GooglePlayBillingService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('ROLE_STUDENT')")
+    @com.chemistry.demo.aspect.AuditEvent("PAYMENT_VERIFIED")
     public ArAccessResponse verify(GooglePlayVerifyRequest request) {
         User user = securityUtils.getCurrentUserCognitoSub();
 

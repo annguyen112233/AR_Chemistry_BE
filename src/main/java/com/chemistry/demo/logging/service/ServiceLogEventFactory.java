@@ -8,6 +8,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -16,11 +17,18 @@ public class ServiceLogEventFactory {
     private static final long SLOW_THRESHOLD_MS = 500L;
     private static final String APPLICATION = "AR_Labs";
     private static final String LAYER = "SERVICE";
+    private static final String LAYER_AUDIT = "AUDIT";
+    private static final String LAYER_SECURITY = "SECURITY";
+    private static final String LAYER_AI = "AI";
     private static final String STATUS_SUCCESS = "SUCCESS";
     private static final String STATUS_FAILED = "FAILED";
+    private static final String STATUS_DENIED = "DENIED";
     private static final String EVENT_SERVICE_EXECUTION = "SERVICE_EXECUTION";
     private static final String EVENT_SERVICE_EXCEPTION = "SERVICE_EXCEPTION";
     private static final String EVENT_SLOW_SERVICE = "SLOW_SERVICE";
+    private static final String EVENT_ACCESS_GRANTED = "ACCESS_GRANTED";
+    private static final String EVENT_ACCESS_DENIED = "ACCESS_DENIED";
+    private static final String EVENT_AI_CHAT = "AI_CHAT";
 
     private final Environment environment;
 
@@ -57,6 +65,67 @@ public class ServiceLogEventFactory {
                 .paramCount(context.paramCount())
                 .paramTypes(context.paramTypes())
                 .safeParams(context.safeParams().isEmpty() ? null : context.safeParams())
+                .build();
+    }
+
+    /**
+     * Sự kiện nghiệp vụ cần audit (thanh toán, kích hoạt kit, cấp quyền, thưởng AR...).
+     * eventType chính là action nghiệp vụ để filter trên Kibana.
+     */
+    public PerformanceLog audit(ServiceExecutionContext context, String action, String actor,
+                                boolean success, Object result, long startTimeNanos) {
+        long durationMs = LogUtil.durationMs(startTimeNanos);
+        return base(context, durationMs)
+                .toBuilder()
+                .layer(LAYER_AUDIT)
+                .level("INFO")
+                .status(success ? STATUS_SUCCESS : STATUS_FAILED)
+                .eventType(action)
+                .message("Audit: " + action)
+                .actor(actor)
+                .success(success)
+                .safeParams(context.safeParams().isEmpty() ? null : context.safeParams())
+                .resultType(SanitizerUtil.extractResultType(result))
+                .resultId(SanitizerUtil.extractResultId(result))
+                .build();
+    }
+
+    /**
+     * Sự kiện kiểm soát truy cập cho các method được bảo vệ (@PreAuthorize).
+     * allowed=false sẽ tạo eventType=ACCESS_DENIED để cảnh báo dò quyền.
+     */
+    public PerformanceLog security(ServiceExecutionContext context, String actor,
+                                   boolean allowed, String reason, long startTimeNanos) {
+        long durationMs = LogUtil.durationMs(startTimeNanos);
+        return base(context, durationMs)
+                .toBuilder()
+                .layer(LAYER_SECURITY)
+                .level(allowed ? "INFO" : "WARN")
+                .status(allowed ? STATUS_SUCCESS : STATUS_DENIED)
+                .eventType(allowed ? EVENT_ACCESS_GRANTED : EVENT_ACCESS_DENIED)
+                .message(allowed ? "Access granted" : "Access denied: " + reason)
+                .actor(actor)
+                .success(allowed)
+                .build();
+    }
+
+    /**
+     * Metric cho một lượt chat AI/RAG: cache hit, số chunk retrieve, điểm cao nhất, model...
+     * Các chỉ số chi tiết đặt trong safeParams để hiển thị dạng nested JSON trên ELK.
+     */
+    public PerformanceLog aiChat(ServiceExecutionContext context, String actor,
+                                 Map<String, Object> metrics, boolean success, long startTimeNanos) {
+        long durationMs = LogUtil.durationMs(startTimeNanos);
+        return base(context, durationMs)
+                .toBuilder()
+                .layer(LAYER_AI)
+                .level("INFO")
+                .status(success ? STATUS_SUCCESS : STATUS_FAILED)
+                .eventType(EVENT_AI_CHAT)
+                .message("AI chat handled")
+                .actor(actor)
+                .success(success)
+                .safeParams(metrics == null || metrics.isEmpty() ? null : metrics)
                 .build();
     }
 
