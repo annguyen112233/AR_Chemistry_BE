@@ -7,7 +7,8 @@ import com.chemistry.demo.dto.response.profile.UserProfileResponse;
 import com.chemistry.demo.entity.User;
 
 public interface UserService {
-    UserResponse syncUser(String email,String cognitoUsername,  String cognitoSub);
+    UserResponse syncUser(String email, String cognitoUsername, String cognitoSub,
+                          String fullName, String avatarUrl);
 
     UpdateProfileResponse updateProfile(UpdateProfileRequest request);
 

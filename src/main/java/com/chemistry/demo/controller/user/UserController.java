@@ -40,7 +40,17 @@ public class UserController {
                         "cognito:username"
                 );
 
-        userService.syncUser(email,cognitoUsername, cognitoSub);
+        // Thông tin hồ sơ từ nhà cung cấp đăng nhập (Google qua Cognito).
+        // "picture" và "name" chỉ có trong token nếu đã cấu hình attribute
+        // mapping của Google IdP trên Cognito và thêm vào ID token.
+        String fullName = jwt.getClaimAsString("name");
+        String avatarUrl = jwt.getClaimAsString("picture");
+
+        if (log.isDebugEnabled()) {
+            log.debug("JWT claims for {}: {}", cognitoSub, jwt.getClaims().keySet());
+        }
+
+        userService.syncUser(email, cognitoUsername, cognitoSub, fullName, avatarUrl);
 
         return ApiResponse.<UserResponse>ok()
                 .data(userSecurityService.getUserSecurity(cognitoSub))

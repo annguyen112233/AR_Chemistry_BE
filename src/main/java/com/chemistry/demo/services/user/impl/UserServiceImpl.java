@@ -42,7 +42,9 @@ public class UserServiceImpl implements UserService {
     public UserResponse syncUser(
             String email,
             String cognitoUsername,
-            String cognitoSub
+            String cognitoSub,
+            String fullName,
+            String avatarUrl
     ) {
         AtomicBoolean isNewUser = new AtomicBoolean(false);
 
@@ -55,9 +57,20 @@ public class UserServiceImpl implements UserService {
                     return User.builder()
                             .cognitoSub(cognitoSub)
                             .email(email)
+                            .fullName(fullName)
+                            .avatarUrl(avatarUrl)
                             .roles(new java.util.HashSet<>(java.util.List.of(studentRole)))
                             .build();
                 });
+
+        // Backfill thông tin từ nhà cung cấp (Google) nếu user chưa có,
+        // nhưng KHÔNG đè lên avatar/tên người dùng đã tự cập nhật.
+        if (isBlank(user.getAvatarUrl()) && !isBlank(avatarUrl)) {
+            user.setAvatarUrl(avatarUrl);
+        }
+        if (isBlank(user.getFullName()) && !isBlank(fullName)) {
+            user.setFullName(fullName);
+        }
 
         User savedUser = userRepository.save(user);
 
@@ -120,6 +133,10 @@ public class UserServiceImpl implements UserService {
         user.setAvatarUrl(avatarUrl);
         userRepository.save(user);
         return "Avatar updated successfully";
+    }
+
+    private static boolean isBlank(String value) {
+        return value == null || value.isBlank();
     }
 
 }

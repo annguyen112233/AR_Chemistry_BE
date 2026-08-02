@@ -37,6 +37,7 @@ public class PerformanceLog {
     private String rootCause;
     private String httpMethod;
     private String endpoint;
+    private String actor;
     private String message;
     private String resultType;
     private Long resultSize;
@@ -63,6 +64,7 @@ public class PerformanceLog {
         put(values, "rootCause", rootCause);
         put(values, "httpMethod", httpMethod);
         put(values, "endpoint", endpoint);
+        put(values, "actor", actor);
         put(values, "resultType", resultType);
         put(values, "resultSize", resultSize);
         put(values, "resultId", resultId);

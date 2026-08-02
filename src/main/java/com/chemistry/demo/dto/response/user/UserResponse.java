@@ -15,5 +15,6 @@ public class UserResponse implements java.io.Serializable{
     private String email;
     private String status;
     private String fullName;
+    private String avatarUrl;
     private Set<RoleResponse> roles;
 }
