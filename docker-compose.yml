@@ -104,6 +104,11 @@ services:
       # network the services are reachable by their compose service names.
       SPRING_DATASOURCE_URL: jdbc:postgresql://pgpool:9999/ar_chemistry
       REDIS_HOST: redis
+      # ELK: backend đẩy log qua Logstash và đọc log cho Admin Portal từ
+      # Elasticsearch — cùng docker network nên gọi bằng tên service.
+      LOGSTASH_HOST: logstash
+      LOGSTASH_PORT: 5044
+      ELASTICSEARCH_URL: http://elasticsearch:9200
     ports:
       - "8080:8080"
     volumes:
@@ -111,6 +116,8 @@ services:
     depends_on:
       - pgpool
       - redis
+      - logstash
+      - elasticsearch
 
 volumes:
   postgres_master_data:
