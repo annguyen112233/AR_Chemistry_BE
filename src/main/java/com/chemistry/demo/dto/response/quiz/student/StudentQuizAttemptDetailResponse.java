@@ -18,8 +18,14 @@ public class StudentQuizAttemptDetailResponse {
     private String quizCode;
     private String quizTitle;
 
-    private String lessonCode;
-    private String lessonTitle;
+    // Thay lesson
+    private String reactionId;
+    private String reactionName;
+    private String equation;
+    private String description;
+
+    private Integer grade;
+    private String reactionType;
 
     private Integer score;
     private Integer totalQuestions;
@@ -33,13 +39,19 @@ public class StudentQuizAttemptDetailResponse {
     @Getter
     @Builder
     public static class AnswerDetail {
+
         private String questionId;
+
         private Integer questionOrder;
+
         private String questionText;
 
         private String studentAnswer;
+
         private String correctAnswer;
+
         private Boolean correct;
+
         private String explanation;
     }
 }

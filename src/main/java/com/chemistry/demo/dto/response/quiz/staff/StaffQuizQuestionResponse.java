@@ -1,21 +1,26 @@
 package com.chemistry.demo.dto.response.quiz.staff;
 
-import lombok.*;
+import com.chemistry.demo.enums.QuizQuestionStatus;
+import lombok.Builder;
+import lombok.Getter;
 
-@Data
-@Builder
+import java.util.List;
+
 @Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder
 public class StaffQuizQuestionResponse {
+
     private String id;
+
     private Integer questionOrder;
-    private String type;
+
     private String questionText;
-    private String optionsJson;
+
+    private List<StaffQuizOptionResponse> options;
+
     private String correctAnswer;
+
     private String explanation;
-    private String difficulty;
-    private String status;
+
+    private QuizQuestionStatus status;
 }

@@ -1,5 +1,6 @@
 package com.chemistry.demo.entity;
 
+import com.chemistry.demo.enums.QuizImportStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,9 +20,9 @@ public class QuizImportJob extends BaseEntity {
     @Column(name = "job_code", unique = true, nullable = false)
     private String jobCode;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lesson_id", nullable = false)
-    private Lesson lesson;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "reaction_id", nullable = false)
+    private ReactionDefinition reaction;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "quiz_id")
@@ -33,8 +34,9 @@ public class QuizImportJob extends BaseEntity {
     @Column(name = "s3_key")
     private String s3Key;
 
-    @Column(name = "status")
-    private String status; // UPLOADED, PROCESSING, COMPLETED, FAILED
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 30)
+    private QuizImportStatus status;
 
     @Column(name = "total_rows")
     private Integer totalRows;
