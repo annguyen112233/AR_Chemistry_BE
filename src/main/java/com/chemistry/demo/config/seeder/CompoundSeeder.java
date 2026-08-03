@@ -5,7 +5,6 @@ import com.chemistry.demo.entity.ChemicalSubstance;
 import com.chemistry.demo.entity.CompoundDetail;
 import com.chemistry.demo.repository.ChemicalSubstanceRepository;
 import com.chemistry.demo.repository.CompoundDetailRepository;
-import com.chemistry.demo.utils.ChemicalFormulaUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +29,7 @@ public class CompoundSeeder implements DataSeeder {
         List<SeedCompoundItem> items = readCompounds();
 
         for (SeedCompoundItem item : items) {
-            String formula = ChemicalFormulaUtils.normalizeFormula(item.getFormula());
+            String formula = normalizeFormula(item.getFormula());
 
             ChemicalSubstance substance = chemicalSubstanceRepository
                     .findByFormula(formula)
@@ -97,4 +96,11 @@ public class CompoundSeeder implements DataSeeder {
         }
     }
 
+    private String normalizeFormula(String formula) {
+        if (formula == null) {
+            throw new RuntimeException("Formula must not be null");
+        }
+
+        return formula.trim();
+    }
 }

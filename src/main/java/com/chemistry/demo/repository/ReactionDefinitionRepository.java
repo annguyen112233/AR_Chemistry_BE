@@ -17,8 +17,6 @@ public interface ReactionDefinitionRepository
 
     Optional<ReactionDefinition> findByCode(String code);
 
-    Optional<ReactionDefinition> findByReactantKey(String reactantKey);
-
     boolean existsByCode(String code);
 
     Page<ReactionDefinition> findByActiveTrue(Pageable pageable);
