@@ -2,7 +2,6 @@ package com.chemistry.demo.dto.response.quiz.student;
 
 import lombok.*;
 
-import java.time.Instant;
 import java.util.List;
 
 @Data
@@ -16,7 +15,6 @@ public class SubmitQuizResponse {
     private Integer score;
     private Integer total;
     private Integer correctCount;
-    private Instant submittedAt;
     private List<QuestionResult> results;
 
     @Getter

@@ -4,21 +4,14 @@ import lombok.*;
 
 @Data
 @Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class StudentQuizSummaryResponse {
-
     private String quizCode;
-
-    private String reactionId;
-
-    private String reactionName;
-
-    private String equation;
-
-    private Integer grade;
-
-    private String reactionType;
-
+    private String lessonCode;
+    private String title;
+    private Integer version;
     private Long questionCount;
 }

@@ -17,13 +17,8 @@ public class StudentQuizAttemptHistoryResponse {
     private String quizCode;
     private String quizTitle;
 
-    // Thay lesson
-    private String reactionId;
-    private String reactionName;
-    private String equation;
-
-    private Integer grade;
-    private String reactionType;
+    private String lessonCode;
+    private String lessonTitle;
 
     private Integer score;
     private Integer totalQuestions;

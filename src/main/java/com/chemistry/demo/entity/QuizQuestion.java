@@ -1,28 +1,10 @@
 package com.chemistry.demo.entity;
 
-import com.chemistry.demo.enums.QuizQuestionStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(
-        name = "quiz_questions",
-        uniqueConstraints = {
-                @UniqueConstraint(
-                        name = "uk_quiz_question_order",
-                        columnNames = {
-                                "quiz_id",
-                                "question_order"
-                        }
-                )
-        },
-        indexes = {
-                @Index(
-                        name = "idx_question_quiz_status",
-                        columnList = "quiz_id, status"
-                )
-        }
-)
+@Table(name = "quiz_questions")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -34,50 +16,37 @@ public class QuizQuestion extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(
-            name = "quiz_id",
-            nullable = false
-    )
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "quiz_id", nullable = false)
     private Quiz quiz;
 
-    @Column(
-            name = "question_text",
-            nullable = false,
-            columnDefinition = "TEXT"
-    )
-    private String questionText;
-
-    @Column(
-            name = "question_order",
-            nullable = false
-    )
+    @Column(name = "question_order")
     private Integer questionOrder;
 
-    /**
-     * Ví dụ A, B, C hoặc D.
-     */
-    @Column(
-            name = "correct_answer",
-            nullable = false,
-            length = 1000
-    )
+    @Column(name = "type", nullable = false)
+    private String type;
+    // multiple_choice / true_false / fill_blank
+
+
+    @Column(name = "question_text", columnDefinition = "TEXT", nullable = false)
+    private String questionText;
+
+
+    @Column(name = "options_json", columnDefinition = "TEXT")
+    private String optionsJson;
+    // ["A", "B", "C", "D"]
+
+
+    @Column(name = "correct_answer", columnDefinition = "TEXT")
     private String correctAnswer;
 
-    @Column(
-            name = "explanation",
-            nullable = false,
-            columnDefinition = "TEXT"
-    )
+
+    @Column(name = "explanation", columnDefinition = "TEXT")
     private String explanation;
 
-    @Enumerated(EnumType.STRING)
-    @Column(
-            name = "status",
-            nullable = false,
-            length = 30
-    )
-    @Builder.Default
-    private QuizQuestionStatus status =
-            QuizQuestionStatus.ACTIVE;
+    @Column(name = "difficulty")
+    private String difficulty; // easy / medium / hard
+
+    @Column(name = "status")
+    private String status; // active / inactive
 }

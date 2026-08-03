@@ -1,15 +1,17 @@
 package com.chemistry.demo.config;
 
 import com.chemistry.demo.dto.quizCSV.QuizCsvRow;
-import com.chemistry.demo.entity.*;
-import com.chemistry.demo.enums.QuizImportStatus;
-import com.chemistry.demo.enums.QuizQuestionStatus;
-import com.chemistry.demo.enums.QuizStatus;
-import com.chemistry.demo.repository.*;
+import com.chemistry.demo.entity.Lesson;
+import com.chemistry.demo.entity.Quiz;
+import com.chemistry.demo.entity.QuizImportJob;
+import com.chemistry.demo.entity.QuizQuestion;
+import com.chemistry.demo.repository.LessonRepository;
+import com.chemistry.demo.repository.QuizImportJobRepository;
+import com.chemistry.demo.repository.QuizQuestionRepository;
+import com.chemistry.demo.repository.QuizRepository;
 import com.chemistry.demo.services.quiz.QuizCsvS3ReaderService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -20,28 +22,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-@Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class QuizImportBatchConfig {
 
-    private static final int REQUIRED_QUESTION_COUNT = 5;
-
-    private static final int QUIZ_DURATION_SECONDS = 420;
-
     @Bean
-    public Job importQuizJob(
-            JobRepository jobRepository,
-            Step importQuizStep
-    ) {
-        return new JobBuilder(
-                "importQuizJob",
-                jobRepository
-        )
+    public Job importQuizJob(JobRepository jobRepository, Step importQuizStep) {
+        return new JobBuilder("importQuizJob", jobRepository)
                 .start(importQuizStep)
                 .build();
     }
@@ -52,509 +41,157 @@ public class QuizImportBatchConfig {
             PlatformTransactionManager transactionManager,
             QuizCsvS3ReaderService quizCsvS3ReaderService,
             QuizImportJobRepository quizImportJobRepository,
-            ReactionDefinitionRepository reactionDefinitionRepository,
+            LessonRepository lessonRepository,
             QuizRepository quizRepository,
             QuizQuestionRepository quizQuestionRepository,
-            QuizQuestionOptionRepository quizQuestionOptionRepository
+            ObjectMapper objectMapper
     ) {
-        return new StepBuilder(
-                "importQuizStep",
-                jobRepository
-        )
+        return new StepBuilder("importQuizStep", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
+                    String jobCode = (String) chunkContext.getStepContext().getJobParameters().get("jobCode");
+                    String lessonCode = (String) chunkContext.getStepContext().getJobParameters().get("lessonCode");
+                    String s3Key = (String) chunkContext.getStepContext().getJobParameters().get("s3Key");
 
-                    String jobCode =
-                            getStringJobParameter(
-                                    chunkContext,
-                                    "jobCode"
-                            );
-
-                    String reactionCode =
-                            getStringJobParameter(
-                                    chunkContext,
-                                    "reactionCode"
-                            );
-
-                    String s3Key =
-                            getStringJobParameter(
-                                    chunkContext,
-                                    "s3Key"
-                            );
-
-                    QuizImportJob importJob =
-                            quizImportJobRepository
-                                    .findByJobCode(jobCode)
-                                    .orElseThrow(() ->
-                                            new IllegalStateException(
-                                                    "Import job not found: "
-                                                            + jobCode
-                                            )
-                                    );
+                    QuizImportJob importJob = quizImportJobRepository.findByJobCode(jobCode)
+                            .orElseThrow(() -> new RuntimeException("Import job not found: " + jobCode));
 
                     try {
-                        importJob.setStatus(
-                                QuizImportStatus.PROCESSING
-                        );
-                        importJob.setErrorMessage(null);
+                        importJob.setStatus("PROCESSING");
+                        quizImportJobRepository.save(importJob);
 
-                        quizImportJobRepository.save(
-                                importJob
-                        );
+                        Lesson lesson = lessonRepository.findByLessonCode(lessonCode)
+                                .orElseThrow(() -> new RuntimeException("Lesson not found: " + lessonCode));
 
-                        ReactionDefinition reaction =
-                                reactionDefinitionRepository
-                                        .findByCode(
-                                                reactionCode
-                                                        .trim()
-                                                        .toUpperCase()
-                                        )
-                                        .orElseThrow(() ->
-                                                new IllegalStateException(
-                                                        "Reaction not found: "
-                                                                + reactionCode
-                                                )
-                                        );
+                        List<QuizCsvRow> rows = quizCsvS3ReaderService.readCsvFromS3(s3Key);
 
-                        if (!Boolean.TRUE.equals(
-                                reaction.getActive()
-                        )) {
-                            throw new IllegalStateException(
-                                    "Reaction is inactive: "
-                                            + reaction.getCode()
-                            );
+                        if (rows.isEmpty()) {
+                            throw new RuntimeException("CSV has no rows");
                         }
 
-                        List<QuizCsvRow> rows =
-                                quizCsvS3ReaderService
-                                        .readCsvFromS3(s3Key);
-
-                        /*
-                         * Không được import CSV rỗng.
-                         */
-                        if (rows == null || rows.isEmpty()) {
-                            throw new IllegalStateException(
-                                    "CSV has no question rows"
-                            );
-                        }
-
-                        /*
-                         * Quiz của student yêu cầu đúng 5 câu.
-                         */
-                        if (rows.size()
-                                != REQUIRED_QUESTION_COUNT) {
-                            throw new IllegalStateException(
-                                    "CSV must contain exactly "
-                                            + REQUIRED_QUESTION_COUNT
-                                            + " questions, but found "
-                                            + rows.size()
-                            );
-                        }
-
-                        /*
-                         * Phải validate toàn bộ trước khi tạo Quiz.
-                         * Chỉ một dòng sai thì import thất bại toàn bộ.
-                         */
-                        validateAllRows(rows);
-
-                        QuizCsvRow firstRow =
-                                rows.getFirst();
-
-                        int nextVersion =
-                                resolveNextVersion(
-                                        quizRepository,
-                                        reaction
-                                );
-
-                        String quizCode =
-                                buildQuizCode(
-                                        reaction.getCode(),
-                                        nextVersion
-                                );
+                        QuizCsvRow first = rows.get(0);
 
                         Quiz quiz = new Quiz();
+                        quiz.setLesson(lesson);
+                        quiz.setQuizCode("quiz_" + lesson.getLessonCode() + "_v" + System.currentTimeMillis());
+                        quiz.setTitle(first.getQuizTitle());
+                        quiz.setGeneratedBy("external_ai_csv");
+                        quiz.setStatus("draft");
+                        quiz.setVersion(1);
+                        quizRepository.save(quiz);
 
-                        quiz.setReaction(reaction);
-                        quiz.setQuizCode(quizCode);
-                        quiz.setTitle(
-                                firstRow.getQuizTitle().trim()
-                        );
-                        quiz.setGeneratedBy(
-                                "EXTERNAL_AI_CSV"
-                        );
-                        quiz.setStatus(
-                                QuizStatus.READY
-                        );
-                        quiz.setVersion(nextVersion);
-                        quiz.setQuestionLimit(
-                                REQUIRED_QUESTION_COUNT
-                        );
-                        quiz.setDurationSeconds(
-                                QUIZ_DURATION_SECONDS
-                        );
-                        quiz.setImportJobCode(
-                                importJob.getJobCode()
-                        );
-
-                        Quiz savedQuiz =
-                                quizRepository.save(quiz);
+                        int success = 0;
+                        int failed = 0;
 
                         for (QuizCsvRow row : rows) {
-                            QuizQuestion question =
-                                    mapToQuestion(
-                                            row,
-                                            savedQuiz
-                                    );
+                            try {
 
-                            QuizQuestion savedQuestion =
-                                    quizQuestionRepository.save(
-                                            question
-                                    );
 
-                            saveQuestionOptions(
-                                    row,
-                                    savedQuestion,
-                                    quizQuestionOptionRepository
-                            );
+                                validateQuizCsvRow(row, lessonCode);
 
-                            log.info(
-                                    "Imported quiz question. quizCode={}, questionOrder={}",
-                                    savedQuiz.getQuizCode(),
-                                    row.getQuestionOrder()
-                            );
+                                QuizQuestion question = new QuizQuestion();
+                                question.setQuiz(quiz);
+                                question.setQuestionOrder(row.getQuestionOrder());
+                                question.setType(row.getType());
+                                question.setQuestionText(row.getQuestionText());
+                                question.setOptionsJson(objectMapper.writeValueAsString(buildOptions(row)));
+                                question.setCorrectAnswer(row.getCorrectAnswer());
+                                question.setExplanation(row.getExplanation());
+                                question.setDifficulty(row.getDifficulty());
+                                question.setStatus("active");
+
+                                quizQuestionRepository.save(question);
+
+                                System.out.println("Saved question order = " + row.getQuestionOrder());
+                                success++;
+
+                            } catch (Exception ex) {
+                                failed++;
+                            }
                         }
 
-                        importJob.setQuiz(savedQuiz);
+                        importJob.setQuiz(quiz);
                         importJob.setTotalRows(rows.size());
-                        importJob.setSuccessRows(rows.size());
-                        importJob.setFailedRows(0);
-                        importJob.setStatus(
-                                QuizImportStatus.COMPLETED
-                        );
-                        importJob.setErrorMessage(null);
-
-                        quizImportJobRepository.save(
-                                importJob
-                        );
-
-                        log.info(
-                                "Quiz import completed. jobCode={}, reactionCode={}, quizCode={}",
-                                jobCode,
-                                reaction.getCode(),
-                                savedQuiz.getQuizCode()
-                        );
+                        importJob.setSuccessRows(success);
+                        importJob.setFailedRows(failed);
+                        importJob.setStatus(failed == 0 ? "COMPLETED" : "PARTIAL_FAILED");
+                        quizImportJobRepository.save(importJob);
 
                         return RepeatStatus.FINISHED;
 
-                    } catch (Exception exception) {
-                        importJob.setStatus(
-                                QuizImportStatus.FAILED
-                        );
-
-                        importJob.setFailedRows(
-                                importJob.getTotalRows() != null
-                                        ? importJob.getTotalRows()
-                                        : 0
-                        );
-
-                        importJob.setErrorMessage(
-                                exception.getMessage()
-                        );
-
-                        quizImportJobRepository.save(
-                                importJob
-                        );
-
-                        log.error(
-                                "Quiz import failed. jobCode={}, reactionCode={}",
-                                jobCode,
-                                reactionCode,
-                                exception
-                        );
-
-                        throw exception;
+                    } catch (Exception e) {
+                        importJob.setStatus("FAILED");
+                        importJob.setErrorMessage(e.getMessage());
+                        quizImportJobRepository.save(importJob);
+                        throw e;
                     }
                 }, transactionManager)
                 .build();
     }
 
-    private void validateAllRows(
-            List<QuizCsvRow> rows
-    ) {
-        Set<Integer> questionOrders =
-                new HashSet<>();
-
-        String expectedQuizTitle = null;
-
-        for (QuizCsvRow row : rows) {
-            validateQuizCsvRow(row);
-
-            if (!questionOrders.add(
-                    row.getQuestionOrder()
-            )) {
-                throw new IllegalStateException(
-                        "Duplicate question_order: "
-                                + row.getQuestionOrder()
-                );
-            }
-
-            String currentTitle =
-                    row.getQuizTitle().trim();
-
-            if (expectedQuizTitle == null) {
-                expectedQuizTitle =
-                        currentTitle;
-            } else if (!expectedQuizTitle
-                    .equals(currentTitle)) {
-                throw new IllegalStateException(
-                        "All CSV rows must have the same quiz_title"
-                );
-            }
+    private void validateQuizCsvRow(QuizCsvRow row, String lessonCode) {
+        if (row.getLessonCode() == null || !row.getLessonCode().equals(lessonCode)) {
+            throw new RuntimeException("Invalid lesson_code");
         }
 
-        Set<Integer> expectedOrders =
-                Set.of(1, 2, 3, 4, 5);
-
-        if (!questionOrders.equals(
-                expectedOrders
-        )) {
-            throw new IllegalStateException(
-                    "question_order must contain exactly 1, 2, 3, 4 and 5"
-            );
-        }
-    }
-
-    private void validateQuizCsvRow(
-            QuizCsvRow row
-    ) {
-        if (row == null) {
-            throw new IllegalStateException(
-                    "CSV row must not be null"
-            );
-        }
-
-        if (isBlank(row.getQuizTitle())) {
-            throw new IllegalStateException(
-                    "quiz_title is required"
-            );
+        if (row.getQuizTitle() == null || row.getQuizTitle().isBlank()) {
+            throw new RuntimeException("quiz_title is required");
         }
 
         if (row.getQuestionOrder() == null) {
-            throw new IllegalStateException(
-                    "question_order is required"
-            );
+            throw new RuntimeException("question_order is required");
         }
 
-        if (row.getQuestionOrder() < 1
-                || row.getQuestionOrder() > 5) {
-            throw new IllegalStateException(
-                    "question_order must be from 1 to 5"
-            );
+        if (row.getType() == null || row.getType().isBlank()) {
+            throw new RuntimeException("type is required");
         }
 
-        if (isBlank(row.getQuestionText())) {
-            throw new IllegalStateException(
-                    "question_text is required at question "
-                            + row.getQuestionOrder()
-            );
+        if (!List.of("multiple_choice", "true_false", "fill_blank").contains(row.getType())) {
+            throw new RuntimeException("Invalid question type: " + row.getType());
         }
 
-        if (isBlank(row.getOptionA())
-                || isBlank(row.getOptionB())
-                || isBlank(row.getOptionC())
-                || isBlank(row.getOptionD())) {
-            throw new IllegalStateException(
-                    "option_a, option_b, option_c and option_d "
-                            + "are required at question "
-                            + row.getQuestionOrder()
-            );
+        if (row.getQuestionText() == null || row.getQuestionText().isBlank()) {
+            throw new RuntimeException("question_text is required");
         }
 
-        validateDuplicateOptions(row);
-
-        if (isBlank(row.getCorrectAnswer())) {
-            throw new IllegalStateException(
-                    "correct_answer is required at question "
-                            + row.getQuestionOrder()
-            );
+        if (row.getCorrectAnswer() == null || row.getCorrectAnswer().isBlank()) {
+            throw new RuntimeException("correct_answer is required");
         }
 
-        String correctAnswer =
-                row.getCorrectAnswer()
-                        .trim()
-                        .toUpperCase();
-
-        if (!Set.of("A", "B", "C", "D")
-                .contains(correctAnswer)) {
-            throw new IllegalStateException(
-                    "correct_answer must be A, B, C or D "
-                            + "at question "
-                            + row.getQuestionOrder()
-            );
+        if ("multiple_choice".equals(row.getType())) {
+            if (isBlank(row.getOptionA()) || isBlank(row.getOptionB())
+                    || isBlank(row.getOptionC()) || isBlank(row.getOptionD())) {
+                throw new RuntimeException("multiple_choice requires option_a to option_d");
+            }
         }
 
-        row.setCorrectAnswer(correctAnswer);
+        if ("true_false".equals(row.getType())) {
+            String ans = row.getCorrectAnswer().trim().toUpperCase();
+            if (!ans.equals("TRUE") && !ans.equals("FALSE")) {
+                throw new RuntimeException("true_false correct_answer must be TRUE or FALSE");
+            }
+        }
 
-        if (isBlank(row.getExplanation())) {
-            throw new IllegalStateException(
-                    "explanation is required at question "
-                            + row.getQuestionOrder()
-            );
+        if ("fill_blank".equals(row.getType())) {
+            if (!row.getQuestionText().contains("____")) {
+                throw new RuntimeException("fill_blank question_text must contain ____");
+            }
         }
     }
 
-    private void validateDuplicateOptions(
-            QuizCsvRow row
-    ) {
-        Set<String> options =
-                Set.of(
-                        normalizeOption(row.getOptionA()),
-                        normalizeOption(row.getOptionB()),
-                        normalizeOption(row.getOptionC()),
-                        normalizeOption(row.getOptionD())
-                );
-
-        if (options.size() != 4) {
-            throw new IllegalStateException(
-                    "Question "
-                            + row.getQuestionOrder()
-                            + " contains duplicate options"
-            );
-        }
-    }
-    private String normalizeOption(
-            String option
-    ) {
-        return option.trim()
-                .toLowerCase();
-    }
-
-    private QuizQuestion mapToQuestion(
-            QuizCsvRow row,
-            Quiz quiz
-    ) {
-        return QuizQuestion.builder()
-                .quiz(quiz)
-                .questionOrder(
-                        row.getQuestionOrder()
-                )
-                .questionText(
-                        row.getQuestionText().trim()
-                )
-                .correctAnswer(
-                        row.getCorrectAnswer()
-                                .trim()
-                                .toUpperCase()
-                )
-                .explanation(
-                        row.getExplanation().trim()
-                )
-                .status(
-                        QuizQuestionStatus.ACTIVE
-                )
-                .build();
-    }
-
-
-    private int resolveNextVersion(
-            QuizRepository quizRepository,
-            ReactionDefinition reaction
-    ) {
-        return quizRepository
-                .findTopByReactionOrderByVersionDesc(
-                        reaction
-                )
-                .map(quiz ->
-                        quiz.getVersion() + 1
-                )
-                .orElse(1);
-    }
-
-    private String buildQuizCode(
-            String reactionCode,
-            int version
-    ) {
-        return "QUIZ_"
-                + reactionCode
-                + "_V"
-                + version;
-    }
-
-    private String getStringJobParameter(
-            org.springframework.batch.core.scope.context.ChunkContext
-                    chunkContext,
-            String parameterName
-    ) {
-        Object value =
-                chunkContext
-                        .getStepContext()
-                        .getJobParameters()
-                        .get(parameterName);
-
-        if (value == null
-                || value.toString().isBlank()) {
-            throw new IllegalStateException(
-                    "Missing job parameter: "
-                            + parameterName
-            );
+    private List<String> buildOptions(QuizCsvRow row) {
+        if (!"multiple_choice".equals(row.getType())) {
+            return List.of();
         }
 
-        return value.toString();
+        return List.of(
+                row.getOptionA(),
+                row.getOptionB(),
+                row.getOptionC(),
+                row.getOptionD()
+        );
     }
 
-    private boolean isBlank(
-            String value
-    ) {
-        return value == null
-                || value.isBlank();
-    }
-
-    private void saveQuestionOptions(
-            QuizCsvRow row,
-            QuizQuestion question,
-            QuizQuestionOptionRepository optionRepository
-    ) {
-        List<QuizQuestionOption> options =
-                List.of(
-                        createOption(
-                                question,
-                                "A",
-                                row.getOptionA(),
-                                1
-                        ),
-                        createOption(
-                                question,
-                                "B",
-                                row.getOptionB(),
-                                2
-                        ),
-                        createOption(
-                                question,
-                                "C",
-                                row.getOptionC(),
-                                3
-                        ),
-                        createOption(
-                                question,
-                                "D",
-                                row.getOptionD(),
-                                4
-                        )
-                );
-
-        optionRepository.saveAll(options);
-    }
-
-    private QuizQuestionOption createOption(
-            QuizQuestion question,
-            String optionKey,
-            String optionText,
-            Integer optionOrder
-    ) {
-        return QuizQuestionOption.builder()
-                .question(question)
-                .optionKey(optionKey)
-                .optionText(optionText.trim())
-                .optionOrder(optionOrder)
-                .build();
+    private boolean isBlank(String value) {
+        return value == null || value.isBlank();
     }
 }
