@@ -39,6 +39,16 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/public/**").permitAll()
                         .requestMatchers("/api/v1/roles/select-role").permitAll()
+                        // Chặn theo cụm URL (defense-in-depth): trước đây nhiều
+                        // controller /admin/** không có @PreAuthorize nên BẤT KỲ
+                        // tài khoản đăng nhập nào (kể cả student) cũng gọi được
+                        // dashboard/doanh thu, import bài học... Ẩn nút trên UI
+                        // không phải là phân quyền.
+                        // Doanh thu, thanh toán, quản trị: CHỈ ADMIN.
+                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                        // Nghiệp vụ staff: staff hoặc admin.
+                        .requestMatchers("/staff/**")
+                        .hasAnyAuthority("ROLE_STAFF", "ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )
 

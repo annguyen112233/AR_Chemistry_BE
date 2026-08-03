@@ -89,10 +89,21 @@ public class UserServiceImpl implements UserService {
         userSecurityCacheService.evictUserSecurity(cognitoSub);
 
         if (isNewUser.get()) {
-            cognitoService.addUserToGroup(
-                    cognitoUsername,
-                    RoleName.ROLE_STUDENT.name()
-            );
+            // Hardening từ nhánh check-ar: Cognito lỗi tạm thời không được làm
+            // hỏng cả lần sync — user đã lưu DB, gán group có thể thử lại sau.
+            try {
+                cognitoService.addUserToGroup(
+                        cognitoUsername,
+                        RoleName.ROLE_STUDENT.name()
+                );
+            } catch (RuntimeException exception) {
+                log.warn(
+                        "User {} was saved locally but could not be added to Cognito group {}",
+                        cognitoSub,
+                        RoleName.ROLE_STUDENT.name(),
+                        exception
+                );
+            }
         }
 
         return userMapper.toUserResponse(savedUser);
