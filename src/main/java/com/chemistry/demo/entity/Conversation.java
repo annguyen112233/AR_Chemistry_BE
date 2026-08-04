@@ -26,7 +26,10 @@ public class Conversation extends BaseEntity {
 
     private String modelUsed;
 
+    // @OrderBy bắt buộc: không có thì Hibernate trả tin nhắn theo thứ tự tuỳ ý
+    // của DB — màn lịch sử chat từng hiển thị câu hỏi nằm DƯỚI câu trả lời.
     @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("createdAt ASC")
     @Builder.Default
     private List<ConversationMessage> messages = new ArrayList<>();
 }
