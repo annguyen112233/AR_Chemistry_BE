@@ -14,4 +14,5 @@ public class ConversationMessageResponse {
     private String content;
     private String modelUsed;
     private Instant createdAt;
+    private Integer rating;
 }

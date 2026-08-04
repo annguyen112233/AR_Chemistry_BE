@@ -3,6 +3,7 @@ package com.chemistry.demo.controller.ai;
 import com.chemistry.demo.dto.ApiResponse;
 import com.chemistry.demo.dto.ai.AiChatRequest;
 import com.chemistry.demo.dto.ai.AiChatResponse;
+import com.chemistry.demo.dto.ai.RateMessageRequest;
 import com.chemistry.demo.dto.response.ai.ConversationDetailResponse;
 import com.chemistry.demo.dto.response.ai.ConversationResponse;
 import com.chemistry.demo.aspect.AiFlowTrace;
@@ -49,6 +50,15 @@ public class AiController {
     @DeleteMapping("/conversations/{id}")
     public ApiResponse<Void> deleteConversation(@PathVariable String id) {
         aiChatService.deleteConversation(id);
+        return ApiResponse.<Void>ok().build();
+    }
+
+    /** Chấm câu trả lời AI (1 = 👍, -1 = 👎, 0 = bỏ chấm). */
+    @PatchMapping("/messages/{id}/rating")
+    public ApiResponse<Void> rateMessage(
+            @PathVariable String id,
+            @RequestBody @Valid RateMessageRequest request) {
+        aiChatService.rateMessage(id, request.getRating());
         return ApiResponse.<Void>ok().build();
     }
 

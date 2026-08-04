@@ -38,4 +38,10 @@ public class ConversationMessage extends BaseEntity {
     private String reusedFromMessageId;
 
     private Double similarityScore;
+
+    /**
+     * Đánh giá của học sinh cho câu trả lời AI: 1 = 👍, -1 = 👎, null = chưa chấm.
+     * Câu bị 👎 sẽ không được memory reuse phục vụ lại.
+     */
+    private Integer rating;
 }

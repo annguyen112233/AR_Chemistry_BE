@@ -154,6 +154,8 @@ public class AiChatServiceImpl implements AiChatService {
                         .timestamp(Instant.now())
                         .reusedMemory(true)
                         .similarityScore(match.getSimilarityScore())
+                        // id message GỐC: 👎 câu reuse sẽ chặn đúng nguồn cache.
+                        .messageId(match.getAssistantMessageId())
                         .build();
             }
             log.info("No memory match found, proceeding to call AI model");
@@ -200,7 +202,8 @@ public class AiChatServiceImpl implements AiChatService {
             // ============================================================
             // STEP 4: Lưu ASSISTANT message
             // ============================================================
-            saveMessage(conversation, MessageRole.ASSISTANT, answer, model);
+            ConversationMessage assistantMessage =
+                    saveMessage(conversation, MessageRole.ASSISTANT, answer, model);
 
             // ============================================================
             // STEP 5: Sinh embedding cho USER message và lưu vào DB (async-safe)
@@ -239,6 +242,7 @@ public class AiChatServiceImpl implements AiChatService {
                     .timestamp(Instant.now())
                     .reusedMemory(false)
                     .similarityScore(null)
+                    .messageId(assistantMessage.getId())
                     .build();
 
         } catch (Exception e) {
@@ -263,6 +267,39 @@ public class AiChatServiceImpl implements AiChatService {
         Conversation conversation = conversationRepository.findById(conversationId)
                 .orElseThrow(() -> new AppException(AppErrorCode.UNCATEGORIZED_EXCEPTION));
         return conversationMapper.toDetailResponse(conversation);
+    }
+
+    /**
+     * Học sinh chấm câu trả lời AI: 1 = 👍, -1 = 👎, 0 = bỏ chấm.
+     * Chỉ chủ cuộc hội thoại chấm được, và chỉ chấm được ASSISTANT message.
+     * Câu bị 👎 sẽ bị {@link ConversationMemoryService} loại khỏi memory reuse.
+     */
+    @Override
+    @Transactional
+    public void rateMessage(String messageId, int rating) {
+        if (rating < -1 || rating > 1) {
+            throw new AppException(AppErrorCode.UNCATEGORIZED_EXCEPTION);
+        }
+
+        ConversationMessage message = messageRepository.findById(messageId)
+                .orElseThrow(() -> new AppException(AppErrorCode.UNCATEGORIZED_EXCEPTION));
+
+        if (message.getRole() != MessageRole.ASSISTANT) {
+            throw new AppException(AppErrorCode.UNCATEGORIZED_EXCEPTION);
+        }
+
+        User currentUser = securityUtils.getCurrentUserCognitoSub();
+        String ownerSub = message.getConversation().getUser().getCognitoSub();
+        if (!ownerSub.equals(currentUser.getCognitoSub())) {
+            throw new AppException(AppErrorCode.UNCATEGORIZED_EXCEPTION);
+        }
+
+        message.setRating(rating == 0 ? null : rating);
+        messageRepository.save(message);
+
+        // Log kèm model để đối chiếu chất lượng từng model trong chuỗi fallback.
+        log.info("AI_RATING: message={} model={} rating={}",
+                messageId, message.getModelUsed(), rating);
     }
 
     @Override

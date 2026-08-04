@@ -85,6 +85,13 @@ public class ConversationMemoryService {
             }
 
             ConversationMessage assistant = assistantMessage.get();
+
+            // Câu trả lời bị học sinh 👎 không được phục vụ lại từ cache —
+            // gọi model mới để tự chữa lành thay vì lặp lại câu sai vĩnh viễn.
+            if (assistant.getRating() != null && assistant.getRating() < 0) {
+                log.info("Memory match {} skipped: answer was downvoted", assistant.getId());
+                return Optional.empty();
+            }
             log.info("Memory match found! Score: {}, reusing answer from message: {}",
                     String.format("%.4f", bestScore), assistant.getId());
 

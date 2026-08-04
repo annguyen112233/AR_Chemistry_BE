@@ -14,4 +14,7 @@ public interface AiChatService {
     ConversationDetailResponse getConversationDetail(String conversationId);
     
     void deleteConversation(String conversationId);
+
+    /** Chấm câu trả lời AI: 1 = 👍, -1 = 👎, 0 = bỏ chấm. */
+    void rateMessage(String messageId, int rating);
 }

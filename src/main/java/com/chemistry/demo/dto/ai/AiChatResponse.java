@@ -15,4 +15,10 @@ public class AiChatResponse {
     private Instant timestamp;
     private boolean reusedMemory;
     private Double similarityScore;
+
+    /**
+     * Id của ASSISTANT message vừa trả lời — FE cần để gọi API đánh giá 👍/👎.
+     * Với MEMORY_REUSE đây là id của message GỐC, nên 👎 sẽ chặn đúng nguồn cache.
+     */
+    private String messageId;
 }
