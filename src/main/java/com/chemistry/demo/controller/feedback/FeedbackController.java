@@ -74,7 +74,6 @@ public class FeedbackController {
                 .data(feedbackService.getFeedbacksForUser(pageable))
                 .build();
     }
-
     @GetMapping("/my-feedbacks/{feedbackId}")
     public ApiResponse<FeedbackResponse> getUserFeedback(
             @PathVariable String feedbackId
