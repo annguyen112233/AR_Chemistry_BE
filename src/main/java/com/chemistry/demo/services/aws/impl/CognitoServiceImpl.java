@@ -122,6 +122,21 @@ public class CognitoServiceImpl implements CognitoService {
     }
 
     @Override
+    public void globalSignOut(String email) {
+        try {
+            cognitoClient.adminUserGlobalSignOut(AdminUserGlobalSignOutRequest.builder()
+                    .userPoolId(userPoolId)
+                    .username(email)
+                    .build());
+        } catch (UserNotFoundException e) {
+            throw new AppException(UserErrorCode.COGNITO_USER_NOT_FOUND);
+        } catch (CognitoIdentityProviderException e) {
+            log.error("Failed to global sign out Cognito user {}", email, e);
+            throw new AppException(UserErrorCode.COGNITO_OPERATION_FAILED);
+        }
+    }
+
+    @Override
     public void resetPassword(String email) {
         try {
             cognitoClient.adminResetUserPassword(AdminResetUserPasswordRequest.builder()

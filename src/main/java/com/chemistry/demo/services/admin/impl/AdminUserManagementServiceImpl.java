@@ -170,7 +170,7 @@ public class AdminUserManagementServiceImpl implements AdminUserManagementServic
         validateNotLastAdmin(user);
 
         user.setStatus(UserStatus.DELETED);
-        cognitoService.disableUser(user.getEmail());
+        syncCognitoStatus(user.getEmail(), UserStatus.DELETED);
         userRepository.save(user);
         cacheService.evictUserSecurity(user.getCognitoSub());
 
@@ -220,11 +220,27 @@ public class AdminUserManagementServiceImpl implements AdminUserManagementServic
         roles.forEach(role -> cognitoService.addUserToGroupIfNeeded(email, role.getRoleName().name()));
     }
 
+    /**
+     * Đồng bộ trạng thái sang Cognito ở dạng best-effort: DB là nguồn sự thật
+     * (mọi request đều bị chặn qua check status trong UserSecurityService),
+     * nên lệch dữ liệu phía Cognito không được phép làm rollback transaction —
+     * trước đây user kẹt vĩnh viễn ở BLOCKED vì enableUser ném lỗi.
+     */
     private void syncCognitoStatus(String email, UserStatus status) {
-        if (status == UserStatus.ACTIVE) {
-            cognitoService.enableUser(email);
-        } else if (status == UserStatus.INACTIVE || status == UserStatus.DELETED) {
-            cognitoService.disableUser(email);
+        try {
+            if (status == UserStatus.ACTIVE) {
+                cognitoService.enableUser(email);
+            } else if (status == UserStatus.INACTIVE
+                    || status == UserStatus.DELETED
+                    || status == UserStatus.BLOCKED
+                    || status == UserStatus.REJECTED) {
+                cognitoService.disableUser(email);
+                // Thu hồi refresh token để user bị chặn không xin được token mới.
+                cognitoService.globalSignOut(email);
+            }
+        } catch (AppException e) {
+            log.warn("Cognito status sync failed for {} (target status {}): {}",
+                    email, status, e.getMessage());
         }
     }
 

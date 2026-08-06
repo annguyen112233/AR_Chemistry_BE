@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.chemistry.demo.entity.Permission;
 import com.chemistry.demo.entity.Role;
+import com.chemistry.demo.enums.UserStatus;
 import com.chemistry.demo.security.UserAuthoritiesProvider;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -47,6 +48,13 @@ public class UserSecurityService implements UserAuthoritiesProvider {
 
                 return userRepository.findByCognitoSub(cognitoSub)
                                 .map(user -> {
+                                        // User bị chặn/vô hiệu hoá thì token còn hạn cũng mất
+                                        // toàn bộ quyền — mọi endpoint sẽ trả 403.
+                                        if (user.getStatus() != UserStatus.ACTIVE) {
+                                                log.warn("Denying authorities for user {} with status {}",
+                                                                cognitoSub, user.getStatus());
+                                                return new HashSet<SimpleGrantedAuthority>();
+                                        }
                                         Set<SimpleGrantedAuthority> authorities = new HashSet<>();
                                         for (Role role : user.getRoles()) {
                                                 authorities.add(new SimpleGrantedAuthority(role.getRoleName().name()));
