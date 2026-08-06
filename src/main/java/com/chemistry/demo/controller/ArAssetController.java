@@ -18,11 +18,11 @@ public class ArAssetController {
     @GetMapping("/latest")
     public ApiResponse<ArAssetResponse> getLatestArAssets() {
         String markerKey = "ar-assets/markers/marker_bundle_v1.zip";
-        String reactionKey = "ar-assets/reactions/reaction_bundle_v1.zip";
+        String reactionKey = "ar-assets/reactions/reaction_bundle_v2.zip";
 
         ArAssetResponse response = ArAssetResponse.builder()
                 .markerVersion(1)
-                .reactionVersion(1)
+                .reactionVersion(2)
                 .markerUrl(s3Service.generatePresignedGetUrl(markerKey))
                 .reactionUrl(s3Service.generatePresignedGetUrl(reactionKey))
                 .markerSizeBytes(s3Service.getObjectSize(markerKey))
