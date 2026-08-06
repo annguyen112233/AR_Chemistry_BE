@@ -6,8 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Một dòng log đọc từ Elasticsearch (index ar-chemistry-be-logs-*).
- * Tên field khớp với output của logstash.conf sau bước filter/rename.
+ * Một dòng log hệ thống/audit đọc từ bảng system_logs (Postgres)
+ * hiển thị trong tab Logs của Admin Portal.
  */
 @Data
 @Builder

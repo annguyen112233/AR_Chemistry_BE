@@ -55,10 +55,6 @@ spring:
           model: openai/text-embedding-3-small
 
 app:
-  elk:
-    # Elasticsearch của bộ ELK — backend làm proxy đọc log cho Admin Portal.
-    # Chạy trong docker-compose thì trỏ http://elasticsearch:9200.
-    elasticsearch-url: ${ELASTICSEARCH_URL:http://localhost:9200}
   ai:
     # Chuỗi model dự phòng cho luồng chat gia sư, thử theo đúng thứ tự này.
     # Thứ tự dựa trên test thật ngày 2026-08-02: 4 câu hỏi Hoá học/model,
@@ -85,12 +81,6 @@ app:
     # không ổn định và hay lẫn chữ Hán/Hangul.
     # Danh mục free thay đổi liên tục: kiểm tra bằng GET /api/v1/models.
     chat-models: "${AI_CHAT_MODELS:inclusionai/ling-3.0-flash:free,google/gemma-4-26b-a4b-it:free,openai/gpt-oss-20b:free,cohere/north-mini-code:free}"
-
-lbos:
-  logging:
-    logstash:
-      host: ${LOGSTASH_HOST:localhost}
-      port: ${LOGSTASH_PORT:5044}
 
 logging:
   level:

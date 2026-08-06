@@ -52,47 +52,7 @@ services:
     ports:
       - "6379:6379"
 
-  # --- ELK STACK SECTION (Logging & Monitoring) ---
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.14.3
-    container_name: elasticsearch
-    environment:
-      - discovery.type=single-node
-      - xpack.security.enabled=false
-      - bootstrap.memory_lock=true
-      - ES_JAVA_OPTS=-Xms256m -Xmx256m
-    ports:
-      - "9200:9200"
-    volumes:
-      - es_data:/usr/share/elasticsearch/data
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-
-  logstash:
-    image: docker.elastic.co/logstash/logstash:8.14.3
-    container_name: logstash
-    environment:
-      - LS_JAVA_OPTS=-Xms512m -Xmx512m
-    volumes:
-      - ./elk-config/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
-    ports:
-      - "5044:5044"
-    depends_on:
-      - elasticsearch
-
-  kibana:
-    image: docker.elastic.co/kibana/kibana:8.14.3
-    container_name: kibana
-    environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-    ports:
-      - "5601:5601"
-    depends_on:
-      - elasticsearch
-
-
+  # ELK đã gỡ: log/audit lưu ở bảng system_logs trong Postgres.
   backend:
     build: .
     container_name: ar-chemistry-backend
@@ -104,11 +64,6 @@ services:
       # network the services are reachable by their compose service names.
       SPRING_DATASOURCE_URL: jdbc:postgresql://pgpool:9999/ar_chemistry
       REDIS_HOST: redis
-      # ELK: backend đẩy log qua Logstash và đọc log cho Admin Portal từ
-      # Elasticsearch — cùng docker network nên gọi bằng tên service.
-      LOGSTASH_HOST: logstash
-      LOGSTASH_PORT: 5044
-      ELASTICSEARCH_URL: http://elasticsearch:9200
     ports:
       - "8080:8080"
     volumes:
@@ -116,10 +71,7 @@ services:
     depends_on:
       - pgpool
       - redis
-      - logstash
-      - elasticsearch
 
 volumes:
   postgres_master_data:
   postgres_replica_data:
-  es_data:

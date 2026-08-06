@@ -1,7 +1,7 @@
 package com.chemistry.demo.controller.admin;
 
 import com.chemistry.demo.dto.ApiResponse;
-import com.chemistry.demo.services.admin.ElasticsearchLogService;
+import com.chemistry.demo.services.admin.DatabaseLogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 /**
- * Xem log hệ thống (từ bộ ELK) ngay trong Admin Portal.
- * Chỉ ROLE_ADMIN gọi được — Elasticsearch không mở ra ngoài.
+ * Xem log hệ thống/audit (bảng system_logs trong Postgres) ngay trong
+ * Admin Portal. Chỉ ROLE_ADMIN gọi được.
  */
 @Slf4j
 @RestController
@@ -22,7 +22,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AdminLogController {
 
-    private final ElasticsearchLogService logService;
+    private final DatabaseLogService logService;
 
     /**
      * @param level   ALL | INFO | WARN | ERROR | DEBUG
