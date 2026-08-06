@@ -33,7 +33,7 @@ public class CognitoServiceImpl implements CognitoService {
             AdminAddUserToGroupRequest groupRequest = AdminAddUserToGroupRequest.builder()
                     .groupName(groupName)
                     .userPoolId(userPoolId)
-                    .username(email)
+                    .username(resolveUsername(email))
                     .build();
 
             cognitoClient.adminAddUserToGroup(groupRequest);
@@ -52,7 +52,7 @@ public class CognitoServiceImpl implements CognitoService {
                 AdminListGroupsForUserResponse groupsResponse = cognitoClient.adminListGroupsForUser(
                         AdminListGroupsForUserRequest.builder()
                                 .userPoolId(userPoolId)
-                                .username(email)
+                                .username(resolveUsername(email))
                                 .nextToken(nextToken)
                                 .build()
                 );
@@ -80,7 +80,7 @@ public class CognitoServiceImpl implements CognitoService {
         try {
             cognitoClient.adminRemoveUserFromGroup(AdminRemoveUserFromGroupRequest.builder()
                     .userPoolId(userPoolId)
-                    .username(email)
+                    .username(resolveUsername(email))
                     .groupName(groupName)
                     .build());
         } catch (UserNotFoundException e) {
@@ -91,12 +91,35 @@ public class CognitoServiceImpl implements CognitoService {
         }
     }
 
+    /**
+     * User đăng nhập bằng Google/social là federated user: username Cognito có
+     * dạng "google_&lt;id&gt;" chứ không phải email, nên các lệnh admin* gọi thẳng
+     * bằng email sẽ báo UserNotFound. Tra username thật theo attribute email.
+     */
+    private String resolveUsername(String email) {
+        try {
+            ListUsersResponse response = cognitoClient.listUsers(ListUsersRequest.builder()
+                    .userPoolId(userPoolId)
+                    .filter("email = \"" + email + "\"")
+                    .limit(1)
+                    .build());
+
+            if (response.users().isEmpty()) {
+                throw new AppException(UserErrorCode.COGNITO_USER_NOT_FOUND);
+            }
+            return response.users().get(0).username();
+        } catch (CognitoIdentityProviderException e) {
+            log.error("Failed to resolve Cognito username for {}", email, e);
+            throw new AppException(UserErrorCode.COGNITO_OPERATION_FAILED);
+        }
+    }
+
     @Override
     public void enableUser(String email) {
         try {
             cognitoClient.adminEnableUser(AdminEnableUserRequest.builder()
                     .userPoolId(userPoolId)
-                    .username(email)
+                    .username(resolveUsername(email))
                     .build());
         } catch (UserNotFoundException e) {
             throw new AppException(UserErrorCode.COGNITO_USER_NOT_FOUND);
@@ -111,7 +134,7 @@ public class CognitoServiceImpl implements CognitoService {
         try {
             cognitoClient.adminDisableUser(AdminDisableUserRequest.builder()
                     .userPoolId(userPoolId)
-                    .username(email)
+                    .username(resolveUsername(email))
                     .build());
         } catch (UserNotFoundException e) {
             throw new AppException(UserErrorCode.COGNITO_USER_NOT_FOUND);
@@ -126,7 +149,7 @@ public class CognitoServiceImpl implements CognitoService {
         try {
             cognitoClient.adminUserGlobalSignOut(AdminUserGlobalSignOutRequest.builder()
                     .userPoolId(userPoolId)
-                    .username(email)
+                    .username(resolveUsername(email))
                     .build());
         } catch (UserNotFoundException e) {
             throw new AppException(UserErrorCode.COGNITO_USER_NOT_FOUND);
