@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
             user.setFullName(fullName);
         }
 
-        User savedUser = userRepository.save(user);
+        User savedUser = userRepository.saveAndFlush(user);
 
         String walletUserId = savedUser.getCognitoSub();
 
@@ -89,10 +89,18 @@ public class UserServiceImpl implements UserService {
         userSecurityCacheService.evictUserSecurity(cognitoSub);
 
         if (isNewUser.get()) {
-            cognitoService.addUserToGroup(
-                    cognitoUsername,
-                    RoleName.ROLE_STUDENT.name()
-            );
+            try {
+                cognitoService.addUserToGroup(
+                        cognitoUsername,
+                        RoleName.ROLE_STUDENT.name()
+                );
+            } catch (Exception e) {
+                log.error(
+                        "Failed to add Cognito user {} to STUDENT group",
+                        cognitoUsername,
+                        e
+                );
+            }
         }
 
         return userMapper.toUserResponse(savedUser);
