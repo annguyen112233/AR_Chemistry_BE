@@ -34,9 +34,14 @@ services:
     environment:
       PGPOOL_PARAMS_BACKEND_HOSTNAME0: postgres-master
       PGPOOL_PARAMS_BACKEND_PORT0: 5432
+
+      POSTGRES_USERNAME: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+      PGPOOL_ENABLE_POOL_PASSWD: "on"
+
     volumes:
-      - ./pgpool/pgpool.conf:/opt/pgpool-II/etc/pgpool.conf
-      - ./pgpool/pool_passwd:/opt/pgpool-II/etc/pool_passwd
+      - ./pgpool/pgpool.conf:/config/pgpool.conf:ro
 
   # --- CACHE SECTION ---
 
