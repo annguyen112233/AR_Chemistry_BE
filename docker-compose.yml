@@ -1,5 +1,7 @@
 services:
-  # --- DATABASE SECTION (Postgres & PgPool) ---
+
+  # --- DATABASE SECTION ---
+
   postgres-master:
     image: postgres:16
     container_name: postgres_master
@@ -7,12 +9,11 @@ services:
     environment:
       POSTGRES_DB: ar_chemistry
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123456
-    ports:
-      - "5433:5432"
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_master_data:/var/lib/postgresql/data
 
+  # Tạm giữ replica container, nhưng chưa cho PgPool sử dụng
   postgres-replica:
     image: postgres:16
     container_name: postgres_replica
@@ -20,9 +21,7 @@ services:
     environment:
       POSTGRES_DB: ar_chemistry
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123456
-    ports:
-      - "5434:5432"
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_replica_data:/var/lib/postgresql/data
 
@@ -32,27 +31,22 @@ services:
     restart: always
     depends_on:
       - postgres-master
-      - postgres-replica
     environment:
       PGPOOL_PARAMS_BACKEND_HOSTNAME0: postgres-master
       PGPOOL_PARAMS_BACKEND_PORT0: 5432
-      PGPOOL_PARAMS_BACKEND_HOSTNAME1: postgres-replica
-      PGPOOL_PARAMS_BACKEND_PORT1: 5432
-    ports:
-      - "5432:9999"
     volumes:
       - ./pgpool/pgpool.conf:/opt/pgpool-II/etc/pgpool.conf
       - ./pgpool/pool_passwd:/opt/pgpool-II/etc/pool_passwd
 
   # --- CACHE SECTION ---
+
   redis:
     image: redis:7
     container_name: redis
     restart: always
-    ports:
-      - "6379:6379"
 
-  # ELK đã gỡ: log/audit lưu ở bảng system_logs trong Postgres.
+  # --- BACKEND SECTION ---
+
   backend:
     build: .
     container_name: ar-chemistry-backend
@@ -60,10 +54,11 @@ services:
     env_file:
       - .env
     environment:
-      # .env targets localhost for running the app outside Docker; inside the
-      # network the services are reachable by their compose service names.
       SPRING_DATASOURCE_URL: jdbc:postgresql://pgpool:9999/ar_chemistry
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       REDIS_HOST: redis
+      REDIS_PORT: 6379
     ports:
       - "8080:8080"
     volumes:
