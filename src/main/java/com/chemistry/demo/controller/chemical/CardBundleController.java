@@ -8,9 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -27,6 +25,15 @@ public class CardBundleController {
     ) {
         return ApiResponse.<PageResponse<CardBundleResponse>>ok()
                 .data(cardBundleService.getCardBundlesShop(pageable))
+                .build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ApiResponse<Void> deleteCardBundle(
+            @PathVariable String id
+    ) {
+        cardBundleService.deleteCardBundle(id);
+        return ApiResponse.<Void>ok()
                 .build();
     }
 }

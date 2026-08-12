@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -45,5 +46,16 @@ public class CardBundleServiceImpl implements CardBundleService{
                 cardBundle,
                 cardBundleMapper::toCardBundleResponse
         );
+    }
+
+    @Override
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public void deleteCardBundle(String id) {
+        CardBundle cardBundle = cardBundleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Card bundle not found"));
+
+        cardBundle.setActive(false);
+
+        cardBundleRepository.save(cardBundle);
     }
 }

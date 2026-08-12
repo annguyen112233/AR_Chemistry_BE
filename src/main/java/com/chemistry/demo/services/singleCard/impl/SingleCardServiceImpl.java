@@ -28,7 +28,8 @@ public class SingleCardServiceImpl implements SingleCardService {
     @Override
     @Transactional(readOnly = true)
     public PageResponse<SingleCardShopResponse> getActiveSingleCards(Pageable pageable) {
-        Page<SingleCard> singleCards = singleCardRepository.findByActiveTrue(pageable);
+        Page<SingleCard> singleCards =
+                singleCardRepository.findActiveSingleCardsWithActiveChemicalCard(pageable);
 
         return PageResponseUtils.toPageResponse(singleCards, singleCard -> {
             SingleCardShopResponse response = SingleCardMapper.toShopResponse(singleCard);

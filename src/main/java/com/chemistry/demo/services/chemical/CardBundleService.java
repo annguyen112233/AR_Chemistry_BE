@@ -9,4 +9,6 @@ public interface CardBundleService {
     PageResponse<CardBundleResponse> getCardBundlesShop(Pageable pageable);
 
     PageResponse<CardBundleResponse> getChemicalCardsForStaff(Boolean purchasable, Pageable pageable);
+
+    void deleteCardBundle(String id);
 }
