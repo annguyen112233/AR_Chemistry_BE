@@ -22,7 +22,7 @@ public class ArAssetController {
 
         ArAssetResponse response = ArAssetResponse.builder()
                 .markerVersion(1)
-                .reactionVersion(2)
+                .reactionVersion(1)
                 .markerUrl(s3Service.generatePresignedGetUrl(markerKey))
                 .reactionUrl(s3Service.generatePresignedGetUrl(reactionKey))
                 .markerSizeBytes(s3Service.getObjectSize(markerKey))
